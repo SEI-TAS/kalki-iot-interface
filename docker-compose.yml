@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: 'postgres'
+    ports:
+     - "20001:5432"
+    environment:
+     - POSTGRES_USER=iotmon
+     - POSTGRES_PASSWORD=iotmon
+     - POSTGRES_DB=iotmon
