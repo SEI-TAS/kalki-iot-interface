@@ -35,9 +35,6 @@ public class HueMonitor extends IotMonitor {
 
         PHHueSDK phHueSDK = PHHueSDK.create();
 
-        HueProperties.loadProperties();  // Load in HueProperties, if first time use a properties file is created.
-        //desktopView.setController(controller);
-
         phHueSDK.getNotificationManager().registerSDKListener(listener);
         this.phHueSDK = PHHueSDK.getInstance();
         this.instance = this;
@@ -70,9 +67,6 @@ public class HueMonitor extends IotMonitor {
             phHueSDK.setSelectedBridge(bridge);
             logger.info("Connected to bridge");
             String lastIpAddress = bridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-            HueProperties.storeUsername(username);
-            HueProperties.storeLastIPAddress(lastIpAddress);
-            HueProperties.saveProperties();
             logger.info("IP is : " + lastIpAddress);
             logger.info("Username is: " + username);
             if(pollingEnabled){
@@ -147,8 +141,6 @@ public class HueMonitor extends IotMonitor {
         accessPoint.setIpAddress(ip);
         accessPoint.setUsername(username);
         phHueSDK.connect(accessPoint);
-        HueProperties.storeLastIPAddress(ip);
-        HueProperties.storeUsername(username);
         return true;
     }
 
