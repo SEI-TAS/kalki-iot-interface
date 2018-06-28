@@ -1,3 +1,5 @@
+package Database;
+
 public class ResetDatabase {
 
     public static void main(String[] args) {

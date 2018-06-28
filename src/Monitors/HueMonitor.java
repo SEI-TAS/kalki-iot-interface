@@ -1,9 +1,12 @@
+package Monitors;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-
+import Models.HueLight;
+import Database.Postgres;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
@@ -39,6 +42,12 @@ public class HueMonitor extends IotMonitor {
         this.phHueSDK = PHHueSDK.getInstance();
         this.instance = this;
         this.username = "f450ab20effc384c3298bbcf745272a";
+    }
+
+    @Override
+    public void start(){
+        connectToDevice();
+        super.start();
     }
 
     public void findBridges() {
@@ -203,7 +212,6 @@ public class HueMonitor extends IotMonitor {
         }
     }
 
-    @Override
     public void connectToDevice() {
         connectToAccessPoint(ip);
     }

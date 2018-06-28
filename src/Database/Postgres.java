@@ -1,3 +1,5 @@
+package Database;
+
 import org.postgresql.util.HStoreConverter;
 
 import java.io.FileInputStream;
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.logging.Logger;
+import Models.Device;
 
 public class Postgres {
     

@@ -1,3 +1,5 @@
+package Monitors;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,11 +54,6 @@ public class WemoMonitor extends IotMonitor {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();
         }
-
-    }
-
-    @Override
-    public void connectToDevice() {
 
     }
 

@@ -1,3 +1,5 @@
+package Monitors;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -21,12 +23,6 @@ public abstract class IotMonitor {
     public abstract void pollDevice();
 
     /**
-     * Establishes connection to target device.
-     */
-    public abstract void connectToDevice();
-
-
-    /**
      * Saves the current state of the iot device to the database
      */
     public abstract void saveCurrentState();
@@ -35,7 +31,6 @@ public abstract class IotMonitor {
      * Connect to the device and begin monitoring.
      */
     public void start(){
-        connectToDevice();
         if(pollingEnabled){
             startPolling(pollInterval);
         }

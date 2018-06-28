@@ -2,6 +2,10 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import Monitors.IotMonitor;
+import Monitors.NeoMonitor;
+import Monitors.WemoMonitor;
+import Database.Postgres;
 
 public class MonitorLauncher {
     public static void main(String[] args) {
@@ -10,7 +14,8 @@ public class MonitorLauncher {
         Postgres.resetDatabase();
 
         //IotMonitor monitor = new HueMonitor("localhost", 80);
-        IotMonitor monitor = new WemoMonitor("WeMo Insight");
+        //IotMonitor monitor = new WemoMonitor("WeMo Insight");
+        IotMonitor monitor = new NeoMonitor("10.27.150.101");
         monitor.start();
         //Device device = Postgres.findDevice("3c83ad5f-c041-47e9-9513-5d39322164b3");
         //System.out.println(device.group);

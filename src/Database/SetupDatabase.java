@@ -1,3 +1,5 @@
+package Database;
+
 public class SetupDatabase {
 
     public static void main(String[] args) {

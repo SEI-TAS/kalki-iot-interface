@@ -1,3 +1,5 @@
+package Models;
+
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,18 +10,18 @@ public class HueLight extends Device{
     private int hue;
     private boolean isOn;
 
-    HueLight(String ip, int brightness, int hue, boolean isOn){
+    public HueLight(String ip, int brightness, int hue, boolean isOn){
         super("Hue Light", ip);
         setAttributes(brightness, hue, isOn);
 
     }
 
-    HueLight(String ip, int brightness, int hue, boolean isOn, String id){
+    public HueLight(String ip, int brightness, int hue, boolean isOn, String id){
         super("Hue Light", ip, "HueLight", id);
         setAttributes(brightness, hue, isOn);
     }
 
-    HueLight(String ip, int brightness, int hue, boolean isOn, String id, String group){
+    public HueLight(String ip, int brightness, int hue, boolean isOn, String id, String group){
         super("Hue Light", ip, group, id);
         setAttributes(brightness, hue, isOn);
     }
