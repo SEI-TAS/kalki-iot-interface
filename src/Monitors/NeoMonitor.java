@@ -1,5 +1,7 @@
 package Monitors;
 
+import Models.DeviceHistory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,14 +15,18 @@ public class NeoMonitor extends IotMonitor {
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
     private String ip;
+    private String deviceId;
 
-    public NeoMonitor(String ip, String username){
-        this(ip);
+    private Map<String, String> attributes = new HashMap<String, String>();
+
+    public NeoMonitor(String deviceId, String ip, String username){
+        this(deviceId, ip);
         this.username = username;
     }
 
-    public NeoMonitor(String ip){
+    public NeoMonitor(String deviceId, String ip){
         this.ip = ip;
+        this.deviceId = deviceId;
         this.username = "udooer";
         setSensors();
     }
@@ -52,7 +58,6 @@ public class NeoMonitor extends IotMonitor {
             result.put(name + "X", splits[0]);
             result.put(name + "Y", splits[1]);
             result.put(name + "Z", splits[2]);
-            //System.out.println(result.toString());
             return result;
         }
     }
@@ -123,9 +128,8 @@ public class NeoMonitor extends IotMonitor {
                     InputStreamReader(p.getErrorStream()));
 
             Map<String, String> results = new HashMap<String, String>();
-            // read the output from the command
 
-            //System.out.println("Here is the standard output of the command:\n");
+            // read the output from the command
             List<String> lines = new ArrayList<String>();
             String s = stdInput.readLine();
             while(s != null){
@@ -138,6 +142,7 @@ public class NeoMonitor extends IotMonitor {
             }
 
             System.out.println("Result is" + results.toString());
+            attributes = results;
 
             // read any errors from the attempted command
             System.out.println("Here is the standard error of the command (if any):\n");
@@ -153,6 +158,7 @@ public class NeoMonitor extends IotMonitor {
 
     @Override
     public void saveCurrentState() {
-
+        DeviceHistory neo = new DeviceHistory(deviceId, attributes);
+        neo.insertOrUpdate();
     }
 }

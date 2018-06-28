@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import Models.HueLight;
+import Models.DeviceHistory;
 import Database.Postgres;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
@@ -27,11 +27,11 @@ public class HueMonitor extends IotMonitor {
     private String username;
     private String ip;
     private static final int MAX_HUE=65535;
-    private HueMonitor instance;
+    private String deviceId;
 
-    private List<HueLight> lights = new ArrayList<HueLight>();
+    private List<DeviceHistory> lights = new ArrayList<DeviceHistory>();
 
-    public HueMonitor(String ip, int port) {
+    public HueMonitor(String ip, int port, String deviceId) {
         super();
 
         this.ip = ip + ":" + port;
@@ -40,7 +40,7 @@ public class HueMonitor extends IotMonitor {
 
         phHueSDK.getNotificationManager().registerSDKListener(listener);
         this.phHueSDK = PHHueSDK.getInstance();
-        this.instance = this;
+        this.deviceId = deviceId;
         this.username = "f450ab20effc384c3298bbcf745272a";
     }
 
@@ -188,7 +188,7 @@ public class HueMonitor extends IotMonitor {
         PHBridgeResourcesCache cache = bridge.getResourceCache();
         // And now you can get any resource you want, for example:
         List<PHLight> myLights = cache.getAllLights();
-        lights = new ArrayList<HueLight>();
+        lights = new ArrayList<DeviceHistory>();
         for(PHLight light : myLights){
             PHLightState state = light.getLastKnownLightState();
             String id = light.getUniqueId();
@@ -196,18 +196,18 @@ public class HueMonitor extends IotMonitor {
                 id = UUID.randomUUID().toString();
                 light.setUniqueId(id);
             }
-            HueLight newLight = new HueLight(ip, state.getBrightness(), state.getHue(), state.isOn(), id);
+            DeviceHistory newLight = new DeviceHistory(deviceId);
+            newLight.addAttribute("brightness", state.getBrightness().toString());
+            newLight.addAttribute("hue", state.getHue().toString());
+            newLight.addAttribute("isOn", state.isOn().toString());
+            newLight.addAttribute("lightId", id);
             lights.add(newLight);
-//            List<Device> devices = Postgres.getAllDevices();
-//            System.out.println("Num devices:" + devices.size());
-//
-//            logger.info("Hue is " + light.getLastKnownLightState().getHue());
         }
     }
 
     @Override
     public void saveCurrentState() {
-        for(HueLight light : lights){
+        for(DeviceHistory light : lights){
             light.insertOrUpdate();
         }
     }

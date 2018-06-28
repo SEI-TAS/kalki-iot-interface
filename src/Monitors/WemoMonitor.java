@@ -1,5 +1,8 @@
 package Monitors;
 
+import Models.DeviceHistory;
+import com.sun.media.jfxmedia.logging.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,9 +10,12 @@ import java.io.InputStreamReader;
 public class WemoMonitor extends IotMonitor {
 
     private String deviceName;
+    private Boolean isOn;
+    private String deviceId;
 
-    public WemoMonitor(String deviceName){
+    public WemoMonitor(String deviceId, String deviceName){
         this.deviceName = deviceName;
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -27,9 +33,6 @@ public class WemoMonitor extends IotMonitor {
                     "status"
             };
             Process p = Runtime.getRuntime().exec(args);
-            //String command = "wemo -v switch WeMo Insight status";
-            //logger.info(command);
-            //Process p = Runtime.getRuntime().exec(command);
 
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(p.getInputStream()));
@@ -38,20 +41,17 @@ public class WemoMonitor extends IotMonitor {
                     InputStreamReader(p.getErrorStream()));
 
             // read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
             while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
                 s = s.replace("Switch: " + deviceName, "");
-                Boolean isOn = s.contains("on");
+                isOn = s.contains("on");
             }
 
             // read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
             while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
+                logger.severe(s);
             }
         } catch (IOException e) {
-            System.out.println("exception happened - here's what I know: ");
+            logger.severe("Error polling Wemo Insight: " + e.toString());
             e.printStackTrace();
         }
 
@@ -59,6 +59,8 @@ public class WemoMonitor extends IotMonitor {
 
     @Override
     public void saveCurrentState() {
-
+        DeviceHistory wemo = new DeviceHistory(deviceId);
+        wemo.addAttribute("isOn", isOn.toString());
+        wemo.insertOrUpdate();
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.logging.Logger;
-import Models.Device;
+import Models.DeviceHistory;
 
 public class Postgres {
     
@@ -124,7 +124,7 @@ public class Postgres {
      * Drops all tables from the database.
      */
     public static void dropTables(){
-        List<String> tableNames = Arrays.asList("device");
+        List<String> tableNames = Arrays.asList("deviceHistory");
         for(String tableName: tableNames){
             dropTable(tableName);
         }
@@ -152,13 +152,12 @@ public class Postgres {
      */
     public static void makeTables(){
         logger.info("Making tables.");
-        executeCommand("CREATE TABLE IF NOT EXISTS device(" +
-                "deviceName   VARCHAR(255)," +
-                "ip           VARCHAR(255)," +
-                "id           VARCHAR(255)    PRIMARY KEY," +
+        executeCommand("CREATE TABLE IF NOT EXISTS deviceHistory_history(" +
+                "deviceId           VARCHAR(255)," +
                 "attributes   hstore, " +
                 "timestamp    TIMESTAMP," +
-                "groupName        VARCHAR(255))");
+                "id           VARCHAR(255)    PRIMARY KEY,"
+        );
     }
 
     /**
@@ -170,143 +169,134 @@ public class Postgres {
     }
 
     /**
-     * Finds a device from the database by its id.
-     * @param id id of the device to find.
-     * @return the device if it exists in the database, else null.
+     * Finds a deviceHistory from the database by its id.
+     * @param id id of the deviceHistory to find.
+     * @return the deviceHistory if it exists in the database, else null.
      */
-    public static Device findDevice(String id){
-        Device device = null;
+    public static DeviceHistory findDeviceHistory(String id){
+        DeviceHistory deviceHistory = null;
         try{
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM device WHERE ID ='" + id+"'");
+            ResultSet rs = st.executeQuery("SELECT * FROM deviceHistory WHERE ID ='" + id+"'");
             while (rs.next())
             {
-                device = rsToDevice(rs);
+                deviceHistory = rsToDeviceHistory(rs);
             }
             rs.close();
             st.close();
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.severe("Error finding device: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error finding deviceHistory: " + e.getClass().getName()+": "+e.getMessage());
         }
-        return device;
+        return deviceHistory;
     }
 
     /**
-     * Finds all devices in the database.
-     * @return a list of all devices in the database.
+     * Finds all deviceHistorys in the database.
+     * @return a list of all deviceHistorys in the database.
      */
-    public static List<Device> getAllDevices(){
-        List<Device> devices = new ArrayList<Device>();
+    public static List<DeviceHistory> getAllDeviceHistories(){
+        List<DeviceHistory> deviceHistorys = new ArrayList<DeviceHistory>();
         try{
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM device");
+            ResultSet rs = st.executeQuery("SELECT * FROM deviceHistory");
             while (rs.next())
             {
-                devices.add(rsToDevice(rs));
+                deviceHistorys.add(rsToDeviceHistory(rs));
             }
             rs.close();
             st.close();
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.severe("Error getting all devices: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error getting all deviceHistorys: " + e.getClass().getName()+": "+e.getMessage());
         }
-        return devices;
+        return deviceHistorys;
     }
 
     /**
-     * Extract a device from the result set of a database query.
-     * @param rs result set from a device query.
-     * @return The device that was found.
+     * Extract a deviceHistory from the result set of a database query.
+     * @param rs result set from a deviceHistory query.
+     * @return The deviceHistory that was found.
      */
-    private static Device rsToDevice(ResultSet rs){
-        Device device = null;
+    private static DeviceHistory rsToDeviceHistory(ResultSet rs){
+        DeviceHistory deviceHistory = null;
         try{
-            String deviceName = rs.getString(1);
-            String ip = rs.getString(2);
-            String deviceId = rs.getString(3);
-            Map<String, String> attributes = HStoreConverter.fromString(rs.getString(4));
-            Timestamp timestamp = rs.getTimestamp(5); //
-            String group = rs.getString(6);
+            String deviceId = rs.getString(1);
+            Map<String, String> attributes = HStoreConverter.fromString(rs.getString(2));
+            Timestamp timestamp = rs.getTimestamp(3);
+            String historyId = rs.getString(4);
 
-            device = new Device(deviceName, ip, deviceId, group, attributes, timestamp);
+            deviceHistory = new DeviceHistory(deviceId, attributes, timestamp, historyId);
         }
         catch(Exception e){
             e.printStackTrace();
-            logger.severe("Error converting rs to device: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error converting rs to deviceHistory: " + e.getClass().getName()+": "+e.getMessage());
         }
-        return device;
+        return deviceHistory;
     }
 
     /**
-     * Saves given device to the database.
-     * @param device device to be inserted.
+     * Saves given deviceHistory to the database.
+     * @param deviceHistory deviceHistory to be inserted.
      */
-    public static void insertDevice(Device device){
-        logger.info("Inserting device with id=" + device.id);
-        //executeCommand("INSERT INTO device(deviceName, ip, id, attributes) values(" + deviceToValues(device) + ")");
+    public static void insertDeviceHistory(DeviceHistory deviceHistory){
+        logger.info("Inserting deviceHistory with id=" + deviceHistory.id);
 
         try{
             PreparedStatement update = db.prepareStatement
-                    ("INSERT INTO device(deviceName, ip, id, attributes, timestamp, groupName) values(?,?,?,?,?,?)");
-
-            update.setString(1, device.deviceName);
-            update.setString(2, device.ip);
-            update.setString(3, device.id);
-            update.setObject(4, device.attributes);
-            update.setTimestamp(5, device.timestamp);
-            update.setString(6, device.group);
+                    ("INSERT INTO deviceHistory(device_id, attributes, timestamp, id) values(?,?,?,?)");
+            update.setString(1, deviceHistory.deviceId);
+            update.setObject(2, deviceHistory.attributes);
+            update.setTimestamp(3, deviceHistory.timestamp);
+            update.setString(4, deviceHistory.id);
 
             update.executeUpdate();
         }
         catch(Exception e){
             e.printStackTrace();
-            logger.severe("Error inserting device: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error inserting deviceHistory: " + e.getClass().getName()+": "+e.getMessage());
         }
     }
 
     /**
-     * Updates device with given id to have the parameters of the given device.
-     * @param device holding new parameters to be saved in the database.
+     * Updates deviceHistory with given id to have the parameters of the given deviceHistory.
+     * @param deviceHistory holding new parameters to be saved in the database.
      */
-    public static void updateDevice(Device device){
-        logger.info("Updating device with id=" + device.id);
+    public static void updateDeviceHistory(DeviceHistory deviceHistory){
+        logger.info("Updating deviceHistory with id=" + deviceHistory.id);
 
         try{
             PreparedStatement update = db.prepareStatement
-                    ("UPDATE device SET deviceName = ?, ip = ?, id = ?, attributes = ?, timestamp = ?, " +
-                            "groupName = ? WHERE id=?");
+                    ("UPDATE deviceHistory SET device_id = ?, attributes = ?, timestamp = ?, id = ? " +
+                            "WHERE id=?");
 
-            update.setString(1, device.deviceName);
-            update.setString(2, device.ip);
-            update.setString(3, device.id);
-            update.setObject(4, device.attributes);
-            update.setTimestamp(5, device.timestamp);
-            update.setString(6, device.group);
-            update.setString(7, device.id);
+            update.setString(1, deviceHistory.id);
+            update.setObject(2, deviceHistory.attributes);
+            update.setTimestamp(3, deviceHistory.timestamp);
+            update.setString(4, deviceHistory.id);
 
             update.executeUpdate();
         }
         catch(Exception e){
             e.printStackTrace();
-            logger.severe("Error updating device: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error updating deviceHistory: " + e.getClass().getName()+": "+e.getMessage());
         }
     }
 
     /**
-     * First, attempts to find the device in the database.
-     * If successful, updates the existing device with the given device's parameters Otherwise,
-     * inserts the given device.
-     * @param device device to be inserted or updated.
+     * First, attempts to find the deviceHistory in the database.
+     * If successful, updates the existing deviceHistory with the given deviceHistory's parameters Otherwise,
+     * inserts the given deviceHistory.
+     * @param deviceHistory deviceHistory to be inserted or updated.
      */
-    public static void insertOrUpdateDevice(Device device){
-        if(findDevice(device.id) != null){
-            updateDevice(device);
+    public static void insertOrUpdateDeviceHistory(DeviceHistory deviceHistory){
+        if(findDeviceHistory(deviceHistory.id) != null){
+            updateDeviceHistory(deviceHistory);
         }
         else{
-            insertDevice(device);
+            insertDeviceHistory(deviceHistory);
         }
     }
 }
