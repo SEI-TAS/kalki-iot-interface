@@ -1,5 +1,6 @@
 package Database;
 
+import Models.Device;
 import org.postgresql.util.HStoreConverter;
 
 import java.io.FileInputStream;
@@ -29,8 +30,7 @@ public class Postgres {
             prop.load(is);
             String port = prop.getProperty("POSTGRES_PORT");
             String ip = prop.getProperty("POSTGRES_IP");
-
-            makeConnection(ip, port);
+            db = makeConnection(ip, port);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -68,19 +68,19 @@ public class Postgres {
 
     /**
      * Connects to the postgres database, allowing for database ops.
-     * @return
+     * @return a connection to the database.
      */
-    public static void makeConnection(String ip, String port){
-        if(db == null){
-            try {
-                Class.forName("org.postgresql.Driver");
-                db = DriverManager
-                        .getConnection("jdbc:postgresql://" + ip + ":" + port + "/myDB",
-                                "postgres", "123");
-            } catch (Exception e) {
-                e.printStackTrace();
-                logger.severe("Error connecting to database : " + e.getClass().getName()+": "+e.getMessage());
-            }
+    public Connection makeConnection(String ip, String port){
+        try {
+            Class.forName("org.postgresql.Driver");
+            db = DriverManager
+                    .getConnection("jdbc:postgresql://" + ip + ":" + port + "/myDB",
+                            "postgres", "123");
+            return db;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.severe("Error connecting to database : " + e.getClass().getName()+": "+e.getMessage());
+            return null;
         }
     }
 
@@ -124,7 +124,9 @@ public class Postgres {
      * Drops all tables from the database.
      */
     public static void dropTables(){
-        List<String> tableNames = Arrays.asList("deviceHistory");
+        List<String> tableNames = new ArrayList<String>();
+        tableNames.add("device_history");
+        tableNames.add("device");
         for(String tableName: tableNames){
             dropTable(tableName);
         }
@@ -152,12 +154,23 @@ public class Postgres {
      */
     public static void makeTables(){
         logger.info("Making tables.");
-        executeCommand("CREATE TABLE IF NOT EXISTS deviceHistory_history(" +
-                "deviceId           VARCHAR(255)," +
+        executeCommand("CREATE TABLE IF NOT EXISTS device_history(" +
+                "device_id     VARCHAR(255)," +
                 "attributes   hstore, " +
                 "timestamp    TIMESTAMP," +
-                "id           VARCHAR(255)    PRIMARY KEY,"
+                "id           VARCHAR(255)    PRIMARY KEY" +
+                ");"
         );
+        executeCommand("CREATE TABLE IF NOT EXISTS device (" +
+                "id               VARCHAR(255)   PRIMARY KEY," +
+                "device_id        varchar(255)," +
+                "device_name             varchar(255)," +
+                "device_type             varchar(255)," +
+                "group_id         varchar(255)," +
+                "ip_address       varchar(255)," +
+                "history_size     int," +
+                "sampling_rate    int" +
+                ");");
     }
 
     /**
@@ -168,6 +181,8 @@ public class Postgres {
         executeCommand("CREATE EXTENSION hstore");
     }
 
+    //DeviceHistory specific methods
+
     /**
      * Finds a deviceHistory from the database by its id.
      * @param id id of the deviceHistory to find.
@@ -177,7 +192,7 @@ public class Postgres {
         DeviceHistory deviceHistory = null;
         try{
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM deviceHistory WHERE ID ='" + id+"'");
+            ResultSet rs = st.executeQuery("SELECT * FROM device_history WHERE ID ='" + id+"'");
             while (rs.next())
             {
                 deviceHistory = rsToDeviceHistory(rs);
@@ -193,26 +208,26 @@ public class Postgres {
     }
 
     /**
-     * Finds all deviceHistorys in the database.
-     * @return a list of all deviceHistorys in the database.
+     * Finds all deviceHistories in the database.
+     * @return a list of all deviceHistories in the database.
      */
     public static List<DeviceHistory> getAllDeviceHistories(){
-        List<DeviceHistory> deviceHistorys = new ArrayList<DeviceHistory>();
+        List<DeviceHistory> deviceHistories = new ArrayList<DeviceHistory>();
         try{
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM deviceHistory");
+            ResultSet rs = st.executeQuery("SELECT * FROM device_history");
             while (rs.next())
             {
-                deviceHistorys.add(rsToDeviceHistory(rs));
+                deviceHistories.add(rsToDeviceHistory(rs));
             }
             rs.close();
             st.close();
         }
         catch (Exception e) {
             e.printStackTrace();
-            logger.severe("Error getting all deviceHistorys: " + e.getClass().getName()+": "+e.getMessage());
+            logger.severe("Error getting all deviceHistories: " + e.getClass().getName()+": "+e.getMessage());
         }
-        return deviceHistorys;
+        return deviceHistories;
     }
 
     /**
@@ -242,11 +257,11 @@ public class Postgres {
      * @param deviceHistory deviceHistory to be inserted.
      */
     public static void insertDeviceHistory(DeviceHistory deviceHistory){
-        logger.info("Inserting deviceHistory with id=" + deviceHistory.id);
+        logger.info("Inserting device_history: " + deviceHistory.toString());
 
         try{
             PreparedStatement update = db.prepareStatement
-                    ("INSERT INTO deviceHistory(device_id, attributes, timestamp, id) values(?,?,?,?)");
+                    ("INSERT INTO device_history(device_id, attributes, timestamp, id) values(?,?,?,?)");
             update.setString(1, deviceHistory.deviceId);
             update.setObject(2, deviceHistory.attributes);
             update.setTimestamp(3, deviceHistory.timestamp);
@@ -269,7 +284,7 @@ public class Postgres {
 
         try{
             PreparedStatement update = db.prepareStatement
-                    ("UPDATE deviceHistory SET device_id = ?, attributes = ?, timestamp = ?, id = ? " +
+                    ("UPDATE device_history SET device_id = ?, attributes = ?, timestamp = ?, id = ? " +
                             "WHERE id=?");
 
             update.setString(1, deviceHistory.id);
@@ -298,5 +313,110 @@ public class Postgres {
         else{
             insertDeviceHistory(deviceHistory);
         }
+    }
+
+    //Device specific methods
+
+    /**
+     * Saves given device to the database.
+     * @param device deviceHistory to be inserted.
+     */
+    public static void insertDevice(Device device){
+        logger.info("Inserting device with id=" + device.id);
+
+        try{
+            PreparedStatement update = db.prepareStatement
+                    ("INSERT INTO device(id, device_id, device_name, device_type, group_id, ip_address," +
+                            "history_size, sampling_rate) values(?,?,?,?,?,?,?,?)");
+            update.setString(1, device.id);
+            update.setString(2, device.deviceId);
+            update.setString(3, device.name);
+            update.setString(4, device.type);
+            update.setString(5, device.groupId);
+            update.setString(6, device.ip);
+            update.setInt(7, device.historySize);
+            update.setInt(8, device.samplingRate);
+
+            update.executeUpdate();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            logger.severe("Error inserting device: " + e.getClass().getName()+": "+e.getMessage());
+        }
+    }
+
+    /**
+     * Finds all devices in the database.
+     * @return a list of all deviceHistories in the database.
+     */
+    public static List<Device> getAllDevices(){
+        List<Device> devices = new ArrayList<Device>();
+        try{
+            Statement st = db.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM device");
+            while (rs.next())
+            {
+                devices.add(rsToDevice(rs));
+            }
+            rs.close();
+            st.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            logger.severe("Error getting all deviceHistories: " + e.getClass().getName()+": "+e.getMessage());
+        }
+        return devices;
+    }
+
+    /**
+     * Extract a deviceHistory from the result set of a database query.
+     * @param rs result set from a deviceHistory query.
+     * @return The deviceHistory that was found.
+     */
+    private static Device rsToDevice(ResultSet rs){
+        Device device = null;
+        try{
+            String id = rs.getString(1);
+            String deviceId = rs.getString(2);
+            String name = rs.getString(3);
+            String type = rs.getString(4);
+            String groupId = rs.getString(5);
+            String ip = rs.getString(6);
+            int historySize = rs.getInt(7);
+            int samplingRate = rs.getInt(8);
+
+
+
+            device = new Device(id, deviceId, name, type, groupId, ip, historySize, samplingRate);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            logger.severe("Error converting rs to deviceHistory: " + e.getClass().getName()+": "+e.getMessage());
+        }
+        return device;
+    }
+
+    /**
+     * Finds a deviceHistory from the database by its id.
+     * @param id id of the device to find.
+     * @return the deviceHistory if it exists in the database, else null.
+     */
+    public static Device findDevice(String id){
+        Device device = null;
+        try{
+            Statement st = db.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM device WHERE ID ='" + id+"'");
+            while (rs.next())
+            {
+                device = rsToDevice(rs);
+            }
+            rs.close();
+            st.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            logger.severe("Error finding device: " + e.getClass().getName()+": "+e.getMessage());
+        }
+        return device;
     }
 }

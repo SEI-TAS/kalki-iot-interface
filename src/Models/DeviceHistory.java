@@ -20,6 +20,7 @@ public class DeviceHistory {
         long millis = System.currentTimeMillis() % 1000;
         this.timestamp = new Timestamp(millis);
         this.deviceId = deviceId;
+        this.id = UUID.randomUUID().toString();
     }
 
     public DeviceHistory(String deviceId, Map<String, String> attributes) {
@@ -45,6 +46,7 @@ public class DeviceHistory {
 
     public void insert(){
         Postgres.insertDeviceHistory(this);
+        System.out.println("Inserting device history: " + this.toString());
     }
 
     public void update(){
@@ -53,5 +55,13 @@ public class DeviceHistory {
 
     public void insertOrUpdate(){
         Postgres.insertOrUpdateDeviceHistory(this);
+    }
+
+    public String toString() {
+        String result = "DeviceHistory Info: deviceId: " + deviceId + ",";
+        for(String key : attributes.keySet()){
+            result += key + ": " + attributes.get(key) + ", ";
+        }
+        return result;
     }
 }

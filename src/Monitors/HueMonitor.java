@@ -31,14 +31,16 @@ public class HueMonitor extends IotMonitor {
 
     private List<DeviceHistory> lights = new ArrayList<DeviceHistory>();
 
-    public HueMonitor(String ip, int port, String deviceId) {
+    public HueMonitor(String ip, int port, String deviceId, int samplingRate) {
         super();
+        logger.info("Starting Hue monitor");
 
         this.ip = ip + ":" + port;
 
         PHHueSDK phHueSDK = PHHueSDK.create();
 
         phHueSDK.getNotificationManager().registerSDKListener(listener);
+        this.pollInterval = samplingRate;
         this.phHueSDK = PHHueSDK.getInstance();
         this.deviceId = deviceId;
         this.username = "f450ab20effc384c3298bbcf745272a";

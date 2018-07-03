@@ -19,15 +19,19 @@ public class NeoMonitor extends IotMonitor {
 
     private Map<String, String> attributes = new HashMap<String, String>();
 
-    public NeoMonitor(String deviceId, String ip, String username){
-        this(deviceId, ip);
+    public NeoMonitor(String deviceId, String ip, String username, int samplingRate){
+        this(deviceId, ip, samplingRate);
         this.username = username;
     }
 
-    public NeoMonitor(String deviceId, String ip){
+    public NeoMonitor(String deviceId, String ip, int samplingRate){
+        logger.info("Starting Neo Monitor for deviceId: " + deviceId + ", ip: " + ip +
+                ", and sampling rate: " + samplingRate + ".");
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
+        this.pollInterval = samplingRate;
+
         setSensors();
     }
 
@@ -51,13 +55,18 @@ public class NeoMonitor extends IotMonitor {
 
         @Override
         public Map<String, String> parseResponse(List<String> responses) {
-            String response = responses.get(0);
-            responses.remove(0);
-            String[] splits = response.split(",");
             Map<String, String> result = new HashMap<String, String>();
-            result.put(name + "X", splits[0]);
-            result.put(name + "Y", splits[1]);
-            result.put(name + "Z", splits[2]);
+            if (responses.size() < 1){
+                logger.severe("Missing response from Udoo Neo.");
+            }
+            else {
+                String response = responses.get(0);
+                responses.remove(0);
+                String[] splits = response.split(",");
+                result.put(name + "X", splits[0]);
+                result.put(name + "Y", splits[1]);
+                result.put(name + "Z", splits[2]);
+            }
             return result;
         }
     }

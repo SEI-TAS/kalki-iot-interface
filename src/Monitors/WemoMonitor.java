@@ -13,9 +13,10 @@ public class WemoMonitor extends IotMonitor {
     private Boolean isOn;
     private String deviceId;
 
-    public WemoMonitor(String deviceId, String deviceName){
+    public WemoMonitor(String deviceId, String deviceName, int samplingRate){
         this.deviceName = deviceName;
         this.deviceId = deviceId;
+        this.pollInterval = samplingRate;
     }
 
     @Override

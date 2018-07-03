@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public abstract class IotMonitor {
 
     protected Timer pollTimer = new Timer();
-    protected int pollInterval = 5000;
+    protected int pollInterval;
     protected boolean pollingEnabled = true;
     protected boolean timerGoing = false;
 
