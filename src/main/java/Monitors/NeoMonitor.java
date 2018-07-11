@@ -1,6 +1,6 @@
 package main.java.Monitors;
 
-import main.java.Models.DeviceHistory;
+import kalkidb.models.DeviceHistory;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package main.java.Monitors;
 
-import main.java.Models.DeviceHistory;
+import kalkidb.models.DeviceHistory;
 import com.sun.media.jfxmedia.logging.Logger;
 
 import java.io.BufferedReader;

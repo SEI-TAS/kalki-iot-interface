@@ -1,6 +1,6 @@
 package main.java.Monitors;
 
-import main.java.Models.Device;
+import kalkidb.models.*;
 
 import java.util.Timer;
 import java.util.TimerTask;

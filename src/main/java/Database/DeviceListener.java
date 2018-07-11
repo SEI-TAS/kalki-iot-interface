@@ -1,7 +1,7 @@
 package main.java.Database;
 
-import main.java.Database.Postgres;
-import main.java.Models.Device;
+import kalkidb.models.*;
+import kalkidb.database.Postgres;
 import main.java.Monitors.IotMonitor;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
@@ -44,7 +44,7 @@ public class DeviceListener extends TimerTask {
                         logger.severe("Error: Null device on notified id.");
                     }
                     else{
-                        IotMonitor monitor = device.toMonitor();
+                        IotMonitor monitor = IotMonitor.fromDevice(device);
                         monitor.start();
                     }
                 }

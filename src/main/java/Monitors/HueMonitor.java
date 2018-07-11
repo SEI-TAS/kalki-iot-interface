@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import main.java.Models.DeviceHistory;
-import main.java.Database.Postgres;
+import kalkidb.models.*;
+import kalkidb.database.Postgres;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
