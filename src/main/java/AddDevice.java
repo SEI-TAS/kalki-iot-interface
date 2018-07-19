@@ -1,15 +1,10 @@
-package main.java;
-
-import java.io.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import kalkidb.models.Device;
-import main.java.Monitors.IotMonitor;
-import main.java.Monitors.NeoMonitor;
-import main.java.Monitors.WemoMonitor;
 import kalkidb.database.Postgres;
+import kalkidb.models.Device;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class AddDevice {
     public static void main(String[] args) {

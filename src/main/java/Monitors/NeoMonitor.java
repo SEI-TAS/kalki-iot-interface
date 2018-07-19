@@ -1,4 +1,4 @@
-package main.java.Monitors;
+package Monitors;
 
 import kalkidb.models.DeviceHistory;
 

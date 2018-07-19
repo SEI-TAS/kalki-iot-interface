@@ -1,7 +1,6 @@
-package main.java.Monitors;
+package Monitors;
 
 import kalkidb.models.DeviceHistory;
-import com.sun.media.jfxmedia.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;

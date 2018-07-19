@@ -1,22 +1,12 @@
-package main.java;
-
-import java.io.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Timer;
-
-//import src.main.edu.cmu.sei.ttg.kalkidb;//database.Postgres;
-//import main.java.*;
-//import main.java.database.*;
-//import main.java.database.Postgres;
-//import main.java.models.Device;
-import kalkidb.models.*;
 import kalkidb.database.Postgres;
-import main.java.Monitors.IotMonitor;
-import main.java.Monitors.NeoMonitor;
-import main.java.Monitors.WemoMonitor;
-import main.java.Database.DeviceListener;
+import kalkidb.models.*;
+import Monitors.IotMonitor;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
 
 public class MonitorLauncher {
     public static void main(String[] args) {
@@ -33,7 +23,7 @@ public class MonitorLauncher {
             Postgres.initialize(ip, port, dbName, dbUser);
         }
         catch(IOException e){
-            System.out.println("oops");
+            System.out.println("Error intializing database.");
         }
 
         Postgres.resetDatabase();

@@ -1,8 +1,8 @@
-package main.java.Database;
+package Database;
 
 import kalkidb.models.*;
 import kalkidb.database.Postgres;
-import main.java.Monitors.IotMonitor;
+import Monitors.IotMonitor;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
 

@@ -11,8 +11,8 @@ mainClassName = "main.java.MonitorLauncher"
 //mainClassName = "main.java.AddDevice"
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
     flatDir {
         dirs 'libs'
     }
@@ -22,6 +22,6 @@ dependencies {
     compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.1-SNAPSHOT'
     compile name: 'huelocalsdk'
     compile name: 'huesdkresources'
-    compile name: 'postgresql-42.2.2'
+    compile group: 'org.postgresql', name: 'postgresql', version:'42.2.2'
     compile name: 'tablelayout'
 }

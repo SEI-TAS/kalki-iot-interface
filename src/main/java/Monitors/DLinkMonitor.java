@@ -1,4 +1,4 @@
-package main.java.Monitors;
+package Monitors;
 
 public class DLinkMonitor extends IotMonitor{
 

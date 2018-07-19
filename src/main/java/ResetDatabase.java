@@ -1,5 +1,3 @@
-package main.java;
-
 import kalkidb.database.Postgres;
 
 import java.io.FileInputStream;
