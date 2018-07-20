@@ -7,7 +7,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "main.java.MonitorLauncher"
+mainClassName = "MonitorLauncher"
 //mainClassName = "main.java.AddDevice"
 
 repositories {
@@ -23,5 +23,5 @@ dependencies {
     compile name: 'huelocalsdk'
     compile name: 'huesdkresources'
     compile group: 'org.postgresql', name: 'postgresql', version:'42.2.2'
-    compile name: 'tablelayout'
+//    compile name: 'tablelayout'
 }

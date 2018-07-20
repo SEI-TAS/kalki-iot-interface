@@ -26,11 +26,9 @@ public class WemoMonitor extends IotMonitor {
             // run the command
             // using the Runtime exec method:
             String[] args = new String[]{
-                    "wemo",
-                    "-v",
-                    "switch",
-                    deviceName,
-                    "status"
+                    "python",
+                    "wemo.py",
+                    "WeMo Insight"
             };
             Process p = Runtime.getRuntime().exec(args);
 
