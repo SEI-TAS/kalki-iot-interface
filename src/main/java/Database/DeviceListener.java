@@ -37,16 +37,18 @@ public class DeviceListener extends TimerTask {
             PGNotification notifications[] = pgconn.getNotifications();
             if (notifications != null) {
                 for (PGNotification notification : notifications) {
-                    String id = notification.getParameter();
+                    int id = Integer.parseInt(notification.getParameter());
                     logger.info("New device with id " + notification.getParameter());
-                    Device device = Postgres.findDevice(id);
-                    if (device == null){
-                        logger.severe("Error: Null device on notified id.");
-                    }
-                    else{
-                        IotMonitor monitor = IotMonitor.fromDevice(device);
-                        monitor.start();
-                    }
+                    Postgres.findDevice(id).thenApplyAsync(device -> {
+                        if (device == null){
+                            logger.severe("Error: Null device on notified id.");
+                        }
+                        else{
+                            IotMonitor monitor = IotMonitor.fromDevice(device);
+                            monitor.start();
+                        }
+                        return 1;
+                    });
                 }
             }
 

@@ -10,9 +10,9 @@ public class WemoMonitor extends IotMonitor {
 
     private String deviceName;
     private Boolean isOn;
-    private String deviceId;
+    private int deviceId;
 
-    public WemoMonitor(String deviceId, String deviceName, int samplingRate){
+    public WemoMonitor(int deviceId, String deviceName, int samplingRate){
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
@@ -59,6 +59,6 @@ public class WemoMonitor extends IotMonitor {
     public void saveCurrentState() {
         DeviceHistory wemo = new DeviceHistory(deviceId);
         wemo.addAttribute("isOn", isOn.toString());
-        wemo.insertOrUpdate();
+        wemo.insert();
     }
 }

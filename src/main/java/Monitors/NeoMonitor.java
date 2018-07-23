@@ -15,16 +15,16 @@ public class NeoMonitor extends IotMonitor {
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
     private String ip;
-    private String deviceId;
+    private int deviceId;
 
     private Map<String, String> attributes = new HashMap<String, String>();
 
-    public NeoMonitor(String deviceId, String ip, String username, int samplingRate){
+    public NeoMonitor(int deviceId, String ip, String username, int samplingRate){
         this(deviceId, ip, samplingRate);
         this.username = username;
     }
 
-    public NeoMonitor(String deviceId, String ip, int samplingRate){
+    public NeoMonitor(int deviceId, String ip, int samplingRate){
         logger.info("Starting Neo Monitor for deviceId: " + deviceId + ", ip: " + ip +
                 ", and sampling rate: " + samplingRate + ".");
         this.ip = ip;
@@ -168,6 +168,6 @@ public class NeoMonitor extends IotMonitor {
     @Override
     public void saveCurrentState() {
         DeviceHistory neo = new DeviceHistory(deviceId, attributes);
-        neo.insertOrUpdate();
+        neo.insert();
     }
 }

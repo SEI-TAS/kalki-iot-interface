@@ -18,11 +18,11 @@ public class HueMonitor extends IotMonitor {
     private String username;
     private String ip;
     private static final int MAX_HUE=65535;
-    private String deviceId;
+    private int deviceId;
 
     private List<DeviceHistory> lights = new ArrayList<DeviceHistory>();
 
-    public HueMonitor(String ip, int port, String deviceId, int samplingRate) {
+    public HueMonitor(String ip, int port, int deviceId, int samplingRate) {
         super();
         logger.info("Starting Hue monitor");
 
@@ -201,7 +201,7 @@ public class HueMonitor extends IotMonitor {
     @Override
     public void saveCurrentState() {
         for(DeviceHistory light : lights){
-            light.insertOrUpdate();
+            light.insert();
         }
     }
 
