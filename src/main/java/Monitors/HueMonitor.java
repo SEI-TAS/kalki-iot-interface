@@ -12,13 +12,12 @@ import java.util.UUID;
 
 //Adapted from https://github.com/PhilipsHue/PhilipsHueSDK-Java-MultiPlatform-Android/tree/master/JavaDesktopApp
 
-public class HueMonitor extends IotMonitor {
+public class HueMonitor extends PollingMonitor {
 
     private PHHueSDK phHueSDK;
     private String username;
     private String ip;
     private static final int MAX_HUE=65535;
-    private int deviceId;
 
     private List<DeviceHistory> lights = new ArrayList<DeviceHistory>();
 

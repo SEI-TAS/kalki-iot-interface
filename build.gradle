@@ -7,7 +7,13 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "MonitorLauncher"
+//classpath = sourceSets.main.runtimeClasspath
+mainClassName = 'MonitorLauncher'
+
+if (project.hasProperty('chooseMain')) {
+    mainClassName = chooseMain
+}
+
 //mainClassName = "main.java.AddDevice"
 
 repositories {
@@ -19,6 +25,11 @@ repositories {
 }
 
 dependencies {
+//    compile name: 'slf4j-api-1.6.1'
+//    compile name: 'mail'
+//    compile name: 'activation'
+    compile group: 'org.subethamail', name: 'subethasmtp', version: '3.1.3'
+    compile 'org.json:json:20171018'
     compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.1-SNAPSHOT'
     compile name: 'huelocalsdk'
     compile name: 'huesdkresources'

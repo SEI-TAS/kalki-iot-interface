@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NeoMonitor extends IotMonitor {
+public class NeoMonitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;

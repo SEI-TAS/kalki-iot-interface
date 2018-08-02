@@ -5,12 +5,19 @@ import kalkidb.models.DeviceHistory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
-public class WemoMonitor extends IotMonitor {
+import org.json.JSONObject;
+
+
+public class WemoMonitor extends PollingMonitor {
 
     private String deviceName;
     private Boolean isOn;
     private int deviceId;
+
+    private Map<String, String> attributes;
 
     public WemoMonitor(int deviceId, String deviceName, int samplingRate){
         this.deviceName = deviceName;
@@ -21,6 +28,7 @@ public class WemoMonitor extends IotMonitor {
     @Override
     public void pollDevice() {
         String s = null;
+        attributes = new HashMap<String, String>();
         try {
 
             // run the command
@@ -40,6 +48,13 @@ public class WemoMonitor extends IotMonitor {
 
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
+                JSONObject json = new JSONObject(s);
+                for(Object keyObj : json.keySet()){
+                    String key = (String) keyObj;
+                    String value = (String) json.get(key).toString();
+                    attributes.put(key, value);
+                }
+
                 s = s.replace("Switch: " + deviceName, "");
                 isOn = s.contains("on");
             }
@@ -57,8 +72,7 @@ public class WemoMonitor extends IotMonitor {
 
     @Override
     public void saveCurrentState() {
-        DeviceHistory wemo = new DeviceHistory(deviceId);
-        wemo.addAttribute("isOn", isOn.toString());
+        DeviceHistory wemo = new DeviceHistory(deviceId, attributes);
         wemo.insert();
     }
 }

@@ -26,7 +26,7 @@ public class AddDevice {
 //        Device d = new Device("2", "2", "myNeo", "Udoo Neo", "neo group",
 //                "10.27.150.101", 20, 50);
 //        d.insert();
-        Device d = new Device(2, "2", "WeMo Insight", "WeMo Insight", "wemo group",
+        Device d = new Device(2, "2", "WeMo Insight", 2, 1,
                 "", 20, 50, "path");
         d.insert();
 
