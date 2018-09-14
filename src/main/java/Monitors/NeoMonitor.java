@@ -33,6 +33,7 @@ public class NeoMonitor extends PollingMonitor {
         this.pollInterval = samplingRate;
 
         setSensors();
+        start();
     }
 
     public abstract class NeoSensor{

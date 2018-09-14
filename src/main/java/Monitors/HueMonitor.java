@@ -34,6 +34,7 @@ public class HueMonitor extends PollingMonitor {
         this.phHueSDK = PHHueSDK.getInstance();
         this.deviceId = deviceId;
         this.username = "f450ab20effc384c3298bbcf745272a";
+        start();
     }
 
     @Override

@@ -18,7 +18,8 @@ public class AddDevice {
             String ip = prop.getProperty("POSTGRES_IP");
             String dbUser = prop.getProperty("POSTGRES_USER");
             String dbName = prop.getProperty("POSTGRES_DBNAME");
-            Postgres.initialize(ip, port, dbName, dbUser);
+            String dbPassword = prop.getProperty("POSTGRES_PASSWORD");
+            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
         }
         catch(IOException e){
 
@@ -26,8 +27,9 @@ public class AddDevice {
 //        Device d = new Device("2", "2", "myNeo", "Udoo Neo", "neo group",
 //                "10.27.150.101", 20, 50);
 //        d.insert();
+        byte[] bytes = new byte[0];
         Device d = new Device(2, "2", "WeMo Insight", 2, 1,
-                "", 20, 50, "path");
+                "", 20, 50, bytes, "path");
         d.insert();
 
     }

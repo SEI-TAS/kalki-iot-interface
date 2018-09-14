@@ -38,7 +38,7 @@ public class MonitorLauncher {
         }
 
         //Postgres.setupDatabase();
-        Postgres.resetDatabase();
+        //Postgres.resetDatabase();
 
         try{
             sleep(1000);
@@ -46,13 +46,6 @@ public class MonitorLauncher {
         catch(Exception e){
 
         }
-        //System.exit(0);
-
-//        Device d1 = new Device("2", "2", "myNeo", "Udoo Neo", "neo group",
-//                "10.27.150.101", 20, 1000, "this is an udoo neo");
-        Device d2 = new Device(2, "2", "WeMo Insight", 1, 1,
-                "", 20, 50, "/policy");
-        d2.insert();
 
         try{
             sleep(1000);
@@ -70,14 +63,9 @@ public class MonitorLauncher {
         deviceStage.thenApplyAsync(devices -> {
             for(Device device : devices){
                 IotMonitor monitor = IotMonitor.fromDevice(device);
-                monitor.start();
             }
             return 1;
         });
-
-
-//        IotMonitor monitor = new WemoMonitor("1","WeMo Insight", 1000);
-//        monitor.start();
 
     }
 }

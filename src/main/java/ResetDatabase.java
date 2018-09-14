@@ -17,7 +17,8 @@ public class ResetDatabase {
             String ip = prop.getProperty("POSTGRES_IP");
             String dbUser = prop.getProperty("POSTGRES_USER");
             String dbName = prop.getProperty("POSTGRES_DBNAME");
-            Postgres.initialize(ip, port, dbName, dbUser);
+            String dbPassword = prop.getProperty("POSTGRES_PASSWORD");
+            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
         }
         catch(IOException e){
 

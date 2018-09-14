@@ -24,7 +24,7 @@ public class DeviceListener extends TimerTask {
     private PGConnection pgconn;
 
     private DeviceListener() {
-        this.pgconn = (PGConnection)Postgres.db;
+        this.pgconn = (PGConnection)Postgres.dbConn;
         Postgres.executeCommand("LISTEN deviceinsert");
     }
 
@@ -45,7 +45,6 @@ public class DeviceListener extends TimerTask {
                         }
                         else{
                             IotMonitor monitor = IotMonitor.fromDevice(device);
-                            monitor.start();
                         }
                         return 1;
                     });
