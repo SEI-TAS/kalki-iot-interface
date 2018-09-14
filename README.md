@@ -1,6 +1,8 @@
 # iot-monitor
 Kalki controller component that monitors and polls information from IoT devices
 
+To run: gradle run
+
 
 ####DLink Camera
 Camera must first be connected to the wifi network via the my dlink phone app.
