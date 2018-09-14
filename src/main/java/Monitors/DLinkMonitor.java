@@ -19,11 +19,4 @@ public class DLinkMonitor extends IotMonitor implements EventObserver {
         }
     }
 
-    public void saveCurrentState(){
-
-    }
-
-    public void pollDevice(){
-
-    }
 }
