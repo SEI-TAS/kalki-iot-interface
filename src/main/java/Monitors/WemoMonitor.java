@@ -37,7 +37,7 @@ public class WemoMonitor extends PollingMonitor {
             String[] args = new String[]{
                     "python",
                     "wemo.py",
-                    "WeMo Insight"
+                    deviceName
             };
             Process p = Runtime.getRuntime().exec(args);
 

@@ -38,7 +38,7 @@ public class MonitorLauncher {
         }
 
         //Postgres.setupDatabase();
-        //Postgres.resetDatabase();
+        Postgres.resetDatabase();
 
         try{
             sleep(1000);
@@ -54,6 +54,10 @@ public class MonitorLauncher {
         catch(Exception e){
 
         }
+
+        Device d2 = new Device(1, "name", "WeMo Insight", 3, 1,
+                "", 20, 1000, new byte[0],"/policy");
+        d2.insert();
 
         //Listen for new devices inserted in the database to add more monitors.
         DeviceListener.checkForDevices();

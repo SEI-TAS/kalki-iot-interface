@@ -26,13 +26,13 @@ public class DeviceListener extends TimerTask {
     private DeviceListener() {
         this.pgconn = (PGConnection)Postgres.dbConn;
         Postgres.executeCommand("LISTEN deviceinsert");
+        // issue a dummy query to contact the backend
+        // and receive any pending notifications.
+        Postgres.executeCommand("SELECT 1");
     }
 
     public void run() {
         try {
-            // issue a dummy query to contact the backend
-            // and receive any pending notifications.
-            Postgres.executeCommand("SELECT 1");
 
             PGNotification notifications[] = pgconn.getNotifications();
             if (notifications != null) {

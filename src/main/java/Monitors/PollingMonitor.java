@@ -20,23 +20,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     public void start(){
         logger.info("Starting monitor!");
-        if(pollingEnabled){
-            startPolling();
-        }
-    }
-
-    /**
-     * Sets whether or not the device should poll the device for updates.
-     * @param isEnabled If true, the device will begin being polled for updates.
-     */
-    public void setPollingUpdates(boolean isEnabled) {
-        pollingEnabled = isEnabled;
-        if (isEnabled){
-            startPolling();
-        }
-        else {
-            stopPolling();
-        }
+        startPolling();
     }
 
     /**
@@ -54,7 +38,6 @@ public abstract class PollingMonitor extends IotMonitor {
      * Stops the current polling task if there is one.
      */
     protected void stopPolling() {
-
         if (timerGoing){
             pollTimer.cancel();
         }
