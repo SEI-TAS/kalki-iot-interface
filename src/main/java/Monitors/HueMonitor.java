@@ -1,6 +1,7 @@
 package Monitors;
 
 import kalkidb.models.*;
+import kalkidb.database.Postgres;
 
 import com.philips.lighting.hue.sdk.*;
 import com.philips.lighting.model.*;
@@ -9,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+// Rulebook imports
+import com.deliveredtechnologies.rulebook.Fact;
+import com.deliveredtechnologies.rulebook.FactMap;
+import com.deliveredtechnologies.rulebook.NameValueReferableMap;
+import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
 
 //Adapted from https://github.com/PhilipsHue/PhilipsHueSDK-Java-MultiPlatform-Android/tree/master/JavaDesktopApp
 
@@ -19,7 +26,8 @@ public class HueMonitor extends PollingMonitor {
     private String ip;
     private static final int MAX_HUE=65535;
 
-    private List<DeviceHistory> lights = new ArrayList<DeviceHistory>();
+    private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
+    private DeviceStatus status;
 
     public HueMonitor(String ip, int port, int deviceId, int samplingRate) {
         super();
@@ -181,7 +189,7 @@ public class HueMonitor extends PollingMonitor {
         PHBridgeResourcesCache cache = bridge.getResourceCache();
         // And now you can get any resource you want, for example:
         List<PHLight> myLights = cache.getAllLights();
-        lights = new ArrayList<DeviceHistory>();
+        lights = new ArrayList<DeviceStatus>();
         for(PHLight light : myLights){
             PHLightState state = light.getLastKnownLightState();
             String id = light.getUniqueId();
@@ -189,7 +197,7 @@ public class HueMonitor extends PollingMonitor {
                 id = UUID.randomUUID().toString();
                 light.setUniqueId(id);
             }
-            DeviceHistory newLight = new DeviceHistory(deviceId);
+            DeviceStatus newLight = new DeviceStatus(deviceId);
             newLight.addAttribute("brightness", state.getBrightness().toString());
             newLight.addAttribute("hue", state.getHue().toString());
             newLight.addAttribute("isOn", state.isOn().toString());
@@ -200,9 +208,23 @@ public class HueMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
-        for(DeviceHistory light : lights){
+        for(DeviceStatus light : lights){
             light.insert();
         }
+    }
+
+    @Override
+    public void runAlertRules() {
+        Postgres.findDevice(deviceId).thenApplyAsync(device -> {
+            NameValueReferableMap facts = new FactMap();
+            facts.setValue("device", device);
+            facts.setValue("status", status);
+
+            RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
+            ruleBook.run(facts);
+
+            return device;
+        });
     }
 
     public void connectToDevice() {

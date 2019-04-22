@@ -1,6 +1,8 @@
 package Monitors;
 
-import kalkidb.models.DeviceHistory;
+import kalkidb.models.Device;
+import kalkidb.models.DeviceStatus;
+import kalkidb.database.Postgres;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,12 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Rulebook imports
+import com.deliveredtechnologies.rulebook.Fact;
+import com.deliveredtechnologies.rulebook.FactMap;
+import com.deliveredtechnologies.rulebook.NameValueReferableMap;
+import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
+
 public class NeoMonitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
     private String ip;
     private int deviceId;
+    private DeviceStatus status;
 
     private Map<String, String> attributes = new HashMap<String, String>();
 
@@ -168,7 +177,26 @@ public class NeoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
-        DeviceHistory neo = new DeviceHistory(deviceId, attributes);
-        neo.insert();
+        status = new DeviceStatus(deviceId, attributes);
+        status.insert();
+    }
+
+    @Override
+    public void runAlertRules() {
+        Postgres.findDevice(deviceId).thenApplyAsync(device -> {
+            DeviceStatus dh1 = new DeviceStatus(device.getId());
+            dh1.addAttribute("acceleration", "5");
+            dh1.addAttribute("temperature", "70");
+            dh1.insert();
+
+            NameValueReferableMap facts = new FactMap();
+            facts.setValue("device", device);
+            facts.setValue("status", dh1);
+            System.out.println("found device. running rulebook");
+            RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
+            ruleBook.run(facts);
+            System.out.println("rulebook run?");
+            return device;
+        });
     }
 }

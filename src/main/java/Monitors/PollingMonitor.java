@@ -16,6 +16,11 @@ public abstract class PollingMonitor extends IotMonitor {
     public abstract void saveCurrentState();
 
     /**
+     * Checks if the latest status generates an alert
+     */
+    public abstract void runAlertRules();
+
+    /**
      * Connect to the device and begin monitoring.
      */
     public void start(){
@@ -49,8 +54,9 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     class PollTask extends TimerTask {
         public void run() {
-            pollDevice();
-            saveCurrentState();
+//            pollDevice();
+//            saveCurrentState();
+            runAlertRules();
         }
     }
 

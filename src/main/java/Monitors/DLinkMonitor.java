@@ -1,7 +1,7 @@
 package Monitors;
 
 import Mail.MailServer;
-import kalkidb.models.DeviceHistory;
+import kalkidb.models.DeviceStatus;
 
 public class DLinkMonitor extends IotMonitor implements EventObserver {
 
@@ -13,7 +13,7 @@ public class DLinkMonitor extends IotMonitor implements EventObserver {
     }
     public void notify(String message){
         if (message.equals(listenEmail)){
-            DeviceHistory history = new DeviceHistory(deviceId);
+            DeviceStatus history = new DeviceStatus(deviceId);
             history.addAttribute("motion_detected", "true");
             history.insert();
         }

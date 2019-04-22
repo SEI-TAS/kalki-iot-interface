@@ -1,6 +1,8 @@
 package Monitors;
 
-import kalkidb.models.DeviceHistory;
+import kalkidb.models.Device;
+import kalkidb.models.DeviceStatus;
+import kalkidb.database.Postgres;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +12,11 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+// Rulebook imports
+import com.deliveredtechnologies.rulebook.Fact;
+import com.deliveredtechnologies.rulebook.FactMap;
+import com.deliveredtechnologies.rulebook.NameValueReferableMap;
+import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
 
 public class WemoMonitor extends PollingMonitor {
 
@@ -18,6 +25,7 @@ public class WemoMonitor extends PollingMonitor {
     private int deviceId;
 
     private Map<String, String> attributes;
+    private DeviceStatus status;
 
     public WemoMonitor(int deviceId, String deviceName, int samplingRate){
         this.deviceName = deviceName;
@@ -49,6 +57,7 @@ public class WemoMonitor extends PollingMonitor {
 
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
+                logger.info(s);
                 JSONObject json = new JSONObject(s);
                 for(Object keyObj : json.keySet()){
                     String key = (String) keyObj;
@@ -73,7 +82,21 @@ public class WemoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
-        DeviceHistory wemo = new DeviceHistory(deviceId, attributes);
+        DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
         wemo.insert();
+    }
+
+    @Override
+    public void runAlertRules() {
+        Postgres.findDevice(deviceId).thenApplyAsync(device -> {
+            NameValueReferableMap facts = new FactMap();
+            facts.setValue("device", device);
+            facts.setValue("status", status);
+
+            RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.wemo");
+            ruleBook.run(facts);
+
+            return device;
+        });
     }
 }

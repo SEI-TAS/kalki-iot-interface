@@ -55,15 +55,15 @@ public class MonitorLauncher {
 
         }
 
-        Device d2 = new Device(1, "name", "WeMo Insight", 3, 1,
-                "", 20, 1000, new byte[0],"/policy");
-        d2.insert();
+//        Device d2 = new Device(1, "name", "WeMo Insight", 3, 1,
+//                "127.0.0.2", 20, 1000);
+//        d2.insert();
 
         //Listen for new devices inserted in the database to add more monitors.
         DeviceListener.checkForDevices();
 
         //Start monitors for all existing devices in the database.
-        CompletionStage<List<Device>> deviceStage = Postgres.getAllDevices();
+        CompletionStage<List<Device>> deviceStage = Postgres.findAllDevices();
         deviceStage.thenApplyAsync(devices -> {
             for(Device device : devices){
                 IotMonitor monitor = IotMonitor.fromDevice(device);

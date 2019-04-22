@@ -24,12 +24,9 @@ public class AddDevice {
         catch(IOException e){
 
         }
-//        Device d = new Device("2", "2", "myNeo", "Udoo Neo", "neo group",
-//                "10.27.150.101", 20, 50);
-//        d.insert();
-        byte[] bytes = new byte[0];
+
         Device d = new Device(2, "2", "WeMo Insight", 2, 1,
-                "", 20, 50, bytes, "path");
+                "127.0.0.1", 20, 50);
         d.insert();
 
     }
