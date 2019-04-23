@@ -44,7 +44,7 @@ public class MailServer {
 
             try{
                 Properties prop = new Properties();
-                String fileName = "iotmon.config";
+                String fileName = "iot-interface.config";
                 InputStream is = new FileInputStream(fileName);
                 prop.load(is);
 

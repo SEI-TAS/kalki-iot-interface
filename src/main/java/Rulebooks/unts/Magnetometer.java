@@ -44,7 +44,7 @@ public class Magnetometer extends RulebookRule {
         double magY = Double.valueOf(status.getAttributes().get("magnetometerY"));
         double magZ = Double.valueOf(status.getAttributes().get("magnetometerZ"));
 
-        if(alertingMagnetometer(magX) || alertingModulus(magY) || alertingModulus(magZ) || alertingModulus(magX, magY, magZ)){
+        if(alertingMagnetometer(magX) || alertingMagnetometer(magY) || alertingMagnetometer(magZ) || alertingModulus(magX, magY, magZ)){
             setAlertName("unts-magnetometer");
             return true;
         }
@@ -61,7 +61,7 @@ public class Magnetometer extends RulebookRule {
 
     private boolean alertingModulus(double magX, double magY, double magZ){
         double mod = Math.sqrt(magX*magY + magY*magY + magZ*magZ);
-        if(mod > 5.0 || mag < -5.0) {
+        if(mod > 5.0 || mod < -5.0) {
             return true;
         }
         return false;
