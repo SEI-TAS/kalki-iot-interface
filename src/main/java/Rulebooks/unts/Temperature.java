@@ -18,9 +18,34 @@ public class Temperature extends RulebookRule {
             throws Throwable{
     }
 
-    public boolean conditionIsTrue(){
 
-        setAlertName("unts-temperature");
+    /**
+     * UNTS DeviceStatus.attributes
+     * {
+     *     accelerometerX: "",
+     *     accelerometerY: "",
+     *     accelerometerZ: "",
+     *     gyroscopeX: "",
+     *     gyroscopeY: "",
+     *     gyroscopeZ: "",
+     *     magnetometerX: "",
+     *     magnetometerY: "",
+     *     magnetometerZ: "",
+     *     tempmax: "",
+     *     tempmax_hyst: "",
+     *     tempinput: ""
+     * }
+     *
+     *
+     * @return
+     */
+    public boolean conditionIsTrue(){
+        double temp = Double.valueOf(status.getAttributes().get("tempmax"));
+
+        if (temp > 76.0 || temp < 66.0){
+            setAlertName("unts-temperature");
+            return true;
+        }
         return false;
     }
 
