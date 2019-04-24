@@ -19,8 +19,14 @@ public class TodayKwh extends RulebookRule {
     }
 
     public boolean conditionIsTrue(){
+        double todayKwH = Double.valueOf(status.getAttributes().get("today_kwh"));
 
-        setAlertName("wemo-today-kwh");
+        // assuming a 100w (.1kw) lightbulb running for 10 hours
+        if (todayKwH > 1 ){
+            setAlertName("wemo-today-kwh");
+            return true;
+        }
+
         return false;
     }
 

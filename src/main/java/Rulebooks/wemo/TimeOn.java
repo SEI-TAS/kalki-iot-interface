@@ -19,8 +19,14 @@ public class TimeOn extends RulebookRule {
     }
 
     public boolean conditionIsTrue(){
+        // today_on_time is in seconds
+        int onTime = Integer.valueOf(status.getAttributes().get("today_on_time")) / 60;
 
-        setAlertName("wemo-time-on");
+        if (onTime > 540){
+            setAlertName("wemo-time-on");
+            return true;
+        }
+
         return false;
     }
 
