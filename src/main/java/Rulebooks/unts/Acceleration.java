@@ -1,8 +1,8 @@
 package Rulebooks.unts;
 
-import kalkidb.database.Postgres;
-import kalkidb.models.DeviceStatus;
-import kalkidb.models.Device;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.ttg.kalki.models.Device;
 
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
@@ -52,14 +52,21 @@ public class Acceleration extends RulebookRule {
 		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
 		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));
 		double accelZ = Double.valueOf(status.getAttributes().get("accelerometerZ"));
+		double mod = calculateModulus(accelX, accelY, accelZ);
 
-		if (alertingAcceleration(accelX) || alertingAcceleration(accelY) || alertingAcceleration(accelZ) || alertingModulus(accelX, accelY, accelZ)) {
+
+
+		if (alertingAcceleration(accelX) || alertingAcceleration(accelY) || alertingAcceleration(accelZ) || alertingModulus(mod)) {
 			setAlertName("unts-acceleration");
 			return true;
 		}
 
 
 		return false;
+	}
+
+	private double calculateModulus(double accelX, double accelY, double accelZ){
+		return Math.sqrt(accelX*accelX + accelY*accelY + accelZ*accelZ);
 	}
 
 	private boolean alertingAcceleration(double accel){
@@ -69,8 +76,7 @@ public class Acceleration extends RulebookRule {
 		return false;
 	}
 
-	private boolean alertingModulus(double accelX, double accelY, double accelZ){
-		double mod = Math.sqrt(accelX*accelX + accelY*accelY + accelZ*accelZ);
+	private boolean alertingModulus(double mod){
 		if ( mod > 3.0 || mod < -3.0){
 			return true;
 		}

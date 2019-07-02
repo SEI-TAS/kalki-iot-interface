@@ -4,7 +4,7 @@ build/*
 .idea*
 # Compiled class file
 *.class
-
+.gradle/
 # Log file
 *.log
 

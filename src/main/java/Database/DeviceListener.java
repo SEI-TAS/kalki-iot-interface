@@ -1,7 +1,7 @@
 package Database;
 
-import kalkidb.models.*;
-import kalkidb.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 import Monitors.IotMonitor;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
@@ -39,15 +39,14 @@ public class DeviceListener extends TimerTask {
                 for (PGNotification notification : notifications) {
                     int id = Integer.parseInt(notification.getParameter());
                     logger.info("New device with id " + notification.getParameter());
-                    Postgres.findDevice(id).thenApplyAsync(device -> {
-                        if (device == null){
-                            logger.severe("Error: Null device on notified id.");
-                        }
-                        else{
-                            IotMonitor monitor = IotMonitor.fromDevice(device);
-                        }
-                        return 1;
-                    });
+                    Device device = Postgres.findDevice(id);
+
+                    if (device == null){
+                        logger.severe("Error: Null device on notified id.");
+                    }
+                    else{
+                        IotMonitor monitor = IotMonitor.fromDevice(device);
+                    }
                 }
             }
 

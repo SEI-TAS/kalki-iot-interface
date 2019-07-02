@@ -1,4 +1,4 @@
-import kalkidb.database.Postgres;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import java.io.FileInputStream;
 import java.io.IOException;

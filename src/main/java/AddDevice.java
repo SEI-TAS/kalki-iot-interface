@@ -1,5 +1,6 @@
-import kalkidb.database.Postgres;
-import kalkidb.models.Device;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +25,8 @@ public class AddDevice {
         catch(IOException e){
 
         }
-
+//        DeviceT
+//        Device d1 = new Device("Udoo Neo", "Desc", )
         Device d = new Device(2, "2", "WeMo Insight", 2, 1,
                 "127.0.0.1", 20, 50);
         d.insert();

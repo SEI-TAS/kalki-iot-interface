@@ -1,10 +1,14 @@
 package Rulebooks;
 
-import kalkidb.database.Postgres;
-import kalkidb.models.*;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.ttg.kalki.models.Alert;
 
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
+
+import java.util.HashMap;
 
 /**
  * @author camazzotta
@@ -15,11 +19,19 @@ import com.deliveredtechnologies.rulebook.annotation.*;
 public abstract class RulebookRule {
 
 	protected String alertName;
+
 	@Given("device")
 	protected Device device;
+
 	@Given("status")
 	protected DeviceStatus status;
 
+	@Given("last-result")
+	protected HashMap<String, String> lastResult;
+
+	@Result
+	protected HashMap<String, String> result;
+	
 	public RulebookRule(){}
 
 	/**
@@ -29,9 +41,7 @@ public abstract class RulebookRule {
 
 	@Then
 	public void then(){
-		System.out.println("alerName in RulebookRule.java: "+alertName);
-
-		Alert alert = new Alert(alertName, null, status.getId());
+		Alert alert = new Alert(alertName, status.getId(), 1);
 		alert.insert();
 	}
 
@@ -41,7 +51,6 @@ public abstract class RulebookRule {
 	}
 
 	protected void setAlertName(String name){
-		System.out.println("Setting alertName");
 		alertName = name;
 	}
 }//end GenericRule

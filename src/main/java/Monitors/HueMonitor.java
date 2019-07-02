@@ -1,7 +1,7 @@
 package Monitors;
 
-import kalkidb.models.*;
-import kalkidb.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import com.philips.lighting.hue.sdk.*;
 import com.philips.lighting.model.*;
@@ -215,16 +215,14 @@ public class HueMonitor extends PollingMonitor {
 
     @Override
     public void runAlertRules() {
-        Postgres.findDevice(deviceId).thenApplyAsync(device -> {
-            NameValueReferableMap facts = new FactMap();
-            facts.setValue("device", device);
-            facts.setValue("status", status);
+        Device device = Postgres.findDevice(deviceId);
 
-            RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
-            ruleBook.run(facts);
+        NameValueReferableMap facts = new FactMap();
+        facts.setValue("device", device);
+        facts.setValue("status", status);
 
-            return device;
-        });
+        RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
+        ruleBook.run(facts);
     }
 
     public void connectToDevice() {

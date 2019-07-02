@@ -1,8 +1,8 @@
 package Rulebooks.phle;
 
-import kalkidb.database.Postgres;
-import kalkidb.models.DeviceStatus;
-import kalkidb.models.Device;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.ttg.kalki.models.Device;
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import Rulebooks.RulebookRule;

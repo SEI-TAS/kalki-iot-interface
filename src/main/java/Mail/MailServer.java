@@ -1,7 +1,7 @@
 package Mail;
 
 import Monitors.EventObserver;
-import kalkidb.database.Postgres;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 import org.subethamail.smtp.server.SMTPServer;
 
 import java.io.FileInputStream;

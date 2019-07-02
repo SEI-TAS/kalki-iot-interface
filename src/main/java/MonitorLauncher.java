@@ -1,6 +1,6 @@
 import Database.DeviceListener;
-import kalkidb.database.Postgres;
-import kalkidb.models.*;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.*;
 import Monitors.IotMonitor;
 
 import java.io.FileInputStream;
@@ -63,13 +63,10 @@ public class MonitorLauncher {
         DeviceListener.checkForDevices();
 
         //Start monitors for all existing devices in the database.
-        CompletionStage<List<Device>> deviceStage = Postgres.findAllDevices();
-        deviceStage.thenApplyAsync(devices -> {
-            for(Device device : devices){
-                IotMonitor monitor = IotMonitor.fromDevice(device);
-            }
-            return 1;
-        });
+        List<Device> devices = Postgres.findAllDevices();
+        for(Device device : devices){
+            IotMonitor monitor = IotMonitor.fromDevice(device);
+        }
 
     }
 }

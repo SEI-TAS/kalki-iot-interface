@@ -1,8 +1,8 @@
 package Monitors;
 
-import kalkidb.models.Device;
-import kalkidb.models.DeviceStatus;
-import kalkidb.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -183,20 +183,13 @@ public class NeoMonitor extends PollingMonitor {
 
     @Override
     public void runAlertRules() {
-        Postgres.findDevice(deviceId).thenApplyAsync(device -> {
-            DeviceStatus dh1 = new DeviceStatus(device.getId());
-            dh1.addAttribute("acceleration", "5");
-            dh1.addAttribute("temperature", "70");
-            dh1.insert();
+        Device device = Postgres.findDevice(deviceId);
 
-            NameValueReferableMap facts = new FactMap();
-            facts.setValue("device", device);
-            facts.setValue("status", dh1);
-            System.out.println("found device. running rulebook");
-            RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
-            ruleBook.run(facts);
-            System.out.println("rulebook run?");
-            return device;
-        });
+        NameValueReferableMap facts = new FactMap();
+        facts.setValue("device", device);
+        facts.setValue("status", status);
+
+        RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
+        ruleBook.run(facts);
     }
 }
