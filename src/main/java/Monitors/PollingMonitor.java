@@ -54,9 +54,9 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     class PollTask extends TimerTask {
         public void run() {
-//            pollDevice();
-//            saveCurrentState();
-            runAlertRules();
+            pollDevice();
+            saveCurrentState();
+//            runAlertRules();
         }
     }
 

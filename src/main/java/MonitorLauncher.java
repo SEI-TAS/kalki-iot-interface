@@ -55,14 +55,16 @@ public class MonitorLauncher {
 
         }
 
-//        Device d2 = new Device(1, "name", "WeMo Insight", 3, 1,
-//                "127.0.0.2", 20, 1000);
-//        d2.insert();
+        System.out.println("\nINSERTING DEVICE\n");
+        DeviceType udooType = Postgres.findDeviceType(2);
+        System.out.println(udooType.toString());
+        Device udooTest = new Device("Udoo Test", "testing values", udooType, "10.27.150.101", 1000, 1000);
+        udooTest.insert();
 
-        //Listen for new devices inserted in the database to add more monitors.
+//        Listen for new devices inserted in the database to add more monitors.
         DeviceListener.checkForDevices();
 
-        //Start monitors for all existing devices in the database.
+//        Start monitors for all existing devices in the database.
         List<Device> devices = Postgres.findAllDevices();
         for(Device device : devices){
             IotMonitor monitor = IotMonitor.fromDevice(device);

@@ -11,6 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+// SSH imports
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.JSchException;
 
 // Rulebook imports
 import com.deliveredtechnologies.rulebook.Fact;
@@ -22,15 +30,17 @@ public class NeoMonitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
+    private String password;
     private String ip;
     private int deviceId;
     private DeviceStatus status;
 
     private Map<String, String> attributes = new HashMap<String, String>();
 
-    public NeoMonitor(int deviceId, String ip, String username, int samplingRate){
+    public NeoMonitor(int deviceId, String ip, String username, String password, int samplingRate){
         this(deviceId, ip, samplingRate);
         this.username = username;
+        this.password = password;
     }
 
     public NeoMonitor(int deviceId, String ip, int samplingRate){
@@ -39,6 +49,7 @@ public class NeoMonitor extends PollingMonitor {
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
+        this.password = "udooer";
         this.pollInterval = samplingRate;
 
         setSensors();
@@ -124,27 +135,26 @@ public class NeoMonitor extends PollingMonitor {
     public void pollDevice() {
         try {
 
-            // run the command
-            // using the Runtime exec method:
-
             String command = "";
             for(NeoSensor sensor: sensors){
                 command += sensor.getCommand();
             }
 
-            String[] args = new String[]{
-                    "ssh",
-                    username + "@" + ip,
-                    command
+            Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(username, ip, 22);
+            session.setPassword(password);
+            session.setConfig(config);
+            session.connect();
 
-            };
-            Process p = Runtime.getRuntime().exec(args);
+            Channel channel = session.openChannel("exec");
+            ((ChannelExec)channel).setCommand(command);
+            channel.setInputStream(null);
+            ((ChannelExec)channel).setErrStream(System.err);
 
-            BufferedReader stdInput = new BufferedReader(new
-                    InputStreamReader(p.getInputStream()));
-
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(p.getErrorStream()));
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+            channel.connect();
 
             Map<String, String> results = new HashMap<String, String>();
 
@@ -163,12 +173,14 @@ public class NeoMonitor extends PollingMonitor {
             System.out.println("Result is" + results.toString());
             attributes = results;
 
-            // read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-        } catch (IOException e) {
+            channel.disconnect();
+            session.disconnect();
+
+        } catch (JSchException e1){
+            System.out.println("exception happend - here's what I know: ");
+            e1.printStackTrace();
+        }
+        catch (IOException e) {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();
         }
@@ -177,6 +189,7 @@ public class NeoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
+        System.out.println("Saving current state");
         status = new DeviceStatus(deviceId, attributes);
         status.insert();
     }

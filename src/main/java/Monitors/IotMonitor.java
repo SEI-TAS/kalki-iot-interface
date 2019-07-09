@@ -22,16 +22,16 @@ public abstract class IotMonitor {
 
     public static IotMonitor fromDevice(Device device){
         IotMonitor mon = null;
-        if(device.getType().getId() == 0){ //Dlink Camera
+        if(device.getType().getId() == 1){ //Dlink Camera
             mon = new DLinkMonitor(device.getId());
         }
-        else if(device.getType().getId() == 1){ //Undoo Neo
+        else if(device.getType().getId() == 2){ //Undoo Neo
             mon = new NeoMonitor(device.getId(), device.getIp(), device.getSamplingRate());
         }
-        else if (device.getType().getId() == 2){ //WeMo Insight
+        else if (device.getType().getId() == 3){ //WeMo Insight
             mon = new WemoMonitor(device.getId(), device.getName(), device.getSamplingRate());
         }
-        else if(device.getType().getId() == 3){ //Hue Light
+        else if(device.getType().getId() == 4){ //Hue Light
             mon = new HueMonitor(device.getIp(), 80, device.getId(), device.getSamplingRate());
         }
         return mon;
