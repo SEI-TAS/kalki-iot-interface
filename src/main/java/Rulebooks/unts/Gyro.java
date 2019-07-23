@@ -1,22 +1,19 @@
 package Rulebooks.unts;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
+
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
 
 @Rule()
-public class Gyro extends RulebookRule {
+public class Gyro extends ThreeAxisRule {
+    private final double gyroXLowerBound = -45;
+    private final double gyroXUpperBound = 45;
+    private final double gyroYLowerBound = -60;
+    private final double gyroYUpperBound = 60;
+    private final double gyroZLowerBound = -15;
+    private final double gyroZUpperBound = 15;
+    private final double gyroModLimit = 76.5;
 
-    public Gyro(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public Gyro(){ }
 
     /**
      * UNTS DeviceStatus.attributes
@@ -43,26 +40,14 @@ public class Gyro extends RulebookRule {
         double gyroY = Double.valueOf(status.getAttributes().get("gyroscopeY"));
         double gyroZ = Double.valueOf(status.getAttributes().get("gyroscopeZ"));
 
-        if (alertingGyro(gyroX) || alertingGyro(gyroY) || alertingGyro(gyroZ) || alertingModulus(gyroX, gyroY, gyroZ)) {
+        if (    alertingAxis(gyroX, gyroXLowerBound, gyroXUpperBound) ||
+                alertingAxis(gyroY, gyroYLowerBound, gyroYUpperBound) ||
+                alertingAxis(gyroZ, gyroZLowerBound, gyroZUpperBound) ||
+                alertingModulus(gyroX, gyroY, gyroZ, gyroModLimit)) {
             setAlertName("unts-gyro");
             return true;
         }
 
-        return false;
-    }
-
-    private boolean alertingGyro(double gyro){
-        if( gyro > 3.0 || gyro < -3.0){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean alertingModulus(double gyroX, double gyroY, double gyroZ){
-        double mod = Math.sqrt(gyroX*gyroX + gyroY*gyroY + gyroZ*gyroZ);
-        if ( mod > 3.0 || mod < -3.0){
-            return true;
-        }
         return false;
     }
 

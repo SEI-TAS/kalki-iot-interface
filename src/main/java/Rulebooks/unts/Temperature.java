@@ -1,23 +1,14 @@
 package Rulebooks.unts;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import Rulebooks.RulebookRule;
 
 @Rule()
 public class Temperature extends RulebookRule {
+    private final double tempLowerBound = 20.0;
+    private final double tempUpperBound = 23.0;
 
-    public Temperature(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
-
+    public Temperature(){ }
 
     /**
      * UNTS DeviceStatus.attributes
@@ -40,9 +31,9 @@ public class Temperature extends RulebookRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        double temp = Double.valueOf(status.getAttributes().get("tempmax"));
+        double temp = Double.valueOf(status.getAttributes().get("temp_input"));
 
-        if (temp > 76.0 || temp < 66.0){
+        if (temp < tempLowerBound || temp > tempUpperBound){
             setAlertName("unts-temperature");
             return true;
         }

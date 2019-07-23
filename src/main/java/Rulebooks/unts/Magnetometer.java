@@ -1,23 +1,20 @@
 package Rulebooks.unts;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
 
 @Rule()
-public class Magnetometer extends RulebookRule {
+public class Magnetometer extends ThreeAxisRule {
+    private final double magXLowerBound = 80.0;
+    private final double magXUpperBound = 90.0;
+    private final double magYLowerBound = 80.0;
+    private final double magYUpperBound = 90.0;
+    private final double magZLowerBound = 90.0;
+    private final double magZUpperBound = 110.0;
+    private final double magModLimit = 168.226;
 
-    public Magnetometer(){
+    private final double coefficient = 0.1; // converts raw readings to micro Teslas
 
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
-
+    public Magnetometer(){ }
 
     /**
      * UNTS DeviceStatus.attributes
@@ -44,26 +41,14 @@ public class Magnetometer extends RulebookRule {
         double magY = Double.valueOf(status.getAttributes().get("magnetometerY"));
         double magZ = Double.valueOf(status.getAttributes().get("magnetometerZ"));
 
-        if(alertingMagnetometer(magX) || alertingMagnetometer(magY) || alertingMagnetometer(magZ) || alertingModulus(magX, magY, magZ)){
+        if(     alertingAxis(magX, magXLowerBound, magXUpperBound) ||
+                alertingAxis(magY, magYLowerBound, magYUpperBound) ||
+                alertingAxis(magZ, magZLowerBound, magZUpperBound) ||
+                alertingModulus(magX, magY, magZ, magModLimit)){
             setAlertName("unts-magnetometer");
             return true;
         }
 
-        return false;
-    }
-
-    private boolean alertingMagnetometer(double mag) {
-        if (mag > 5.0 || mag < -5.0) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean alertingModulus(double magX, double magY, double magZ){
-        double mod = Math.sqrt(magX*magY + magY*magY + magZ*magZ);
-        if(mod > 5.0 || mod < -5.0) {
-            return true;
-        }
         return false;
     }
 

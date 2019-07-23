@@ -1,31 +1,21 @@
 package Rulebooks.unts;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
 
 import java.util.Map;
 
 
 @Rule()
-public class Acceleration extends RulebookRule {
+public class Acceleration extends ThreeAxisRule {
+	private final double accelXLowerBound = -0.01;
+	private final double accelXUpperBound = 0.01;
+	private final double accelYLowerBound = -0.0766;
+	private final double accelYUpperBound = -0.0376;
+	private final double accelZLowerBound = -1.126;
+	private final double accelZUpperBound = 1.000;
+	private final double accelModLimit = 1.12864;
 
-	public Acceleration(){
-
-	}
-
-	/**
-	 *
-	 * @exception Throwable Throwable
-	 */
-	public void finalize()
-			throws Throwable{
-
-	}
+	public Acceleration(){ }
 
 	/**
 	 * UNTS DeviceStatus.attributes
@@ -52,34 +42,15 @@ public class Acceleration extends RulebookRule {
 		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
 		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));
 		double accelZ = Double.valueOf(status.getAttributes().get("accelerometerZ"));
-		double mod = calculateModulus(accelX, accelY, accelZ);
 
-
-
-		if (alertingAcceleration(accelX) || alertingAcceleration(accelY) || alertingAcceleration(accelZ) || alertingModulus(mod)) {
+		if (	alertingAxis(accelX, accelXLowerBound, accelXUpperBound) ||
+				alertingAxis(accelY, accelYLowerBound, accelYUpperBound) ||
+				alertingAxis(accelZ, accelZLowerBound, accelZUpperBound) ||
+				alertingModulus(accelX, accelY, accelZ, accelModLimit)) {
 			setAlertName("unts-acceleration");
 			return true;
 		}
 
-
 		return false;
 	}
-
-	private double calculateModulus(double accelX, double accelY, double accelZ){
-		return Math.sqrt(accelX*accelX + accelY*accelY + accelZ*accelZ);
-	}
-
-	private boolean alertingAcceleration(double accel){
-		if( accel > 3.0 || accel < -3.0){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean alertingModulus(double mod){
-		if ( mod > 3.0 || mod < -3.0){
-			return true;
-		}
-		return false;
-	}
-}//end Acceleration
+}
