@@ -14,7 +14,8 @@ if (project.hasProperty('chooseMain')) {
     mainClassName = chooseMain
 }
 
-//mainClassName = "main.java.AddDevice"
+
+sourceCompatibility = 1.8
 
 repositories {
     mavenLocal()
