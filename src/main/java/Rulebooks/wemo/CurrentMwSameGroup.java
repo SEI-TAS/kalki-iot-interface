@@ -7,46 +7,43 @@ import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import Rulebooks.RulebookRule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Rule()
 public class CurrentMwSameGroup extends RulebookRule {
 
-    public CurrentMwSameGroup(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public CurrentMwSameGroup(){ }
 
     public boolean conditionIsTrue(){
-        float currentmw = Float.valueOf(status.getAttributes().get("currentmw"));
+        double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
+        double groupAverage = groupAverage();
 
-
-        setAlertName("wemo-current-mw-same-group");
+        if(currentmw > (groupAverage + 20)){
+            setAlertName("wemo-current-mw-same-group");
+            return true;
+        }
         return false;
     }
 
-    private float groupAverage() {
+    private double groupAverage() {
         // get group statuses
+        Map<Device, DeviceStatus> groupStatuses = device.statusesOfSameGroup();
+        int numDevices = 0;
+        int sum = 0;
+        for(Map.Entry<Device,DeviceStatus> entry: groupStatuses.entrySet()){
+            Device d = entry.getKey();
+            DeviceStatus s = entry.getValue();
+            // ensure correct device type and
+            // don't include device in question
+            if (d.getType().getId() == device.getType().getId() && d.getId() != device.getId()) {
+                sum += Integer.parseInt(s.getAttributes().get("currentpower"));
+                numDevices++;
+            }
+        }
 
-        // calc average
-
-        float sum = 0.0f;
-//        int groupSize = list.length;
-//        for(int i=0; i< len; i++){
-//            DeviceStatus s = list.get(i);
-//
-//            if(s.getDeviceId() == device.getId()){ //dont include this device's status in the avg calculation
-//                groupSize--;
-//            } else {
-//                float mw = Float.valueOf(s.getAttributes().get("currentmw"));
-//                sum += mw;
-//            }
-//
-//        }
-//
-//        return (sum / groupSize);
-        return sum;
+        double avg = sum/numDevices;
+        return avg;
     }
 
 }

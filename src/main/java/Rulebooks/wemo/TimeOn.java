@@ -10,19 +10,13 @@ import Rulebooks.RulebookRule;
 @Rule()
 public class TimeOn extends RulebookRule {
 
-    public TimeOn(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public TimeOn(){ }
 
     public boolean conditionIsTrue(){
         // today_on_time is in seconds
-        int onTime = Integer.valueOf(status.getAttributes().get("today_on_time")) / 60;
+        int onTime = Integer.valueOf(status.getAttributes().get("today_on_time"));
 
-        if (onTime > 540){
+        if (onTime > 32400){
             setAlertName("wemo-time-on");
             return true;
         }

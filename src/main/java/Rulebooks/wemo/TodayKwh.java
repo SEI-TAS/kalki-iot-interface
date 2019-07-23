@@ -10,19 +10,14 @@ import Rulebooks.RulebookRule;
 @Rule()
 public class TodayKwh extends RulebookRule {
 
-    public TodayKwh(){
+    private final double kwhUpperBound = 0.220;
 
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public TodayKwh(){ }
 
     public boolean conditionIsTrue(){
         double todayKwH = Double.valueOf(status.getAttributes().get("today_kwh"));
 
-        // assuming a 100w (.1kw) lightbulb running for 10 hours
-        if (todayKwH > 1 ){
+        if (todayKwH > kwhUpperBound ){
             setAlertName("wemo-today-kwh");
             return true;
         }
