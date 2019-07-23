@@ -12,13 +12,7 @@ import java.util.Map;
 @Rule()
 public class MotionSense extends RulebookRule {
 
-    public MotionSense(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public MotionSense(){ }
 
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = false; // condition: motion_sense == true && PHLE.isOn == false
