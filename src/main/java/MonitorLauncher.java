@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import static java.lang.Thread.sleep;
 
@@ -30,41 +31,42 @@ public class MonitorLauncher {
             String dbPassword = prop.getProperty("POSTGRES_PASSWORD");
 
             Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
+//            Postgres.initialize("localhost", "5432", "kalkidb", "kalkiuser", "kalkipass");
+
             logger.info("Succesfully initialized database.");
         }
-        catch(IOException e){
+        catch(Exception e){
             logger.severe("Error intializing database.");
+            e.printStackTrace();
             System.exit(-1);
         }
 
         //Postgres.setupDatabase();
         Postgres.resetDatabase();
 
-        try{
-            sleep(1000);
-        }
-        catch(Exception e){
+        try{ sleep(1000); } catch(Exception e){ }
 
-        }
+        try{ sleep(1000); } catch(Exception e){ }
 
-        try{
-            sleep(1000);
-
-        }
-        catch(Exception e){
-
-        }
-
-        System.out.println("\nINSERTING DEVICE\n");
+        System.out.println("\nINSERTING Udoo\n");
         DeviceType udooType = Postgres.findDeviceType(2);
         System.out.println(udooType.toString());
-        Device udooTest = new Device("Udoo Test", "testing values", udooType, "10.27.150.101", 1000, 1000);
+        Device udooTest = new Device("Udoo Test", "testing values", udooType, "10.27.151.101", 1000, 1000);
         udooTest.insert();
+
+//        Postgres.deleteDevice(2);
+//        Postgres.deleteDevice(3);
+
+//        System.out.println("\nINSERTING Wemo\n");
+//        DeviceType wemoType = Postgres.findDeviceType(3);
+//        System.out.println(wemoType.toString());
+//        Device wemoTest = new Device("Kalki", "testing values", wemoType, "10.27.151.121", 1000, 1000);
+//        wemoTest.insert();
 
 //        Listen for new devices inserted in the database to add more monitors.
         DeviceListener.checkForDevices();
 
-//        Start monitors for all existing devices in the database.
+//        Start monitors for all existing devices in the database
         List<Device> devices = Postgres.findAllDevices();
         for(Device device : devices){
             IotMonitor monitor = IotMonitor.fromDevice(device);

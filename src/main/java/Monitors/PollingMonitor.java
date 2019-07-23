@@ -56,7 +56,7 @@ public abstract class PollingMonitor extends IotMonitor {
         public void run() {
             pollDevice();
             saveCurrentState();
-//            runAlertRules();
+            runAlertRules();
         }
     }
 

@@ -172,7 +172,7 @@ public class NeoMonitor extends PollingMonitor {
 
             System.out.println("Result is" + results.toString());
             attributes = results;
-
+            convertRawReadings();
             channel.disconnect();
             session.disconnect();
 
@@ -187,9 +187,41 @@ public class NeoMonitor extends PollingMonitor {
 
     }
 
+    public void convertRawReadings(){
+        //convert accelerometer readings to g's
+        double accelCoefficient = 0.000244 / 4;
+        convertThreeAxisReading("accelerometer", accelCoefficient);
+        //convert gyroscope readings to degrees/second
+        double gyroCoefficient = 0.0625;
+        convertThreeAxisReading("gyroscope", gyroCoefficient);
+        //convert magnetometer readings to micro Teslas
+        double magCoefficient = 0.1;
+        convertThreeAxisReading("magnetometer", magCoefficient);
+
+        //convert temperature readings to celsius
+        double tempCoefficient = 1/1000;
+        convertTempReading("input", tempCoefficient);
+        convertTempReading("max", tempCoefficient);
+        convertTempReading("max_hyst", tempCoefficient);
+    }
+
+    private void convertThreeAxisReading(String sensor, double coefficient){
+        double xReading = Double.valueOf(attributes.get(sensor+"X")) * coefficient;
+        double yReading = Double.valueOf(attributes.get(sensor+"Y")) * coefficient;
+        double zReading = Double.valueOf(attributes.get(sensor+"Z")) * coefficient;
+        attributes.replace(sensor+"X", String.valueOf(xReading));
+        attributes.replace(sensor+"Y", String.valueOf(yReading));
+        attributes.replace(sensor+"Z", String.valueOf(zReading));
+    }
+
+    private void convertTempReading(String suffix, double coefficient) {
+        double reading = Double.valueOf(attributes.get("temp_"+suffix)) * coefficient;
+        attributes.replace("temp"+suffix, String.valueOf(reading));
+    }
+
     @Override
     public void saveCurrentState() {
-        System.out.println("Saving current state");
+        logger.info("Saving current state");
         status = new DeviceStatus(deviceId, attributes);
         status.insert();
     }
