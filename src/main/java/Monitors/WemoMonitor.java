@@ -12,12 +12,6 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-// Rulebook imports
-import com.deliveredtechnologies.rulebook.Fact;
-import com.deliveredtechnologies.rulebook.FactMap;
-import com.deliveredtechnologies.rulebook.NameValueReferableMap;
-import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
-
 public class WemoMonitor extends PollingMonitor {
 
     private String deviceName;
@@ -84,18 +78,5 @@ public class WemoMonitor extends PollingMonitor {
     public void saveCurrentState() {
         DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
         wemo.insert();
-    }
-
-    @Override
-    public void runAlertRules() {
-        Device device = Postgres.findDevice(deviceId);
-
-        NameValueReferableMap facts = new FactMap();
-        facts.setValue("device", device);
-        facts.setValue("status", status);
-
-        RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.wemo");
-        ruleBook.run(facts);
-
     }
 }

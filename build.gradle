@@ -35,7 +35,6 @@ dependencies {
     compile name: 'huelocalsdk'
     compile name: 'huesdkresources'
     compile group: 'org.postgresql', name: 'postgresql', version:'42.2.2'
-    compile 'com.deliveredtechnologies:rulebook-core:0.8'
     implementation 'com.jcraft:jsch:0.1.55'
 //    compile name: 'tablelayout'
 }

@@ -20,12 +20,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.JSchException;
 
-// Rulebook imports
-import com.deliveredtechnologies.rulebook.Fact;
-import com.deliveredtechnologies.rulebook.FactMap;
-import com.deliveredtechnologies.rulebook.NameValueReferableMap;
-import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
-
 public class NeoMonitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
@@ -224,17 +218,5 @@ public class NeoMonitor extends PollingMonitor {
         logger.info("Saving current state");
         status = new DeviceStatus(deviceId, attributes);
         status.insert();
-    }
-
-    @Override
-    public void runAlertRules() {
-        Device device = Postgres.findDevice(deviceId);
-
-        NameValueReferableMap facts = new FactMap();
-        facts.setValue("device", device);
-        facts.setValue("status", status);
-
-        RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
-        ruleBook.run(facts);
     }
 }

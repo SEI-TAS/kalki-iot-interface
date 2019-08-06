@@ -20,18 +20,18 @@ public class MonitorLauncher {
 
         try{
             Properties prop = new Properties();
-            String fileName = "iot-interface.config";
-            InputStream is = new FileInputStream(fileName);
-            prop.load(is);
+//            String fileName = "iot-interface.config";
+//            InputStream is = new FileInputStream(fileName);
+//            prop.load(is);
 
-            String port = prop.getProperty("POSTGRES_PORT");
-            String ip = prop.getProperty("POSTGRES_IP");
-            String dbUser = prop.getProperty("POSTGRES_USER");
-            String dbName = prop.getProperty("POSTGRES_DB_NAME");
-            String dbPassword = prop.getProperty("POSTGRES_PASSWORD");
-
-            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
-//            Postgres.initialize("localhost", "5432", "kalkidb", "kalkiuser", "kalkipass");
+//            String port = prop.getProperty("POSTGRES_PORT");
+//            String ip = prop.getProperty("POSTGRES_IP");
+//            String dbUser = prop.getProperty("POSTGRES_USER");
+//            String dbName = prop.getProperty("POSTGRES_DB_NAME");
+//            String dbPassword = prop.getProperty("POSTGRES_PASSWORD");
+//
+//            Postgres.initialize(ip, port, dbName, dbUser, dbPassword);
+            Postgres.initialize("localhost", "5432", "kalkidb", "kalkiuser", "kalkipass");
 
             logger.info("Succesfully initialized database.");
         }

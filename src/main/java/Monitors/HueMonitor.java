@@ -11,12 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-// Rulebook imports
-import com.deliveredtechnologies.rulebook.Fact;
-import com.deliveredtechnologies.rulebook.FactMap;
-import com.deliveredtechnologies.rulebook.NameValueReferableMap;
-import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
-
 //Adapted from https://github.com/PhilipsHue/PhilipsHueSDK-Java-MultiPlatform-Android/tree/master/JavaDesktopApp
 
 public class HueMonitor extends PollingMonitor {
@@ -211,18 +205,6 @@ public class HueMonitor extends PollingMonitor {
         for(DeviceStatus light : lights){
             light.insert();
         }
-    }
-
-    @Override
-    public void runAlertRules() {
-        Device device = Postgres.findDevice(deviceId);
-
-        NameValueReferableMap facts = new FactMap();
-        facts.setValue("device", device);
-        facts.setValue("status", status);
-
-        RuleBookRunner ruleBook = new RuleBookRunner("Rulebooks.unts");
-        ruleBook.run(facts);
     }
 
     public void connectToDevice() {
