@@ -1,8 +1,6 @@
-package Monitors;
+package edu.cmu.sei.kalki.Monitors;
 
-import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,16 +1,13 @@
-import Database.DeviceListener;
+package edu.cmu.sei.kalki;
+
+import edu.cmu.sei.kalki.Database.DeviceListener;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.*;
-import Monitors.IotMonitor;
+import edu.cmu.sei.kalki.Monitors.IotMonitor;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import static java.lang.Thread.sleep;
 

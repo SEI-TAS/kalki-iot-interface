@@ -1,4 +1,4 @@
-package Mail;
+package edu.cmu.sei.kalki.Mail;
 
 import org.subethamail.smtp.*;
 
@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Observer;
 
 public class MyMessageHandlerFactory implements MessageHandlerFactory {
 

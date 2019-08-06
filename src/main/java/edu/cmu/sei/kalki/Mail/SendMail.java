@@ -1,9 +1,8 @@
-package Mail;
+package edu.cmu.sei.kalki.Mail;
 
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
 
 public class SendMail {
 

@@ -1,7 +1,6 @@
-package Mail;
+package edu.cmu.sei.kalki.Mail;
 
-import Monitors.EventObserver;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.kalki.Monitors.EventObserver;
 import org.subethamail.smtp.server.SMTPServer;
 
 import java.io.FileInputStream;

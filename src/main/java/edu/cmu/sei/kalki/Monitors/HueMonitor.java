@@ -1,7 +1,6 @@
-package Monitors;
+package edu.cmu.sei.kalki.Monitors;
 
 import edu.cmu.sei.ttg.kalki.models.*;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import com.philips.lighting.hue.sdk.*;
 import com.philips.lighting.model.*;

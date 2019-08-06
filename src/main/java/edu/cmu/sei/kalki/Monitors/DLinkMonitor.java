@@ -1,6 +1,6 @@
-package Monitors;
+package edu.cmu.sei.kalki.Monitors;
 
-import Mail.MailServer;
+import edu.cmu.sei.kalki.Mail.MailServer;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 public class DLinkMonitor extends IotMonitor implements EventObserver {

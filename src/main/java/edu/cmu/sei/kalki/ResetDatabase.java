@@ -1,15 +1,15 @@
+package edu.cmu.sei.kalki;
+
 import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class AddDevice {
-    public static void main(String[] args) {
+public class ResetDatabase {
 
+    public static void main(String[] args) {
         try{
             Properties prop = new Properties();
             String fileName = "db.config";
@@ -25,6 +25,7 @@ public class AddDevice {
         catch(IOException e){
 
         }
-
+        Postgres.resetDatabase();
+        System.out.println("Successfully cleared tables in database.");
     }
 }

@@ -1,8 +1,8 @@
-package Database;
+package edu.cmu.sei.kalki.Database;
 
 import edu.cmu.sei.ttg.kalki.models.*;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
-import Monitors.IotMonitor;
+import edu.cmu.sei.kalki.Monitors.IotMonitor;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
 
