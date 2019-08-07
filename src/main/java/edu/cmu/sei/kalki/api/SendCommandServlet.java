@@ -13,6 +13,9 @@ public class SendCommandServlet extends  HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        System.out.println("Request received at /api/send-command/");
+
+        response.setStatus(HttpStatus.OK_200);
 
     }
 

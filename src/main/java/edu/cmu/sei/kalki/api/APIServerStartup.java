@@ -14,10 +14,12 @@ public class APIServerStartup {
         try {
             Server httpServer = new Server(SERVER_PORT);
             ServletContextHandler handler = new ServletContextHandler(httpServer, API_URL);
-            handler.addServlet(NewDeviceServlet.class, "new-device/");
-            handler.addServlet(UpdateDeviceServlet.class, "update-device");
-            handler.addServlet(SendCommandServlet.class, "send-commad/");
+            handler.addServlet(NewDeviceServlet.class, "/new-device");
+            handler.addServlet(UpdateDeviceServlet.class, "/update-device");
+            handler.addServlet(SendCommandServlet.class, "/send-command");
             httpServer.start();
+
+            System.out.println("URI: "+httpServer.getURI().toString());
         } catch (Exception e) {
             System.out.println("Error starting IoT Interface API Server");
             e.printStackTrace();

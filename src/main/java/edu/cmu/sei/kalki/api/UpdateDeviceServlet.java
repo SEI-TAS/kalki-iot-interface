@@ -13,6 +13,8 @@ public class UpdateDeviceServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        System.out.println("Request received at /api/update-device/");
 
+        response.setStatus(HttpStatus.OK_200);
     }
 }
