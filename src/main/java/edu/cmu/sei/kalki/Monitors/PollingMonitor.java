@@ -58,6 +58,7 @@ public abstract class PollingMonitor extends IotMonitor {
      * Sets the interval for polling the device for updates.
      * @param newInterval new interval, in milliseconds.
      */
+    @Override
     public void setPollInterval(int newInterval) {
         pollInterval = newInterval;
         stopPolling();

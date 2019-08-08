@@ -23,6 +23,7 @@ public class WemoMonitor extends PollingMonitor {
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
+        this.isPollable = true;
         start();
     }
 
