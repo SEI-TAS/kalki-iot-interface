@@ -27,13 +27,20 @@ public class DeviceMonitor {
      * Updates the sampling rate for the given device
      * @param device
      */
-    protected void updateMonitor(Device device) {
+    public void updateMonitor(Device device) {
         System.out.println("Updating monitor for device: "+device.getId());
         IotMonitor mon = monitors.get(device.getId());
-        if(mon.isPollable()){
-            System.out.println("Found monitor, updating sampling rate");
-            mon.setPollInterval(device.getSamplingRate());
-            monitors.replace(device.getId(), mon);
+        if(mon != null){
+            System.out.println("Monitor found!");
+            if(mon.isPollable()){
+                System.out.println("Found monitor, updating sampling rate");
+                mon.setPollInterval(device.getSamplingRate());
+                monitors.replace(device.getId(), mon);
+            }
+        } else {
+            System.out.println("No monitor found for given device. Starting one...");
+            startMonitor(device);
         }
+
     }
 }

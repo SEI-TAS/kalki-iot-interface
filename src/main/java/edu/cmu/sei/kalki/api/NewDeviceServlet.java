@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.cmu.sei.kalki.DeviceMonitor;
 import edu.cmu.sei.ttg.kalki.models.*;
 import org.eclipse.jetty.http.HttpStatus;
 
@@ -30,6 +31,9 @@ public class NewDeviceServlet extends APIServlet {
 
         System.out.println("going to update device: "+device.toString());
         response.setStatus(HttpStatus.OK_200);
+
+        DeviceMonitor monitor = (DeviceMonitor) getServletContext().getAttribute("monitor");
+        monitor.startMonitor(device);
     }
 
 
