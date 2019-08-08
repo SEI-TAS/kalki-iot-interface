@@ -9,6 +9,7 @@ public abstract class IotMonitor {
 
     protected Timer pollTimer = new Timer();
     protected int pollInterval;
+    protected boolean isPollable;
     protected boolean pollingEnabled = true;
     protected boolean timerGoing = false;
     public int deviceId;
@@ -34,5 +35,13 @@ public abstract class IotMonitor {
             mon = new HueMonitor(device.getIp(), 80, device.getId(), device.getSamplingRate());
         }
         return mon;
+    }
+
+    public boolean isPollable() {
+        return isPollable;
+    }
+
+    public void setPollInterval(int pollInterval) {
+        return;
     }
 }

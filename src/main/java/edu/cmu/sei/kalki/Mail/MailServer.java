@@ -1,6 +1,5 @@
 package edu.cmu.sei.kalki.Mail;
 
-import edu.cmu.sei.kalki.Monitors.EventObserver;
 import org.subethamail.smtp.server.SMTPServer;
 
 import java.io.FileInputStream;
