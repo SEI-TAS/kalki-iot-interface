@@ -7,12 +7,18 @@ import static java.lang.Thread.sleep;
 public class IotInterface {
     public static void main(String[] args) {
         Postgres.initialize("localhost", "5432", "kalkidb", "kalkiuser", "kalkipass");
+        Postgres.resetDatabase();
 
         DeviceMonitor monitor = new DeviceMonitor();
+//
+//        Device device = new Device("Kalki", "description", Postgres.findDeviceType(3), "10.27.151.121", 1000, 1000);
+//        device.insert();
+
+//        monitor.startMonitor(device);
         APIServerStartup.start(monitor);
 
-//        while (true){
-//
-//        }
+        while (true){
+
+        }
     }
 }
