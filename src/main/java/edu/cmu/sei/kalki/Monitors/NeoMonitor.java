@@ -33,6 +33,7 @@ public class NeoMonitor extends PollingMonitor {
         this(deviceId, ip, samplingRate);
         this.username = username;
         this.password = password;
+        this.isPollable = true;
     }
 
     public NeoMonitor(int deviceId, String ip, int samplingRate){
@@ -43,7 +44,7 @@ public class NeoMonitor extends PollingMonitor {
         this.username = "udooer";
         this.password = "udooer";
         this.pollInterval = samplingRate;
-
+        this.isPollable = true;
         setSensors();
         start();
     }

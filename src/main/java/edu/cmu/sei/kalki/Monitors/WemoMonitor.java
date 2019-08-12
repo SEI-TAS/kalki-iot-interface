@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WemoMonitor extends PollingMonitor {
@@ -23,6 +24,7 @@ public class WemoMonitor extends PollingMonitor {
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
+        this.isPollable = true;
         start();
     }
 
@@ -37,7 +39,8 @@ public class WemoMonitor extends PollingMonitor {
             String[] args = new String[]{
                     "python",
                     "wemo.py",
-                    deviceName
+                    deviceName,
+                    "status"
             };
             Process p = Runtime.getRuntime().exec(args);
 
@@ -68,6 +71,8 @@ public class WemoMonitor extends PollingMonitor {
         } catch (IOException e) {
             logger.severe("Error polling Wemo Insight: " + e.toString());
             e.printStackTrace();
+        } catch (JSONException e) {
+            logger.severe("Error parsing JSON respons from Wemo Insight: " + deviceId + ". " + e.getMessage());
         }
 
     }
