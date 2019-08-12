@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.cmu.sei.kalki.commanders.DeviceCommandSender;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommandLookup;
@@ -44,7 +45,8 @@ public class SendCommandServlet extends  APIServlet {
             throw new ServletException("Error parsing command list JSON: " + e.getMessage());
         }
         response.setStatus(HttpStatus.OK_200);
-
+        DeviceCommandSender.sendCommands(device, commandList);
+        System.out.println("Commands sent");
     }
 
     private List<DeviceCommand> parseCommandList(JSONArray commandList) {
