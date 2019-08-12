@@ -21,6 +21,7 @@ public class DeviceCommandSender {
                 WemoCommandSender.sendCommands(device, commands);
                 break;
             case 4: // PHLE
+                PhleCommandSender.sendCommands(device, commands);
                 break;
             default:
                 System.out.println("System not configured to send commands to type: " + deviceType.getName());
