@@ -37,8 +37,7 @@ public class NeoMonitor extends PollingMonitor {
     }
 
     public NeoMonitor(int deviceId, String ip, int samplingRate){
-        logger.info("Starting Neo Monitor for deviceId: " + deviceId + ", ip: " + ip +
-                ", and sampling rate: " + samplingRate + ".");
+        logger.info("[NeoMonitor] Starting Neo Monitor for device: " + deviceId);
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
@@ -71,7 +70,7 @@ public class NeoMonitor extends PollingMonitor {
         public Map<String, String> parseResponse(List<String> responses) {
             Map<String, String> result = new HashMap<String, String>();
             if (responses.size() < 1){
-                logger.severe("Missing response from Udoo Neo.");
+                logger.severe("[NeoMonitor] Missing response from Udoo Neo.");
             }
             else {
                 String response = responses.get(0);
@@ -163,19 +162,18 @@ public class NeoMonitor extends PollingMonitor {
                 results.putAll(sensor.parseResponse(lines));
             }
 
-            System.out.println("Result is" + results.toString());
             attributes = results;
             convertRawReadings();
             channel.disconnect();
             session.disconnect();
 
         } catch (JSchException e1){
-            System.out.println("exception happend - here's what I know: ");
-            e1.printStackTrace();
+            logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
+            logger.severe(e1.getMessage());
         }
         catch (IOException e) {
-            System.out.println("exception happened - here's what I know: ");
-            e.printStackTrace();
+            logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
+            logger.severe(e.getMessage());
         }
 
     }
@@ -214,7 +212,7 @@ public class NeoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
-        logger.info("Saving current state");
+        logger.info("[NeoMonitor] Saving current state");
         status = new DeviceStatus(deviceId, attributes);
         status.insert();
     }

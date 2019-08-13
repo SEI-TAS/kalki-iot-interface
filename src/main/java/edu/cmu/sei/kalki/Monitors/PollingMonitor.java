@@ -19,7 +19,7 @@ public abstract class PollingMonitor extends IotMonitor {
      * Connect to the device and begin monitoring.
      */
     public void start(){
-        logger.info("Starting monitor!");
+        logger.info("[PollingMonitor] Starting monitor!");
         startPolling();
     }
 
@@ -39,6 +39,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     protected void stopPolling() {
         if (timerGoing){
+            logger.info("[PollingMonitor] Stopping monitor!");
             pollTimer.cancel();
         }
     }

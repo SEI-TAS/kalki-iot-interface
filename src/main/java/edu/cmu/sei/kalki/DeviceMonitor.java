@@ -5,8 +5,10 @@ import edu.cmu.sei.kalki.Monitors.IotMonitor;
 import edu.cmu.sei.kalki.Monitors.PollingMonitor;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class DeviceMonitor {
+    private Logger logger = Logger.getLogger("iot-interface");
     private HashMap<Integer, IotMonitor> monitors;
 
     public DeviceMonitor() {
@@ -18,7 +20,7 @@ public class DeviceMonitor {
      * @param device
      */
     public void startMonitor(Device device) {
-        System.out.println("Starting monitor for device: "+device.getId());
+        logger.info("[DeviceMonitor] Starting monitor for device: "+device.getId());
         IotMonitor mon = IotMonitor.fromDevice(device);
         monitors.put(device.getId(), mon);
     }
@@ -28,17 +30,16 @@ public class DeviceMonitor {
      * @param device
      */
     public void updateMonitor(Device device) {
-        System.out.println("Updating monitor for device: "+device.getId());
         IotMonitor mon = monitors.get(device.getId());
         if(mon != null){
-            System.out.println("Monitor found!");
+            logger.info("[DeviceMonitor] Updating monitor for device: "+device.getId());
             if(mon.isPollable()){
-                System.out.println("Found monitor, updating sampling rate");
+                logger.info("[DeviceMonitor] Found monitor, updating sampling rate");
                 mon.setPollInterval(device.getSamplingRate());
                 monitors.replace(device.getId(), mon);
             }
         } else {
-            System.out.println("No monitor found for given device. Starting one...");
+            logger.severe("[DeviceMonitor] No monitor found for given device "+device.getId()+". Starting one...");
             startMonitor(device);
         }
 

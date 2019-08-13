@@ -25,6 +25,7 @@ public class WemoMonitor extends PollingMonitor {
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
+        logger.info("[WemoMonitor] Starting monitor.");
         start();
     }
 
@@ -70,7 +71,6 @@ public class WemoMonitor extends PollingMonitor {
             }
         } catch (IOException e) {
             logger.severe("Error polling Wemo Insight: " + e.toString());
-            e.printStackTrace();
         } catch (JSONException e) {
             logger.severe("Error parsing JSON respons from Wemo Insight: " + deviceId + ". " + e.getMessage());
         }
@@ -79,6 +79,7 @@ public class WemoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
+        logger.info("[WemoMonitor] Saving current state");
         DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
         wemo.insert();
     }

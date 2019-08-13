@@ -15,12 +15,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class SendCommandServlet extends ApiServlet {
+    private Logger logger = Logger.getLogger("iot-interface");
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        System.out.println("Request received at /api/send-command/");
+        logger.info("[SendCommandServlet] Handling request");
 
         // read body of request
         JSONObject requestBody = parseRequestBody(request, response);
@@ -43,8 +45,9 @@ public class SendCommandServlet extends ApiServlet {
             throw new ServletException("Error parsing command list JSON: " + e.getMessage());
         }
         response.setStatus(HttpStatus.OK_200);
+
+        logger.info("[SendCommandServlet] Sending commands to device: "+device.toString());
         DeviceCommandSender.sendCommands(device, commandList);
-        System.out.println("Commands sent");
     }
 
     private List<DeviceCommand> parseCommandList(JSONArray commandList) {

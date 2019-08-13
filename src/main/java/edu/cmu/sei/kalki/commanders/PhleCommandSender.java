@@ -17,9 +17,10 @@ import java.util.logging.Logger;
 
 public class PhleCommandSender {
     private static PHHueSDK phHueSDK;
-    private static Logger logger = Logger.getLogger("myLogger");
+    private static Logger logger = Logger.getLogger("iot-interface");
 
     public static void sendCommands(Device device, List<DeviceCommand> commands){
+        logger.info("[PhleCommandSender] Sending commands to PHLE: "+device.getId());
         connectToHue(device);
 
         PHBridge bridge = null;
@@ -38,11 +39,11 @@ public class PhleCommandSender {
             for(DeviceCommand command: commands){
                 switch (command.getName()){
                     case "turn-on":
-                        System.out.println("Sending 'turn-on' command to PHLE: " + device.getId());
+                        logger.info("[PhleCommandSender] Sending 'turn-on' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), i+1,"true");
                         break;
                     case "turn-off":
-                        System.out.println("Sending 'turn-off' command to PHLE: " + device.getId());
+                        logger.info("[PhleCommandSender] Sending 'turn-off' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), i+1,"false");
                         break;
                     case "set-name":
@@ -52,7 +53,7 @@ public class PhleCommandSender {
                     case "set-group":
                     case "set-scene":
                     default:
-                        System.out.println("Command: " + command.getName() + " not supported for Phillips Hue Light Emulator.");
+                        logger.severe("[PhleCommandSender] Command: " + command.getName() + " not supported for Phillips Hue Light Emulator.");
                 }
             }
         }
@@ -70,7 +71,10 @@ public class PhleCommandSender {
             out.write(json.toString());
             out.close();
             httpCon.getInputStream();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            logger.severe("[PhleCommandSender] Error sending command to device!");
+            logger.severe(e.getMessage());
+        }
     }
 
     private static void connectToHue(Device device) {
@@ -101,9 +105,9 @@ public class PhleCommandSender {
         public void onBridgeConnected(PHBridge bridge, String username) {
             phHueSDK.setSelectedBridge(bridge);
             logger.info("Connected to bridge");
-            String lastIpAddress = bridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+/*            String lastIpAddress = bridge.getResourceCache().getBridgeConfiguration().getIpAddress();
             logger.info("IP is : " + lastIpAddress);
-            logger.info("Username is: " + username);
+            logger.info("Username is: " + username);*/
         }
 
         @Override

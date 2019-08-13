@@ -8,8 +8,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class WemoCommandSender {
+    private static Logger logger = Logger.getLogger("iot-interface");
     private static String[] args = new String[]{
             "python",
             "wemo.py",
@@ -18,6 +20,8 @@ public class WemoCommandSender {
     };
 
     public static void sendCommands(Device device, List<DeviceCommand> commands) {
+        logger.info("[WemoCommandSender] Sending commands to device: "+device.getId());
+
         for(DeviceCommand command: commands) {
             switch (command.getName()){
                 case "turn-on":
@@ -25,7 +29,7 @@ public class WemoCommandSender {
                     sendCommand(device, command);
                     break;
                 default:
-                    System.out.println("Command: " + command.getName() + " is not a valid command for a Wemo Insight");
+                    logger.severe("[WemoCommandSender] Command: " + command.getName() + " is not a valid command for a Wemo Insight");
             }
         }
     }
@@ -46,16 +50,16 @@ public class WemoCommandSender {
 
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
+                logger.info("[WemoCommandSender] " + s);
             }
 
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
+                logger.severe("[WemoCommandSender] Error with wemo.py: "+s);
             }
         } catch (IOException e) {
-            System.out.println("Error reading response from " + device.getId() + ") " + device.getName());
-            System.out.println(e.getMessage());
+            logger.severe("[WemoCommandSender] Error reading response from " + device.getId() + ") " + device.getName());
+            logger.severe(e.getMessage());
         }
     }
 

@@ -3,8 +3,10 @@ package edu.cmu.sei.kalki.api;
 import edu.cmu.sei.kalki.DeviceMonitor;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import java.util.logging.Logger;
 
 public class ApiServerStartup {
+    private static Logger logger = Logger.getLogger("iot-interface");
     private static final String API_URL = "/iot-interface-api";
     private static final int SERVER_PORT = 9090;
 
@@ -21,10 +23,10 @@ public class ApiServerStartup {
             handler.setAttribute("monitor", monitor);
             httpServer.start();
 
-            System.out.println("URI: "+httpServer.getURI().toString());
+            logger.info("[ApiServerStartup] HTTP server started at " + httpServer.getURI().toString());
         } catch (Exception e) {
-            System.out.println("Error starting IoT Interface API Server");
-            e.printStackTrace();
+            logger.severe("[ApiServerStartup] Error starting IoT Interface API Server");
+            logger.severe(e.getMessage());
         }
     }
 }

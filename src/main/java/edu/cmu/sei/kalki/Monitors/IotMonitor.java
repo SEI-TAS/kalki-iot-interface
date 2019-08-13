@@ -17,12 +17,13 @@ public abstract class IotMonitor {
     protected Logger logger;
 
     public IotMonitor(){
-        logger = Logger.getLogger( "myLogger" );
+        logger = Logger.getLogger( "iot-interface" );
     }
 
     public static IotMonitor fromDevice(Device device){
         IotMonitor mon = null;
         if(device.getType().getId() == 1){ //Dlink Camera
+            lo
             mon = new DLinkMonitor(device.getId());
         }
         else if(device.getType().getId() == 2){ //Undoo Neo
