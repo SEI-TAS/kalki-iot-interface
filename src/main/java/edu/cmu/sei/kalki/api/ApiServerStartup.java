@@ -4,7 +4,7 @@ import edu.cmu.sei.kalki.DeviceMonitor;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
-public class APIServerStartup {
+public class ApiServerStartup {
     private static final String API_URL = "/iot-interface-api";
     private static final int SERVER_PORT = 9090;
 

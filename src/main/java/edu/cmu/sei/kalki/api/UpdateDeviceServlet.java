@@ -11,7 +11,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UpdateDeviceServlet extends APIServlet {
+public class UpdateDeviceServlet extends ApiServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {

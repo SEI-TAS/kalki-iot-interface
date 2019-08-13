@@ -1,14 +1,12 @@
 package edu.cmu.sei.kalki.api;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.cmu.sei.kalki.commanders.DeviceCommandSender;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
-import edu.cmu.sei.ttg.kalki.models.DeviceCommandLookup;
 import org.eclipse.jetty.http.HttpStatus;
 
 import org.json.JSONArray;
@@ -18,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendCommandServlet extends  APIServlet {
+public class SendCommandServlet extends ApiServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {

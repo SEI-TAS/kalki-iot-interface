@@ -13,7 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-public class APIServlet extends HttpServlet {
+public class ApiServlet extends HttpServlet {
 
     protected JSONObject parseRequestBody(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         JSONObject requestBody;
