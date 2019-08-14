@@ -30,7 +30,7 @@ dependencies {
     compile name: 'huelocalsdk'
     compile name: 'huesdkresources'
     compile group: 'org.postgresql', name: 'postgresql', version:'42.2.2'
-    implementation 'com.jcraft:jsch:0.1.55'
+    compile 'com.jcraft:jsch:0.1.55'
 //    compile name: 'tablelayout'
 }
 
