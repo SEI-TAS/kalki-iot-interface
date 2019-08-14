@@ -33,3 +33,7 @@ dependencies {
     implementation 'com.jcraft:jsch:0.1.55'
 //    compile name: 'tablelayout'
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
