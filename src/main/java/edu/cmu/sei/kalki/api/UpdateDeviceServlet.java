@@ -32,7 +32,7 @@ public class UpdateDeviceServlet extends ApiServlet {
             throw new ServletException("Error parsing device JSON: " + e.getMessage());
         }
 
-        logger.info("[UpdateDeviceServlet] Updating monitor for device: "+);
+        logger.info("[UpdateDeviceServlet] Updating monitor for device: "+device.getId());
         response.setStatus(HttpStatus.OK_200);
         DeviceMonitor monitor = (DeviceMonitor) getServletContext().getAttribute("monitor");
         monitor.updateMonitor(device);

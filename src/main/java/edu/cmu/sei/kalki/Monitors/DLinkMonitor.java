@@ -16,9 +16,9 @@ public class DLinkMonitor extends IotMonitor implements EventObserver {
     }
     public void notify(String message){
         if (message.equals(listenEmail)){
-            DeviceStatus history = new DeviceStatus(deviceId);
-            history.addAttribute("motion_detected", "true");
-            history.insert();
+            DeviceStatus status = new DeviceStatus(deviceId);
+            status.addAttribute("motion_detected", "true");
+            sendToDeviceController(status);
         }
     }
 

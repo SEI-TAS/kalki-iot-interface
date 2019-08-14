@@ -1,12 +1,17 @@
 package edu.cmu.sei.kalki.Monitors;
 
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Timer;
 import java.util.logging.Logger;
 
 import edu.cmu.sei.ttg.kalki.models.*;
+import org.json.JSONObject;
 
 public abstract class IotMonitor {
-
+    protected final String apiUrl = "http://10.27.151.103:9090/device-controller-api/new-status"; // test url
+//    protected final String apiUrl = "http://10.27.153.3:9090/device-controller-api/new-status"; // deployment url
     protected Timer pollTimer = new Timer();
     protected int pollInterval;
     protected boolean isPollable;
@@ -23,7 +28,6 @@ public abstract class IotMonitor {
     public static IotMonitor fromDevice(Device device){
         IotMonitor mon = null;
         if(device.getType().getId() == 1){ //Dlink Camera
-            lo
             mon = new DLinkMonitor(device.getId());
         }
         else if(device.getType().getId() == 2){ //Undoo Neo
@@ -45,4 +49,22 @@ public abstract class IotMonitor {
     public void setPollInterval(int pollInterval) {
         return;
     }
+
+    protected void sendToDeviceController(DeviceStatus status) {
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+            httpCon.setDoOutput(true);
+            httpCon.setRequestMethod("POST");
+            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+            JSONObject json = new JSONObject(status.toString());
+            out.write(json.toString());
+            out.close();
+            httpCon.getInputStream();
+        } catch (Exception e) {
+            logger.severe("[IoTMonitor] Error sending status to DeviceController: "+status.toString());
+            logger.severe(e.getMessage());
+        }
+    }
+
 }

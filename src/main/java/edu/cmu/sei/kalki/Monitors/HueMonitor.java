@@ -202,7 +202,7 @@ public class HueMonitor extends PollingMonitor {
     @Override
     public void saveCurrentState() {
         for(DeviceStatus light : lights){
-            light.insert();
+            sendToDeviceController(light);
         }
     }
 

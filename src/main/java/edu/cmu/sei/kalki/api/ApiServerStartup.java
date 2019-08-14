@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class ApiServerStartup {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static final String API_URL = "/iot-interface-api";
-    private static final int SERVER_PORT = 9090;
+    private static final int SERVER_PORT = 5050;
 
     /**
      * Starts a Jetty server, with handler for notifications

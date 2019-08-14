@@ -214,6 +214,6 @@ public class NeoMonitor extends PollingMonitor {
     public void saveCurrentState() {
         logger.info("[NeoMonitor] Saving current state");
         status = new DeviceStatus(deviceId, attributes);
-        status.insert();
+        sendToDeviceController(status);
     }
 }
