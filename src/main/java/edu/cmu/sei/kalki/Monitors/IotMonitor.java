@@ -10,8 +10,8 @@ import edu.cmu.sei.ttg.kalki.models.*;
 import org.json.JSONObject;
 
 public abstract class IotMonitor {
-    protected final String apiUrl = "http://10.27.151.103:9090/device-controller-api/new-status"; // test url
-//    protected final String apiUrl = "http://10.27.153.3:9090/device-controller-api/new-status"; // deployment url
+//    protected final String apiUrl = "http://10.27.151.103:9090/device-controller-api/new-status"; // test url
+    protected final String apiUrl = "http://10.27.153.3:9090/device-controller-api/new-status"; // deployment url
     protected Timer pollTimer = new Timer();
     protected int pollInterval;
     protected boolean isPollable;
