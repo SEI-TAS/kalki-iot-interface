@@ -82,5 +82,6 @@ public class WemoMonitor extends PollingMonitor {
         logger.info("[WemoMonitor] Saving current state");
         DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
         sendToDeviceController(wemo);
+        logger.info("[WemoMonitor] State saved: "+wemo.toString());
     }
 }

@@ -4,6 +4,7 @@ import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,28 +146,34 @@ public class NeoMonitor extends PollingMonitor {
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
 
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(channel.getInputStream()));
             channel.connect();
 
-            Map<String, String> results = new HashMap<String, String>();
-
-            // read the output from the command
+            InputStream inStream = channel.getInputStream();
+            logger.info("[NeoMonitor] Sent commands to device");
             List<String> lines = new ArrayList<String>();
-            String s = stdInput.readLine();
-            while(s != null){
-                lines.add(s);
-                s = stdInput.readLine();
+
+            int c = inStream.read();
+            StringBuilder string = new StringBuilder();
+            while (c > -1) {
+                if (inStream.available() == 0) { // read the newline char
+                    lines.add(string.toString());
+                    string = new StringBuilder();
+                } else {
+                    string.append((char)c);
+                }
+                c = inStream.read();
             }
 
+            channel.disconnect();
+            session.disconnect();
+
+            Map<String, String> results = new HashMap<String, String>();
             for(NeoSensor sensor: sensors){
                 results.putAll(sensor.parseResponse(lines));
             }
 
             attributes = results;
             convertRawReadings();
-            channel.disconnect();
-            session.disconnect();
-
         } catch (JSchException e1){
             logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
@@ -175,7 +182,7 @@ public class NeoMonitor extends PollingMonitor {
             logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
         }
-
+        return;
     }
 
     public void convertRawReadings(){
@@ -206,7 +213,7 @@ public class NeoMonitor extends PollingMonitor {
     }
 
     private void convertTempReading(String suffix, double coefficient) {
-        double reading = Double.valueOf(attributes.get("temp_"+suffix)) * coefficient;
+        double reading = Double.valueOf(attributes.get("temp"+suffix)) * coefficient;
         attributes.replace("temp"+suffix, String.valueOf(reading));
     }
 

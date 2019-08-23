@@ -19,10 +19,10 @@ public abstract class IotMonitor {
     protected boolean timerGoing = false;
     public int deviceId;
 
-    protected Logger logger;
+    protected final Logger logger = Logger.getLogger("iot-interface");
 
     public IotMonitor(){
-        logger = Logger.getLogger( "iot-interface" );
+
     }
 
     public static IotMonitor fromDevice(Device device){
