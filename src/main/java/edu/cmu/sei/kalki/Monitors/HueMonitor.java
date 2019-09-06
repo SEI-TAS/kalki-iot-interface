@@ -22,12 +22,12 @@ public class HueMonitor extends PollingMonitor {
     private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
     private DeviceStatus status;
 
-    public HueMonitor(String ip, int port, int deviceId, int samplingRate) {
+    public HueMonitor(String ip, int deviceId, int samplingRate) {
         super();
         this.isPollable = true;
         logger.info("[HueMonitor] Starting monitor for device: "+deviceId);
 
-        this.ip = ip + ":" + port;
+        this.ip = ip;
 
         PHHueSDK phHueSDK = PHHueSDK.create();
         phHueSDK.getNotificationManager().registerSDKListener(listener);

@@ -37,7 +37,7 @@ public abstract class IotMonitor {
             mon = new WemoMonitor(device.getId(), device.getName(), device.getSamplingRate());
         }
         else if(device.getType().getId() == 4){ //Hue Light
-            mon = new HueMonitor(device.getIp(), 80, device.getId(), device.getSamplingRate());
+            mon = new HueMonitor(device.getIp(), device.getId(), device.getSamplingRate());
         }
         return mon;
     }
