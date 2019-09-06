@@ -13,6 +13,7 @@ public class DLinkMonitor extends IotMonitor implements EventObserver {
         MailServer.registerObserver(this);
         isPollable = false;
         logger.info("[DLinkMonitor] Monitor started for device: "+deviceId);
+        this.deviceId = deviceId;
     }
     public void notify(String message){
         if (message.equals(listenEmail)){

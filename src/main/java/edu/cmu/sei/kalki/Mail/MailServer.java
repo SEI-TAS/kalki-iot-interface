@@ -31,6 +31,7 @@ public class MailServer {
     }
 
     public static void notify(String fromEmail){
+        logger.info("notify! "+fromEmail);
         for(EventObserver o : mailServer.mailObservers){
             o.notify(fromEmail);
         }
@@ -48,7 +49,6 @@ public class MailServer {
 
                 int port = Integer.parseInt(prop.getProperty("MAIL_PORT"));
                 mailServer = new MailServer(port);
-
                 logger.info("Succesfully initialized mail Server.");
             }
             catch(IOException e){
