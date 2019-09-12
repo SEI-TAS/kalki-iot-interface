@@ -28,6 +28,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
         logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor for device: "+deviceId);
         this.apiUrl = url;
         this.ip = ip;
+
         PHHueSDK phHueSDK = PHHueSDK.create();
         phHueSDK.getNotificationManager().registerSDKListener(listener);
         this.pollInterval = samplingRate;
