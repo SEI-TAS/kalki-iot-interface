@@ -50,9 +50,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     class PollTask extends TimerTask {
         public void run() {
-            logger.info("calling pollDevice()");
             pollDevice();
-            System.out.println("calling saveCurrentState()");
             saveCurrentState();
         }
     }

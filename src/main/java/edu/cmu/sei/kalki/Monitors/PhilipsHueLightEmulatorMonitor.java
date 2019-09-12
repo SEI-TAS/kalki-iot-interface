@@ -12,7 +12,7 @@ import java.util.UUID;
 
 //Adapted from https://github.com/PhilipsHue/PhilipsHueSDK-Java-MultiPlatform-Android/tree/master/JavaDesktopApp
 
-public class HueMonitor extends PollingMonitor {
+public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
     private PHHueSDK phHueSDK;
     private String username;
@@ -22,13 +22,12 @@ public class HueMonitor extends PollingMonitor {
     private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
     private DeviceStatus status;
 
-    public HueMonitor(String ip, int port, int deviceId, int samplingRate) {
+    public PhilipsHueLightEmulatorMonitor( int deviceId, String ip, int samplingRate, String url) {
         super();
         this.isPollable = true;
-        logger.info("[HueMonitor] Starting monitor for device: "+deviceId);
-
-        this.ip = ip + ":" + port;
-
+        logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor for device: "+deviceId);
+        this.apiUrl = url;
+        this.ip = ip;
         PHHueSDK phHueSDK = PHHueSDK.create();
         phHueSDK.getNotificationManager().registerSDKListener(listener);
         this.pollInterval = samplingRate;

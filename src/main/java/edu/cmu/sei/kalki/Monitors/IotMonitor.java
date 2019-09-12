@@ -1,8 +1,12 @@
 package edu.cmu.sei.kalki.Monitors;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Constructor;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.logging.Logger;
 
@@ -10,8 +14,7 @@ import edu.cmu.sei.ttg.kalki.models.*;
 import org.json.JSONObject;
 
 public abstract class IotMonitor {
-    protected final String apiUrl = "http://0.0.0.0:9090/device-controller-api/new-status"; // test url
-//    protected final String apiUrl = "http://10.27.153.3:9090/device-controller-api/new-status"; // deployment url
+    protected String apiUrl;
     protected Timer pollTimer = new Timer();
     protected int pollInterval;
     protected boolean isPollable;
@@ -21,25 +24,36 @@ public abstract class IotMonitor {
 
     protected final Logger logger = Logger.getLogger("iot-interface");
 
-    public IotMonitor(){
+    public IotMonitor(){ }
 
+    public static IotMonitor fromDevice(Device device, String apiUrl){
+        Logger logger = Logger.getLogger("iot-interface");
+        try {
+            String classPath = "edu.cmu.sei.kalki.Monitors."+getDeviceTypeMonitorClassName(device.getType().getName());
+            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE, String.class);
+            IotMonitor mon = (IotMonitor) con.newInstance(device.getId(), device.getIp(), device.getSamplingRate(), apiUrl);
+            return mon;
+        } catch (Exception e2){
+            e2.printStackTrace();
+            logger.info(e2.getMessage());
+
+            return null;
+        }
     }
 
-    public static IotMonitor fromDevice(Device device){
-        IotMonitor mon = null;
-        if(device.getType().getId() == 1){ //Dlink Camera
-            mon = new DLinkMonitor(device.getId());
+    /**
+     * Removes spaces from device type's name and append 'Monitor'
+     * @param devTypeName
+     * @return device type's monitor class name
+     */
+    private static String getDeviceTypeMonitorClassName(String devTypeName) {
+        String[] temp = devTypeName.split(" ");
+        String name = "";
+        for(int i=0;i<temp.length;i++){
+            name+=temp[i];
         }
-        else if(device.getType().getId() == 2){ //Undoo Neo
-            mon = new NeoMonitor(device.getId(), device.getIp(), device.getSamplingRate());
-        }
-        else if (device.getType().getId() == 3){ //WeMo Insight
-            mon = new WemoMonitor(device.getId(), device.getName(), device.getSamplingRate());
-        }
-        else if(device.getType().getId() == 4){ //Hue Light
-            mon = new HueMonitor(device.getIp(), 80, device.getId(), device.getSamplingRate());
-        }
-        return mon;
+        name+="Monitor";
+        return name;
     }
 
     public boolean isPollable() {
@@ -52,12 +66,12 @@ public abstract class IotMonitor {
 
     protected void sendToDeviceController(DeviceStatus status) {
         try {
+            JSONObject json = new JSONObject(status.toString());
             URL url = new URL(apiUrl);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             httpCon.setDoOutput(true);
             httpCon.setRequestMethod("POST");
             OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            JSONObject json = new JSONObject(status.toString());
             out.write(json.toString());
             out.close();
             httpCon.getInputStream();

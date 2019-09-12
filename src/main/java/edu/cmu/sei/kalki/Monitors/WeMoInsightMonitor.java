@@ -11,7 +11,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WemoMonitor extends PollingMonitor {
+public class WeMoInsightMonitor extends PollingMonitor {
 
     private String deviceName;
     private Boolean isOn;
@@ -20,12 +20,13 @@ public class WemoMonitor extends PollingMonitor {
     private Map<String, String> attributes;
     private DeviceStatus status;
 
-    public WemoMonitor(int deviceId, String deviceName, int samplingRate){
+    public WeMoInsightMonitor(int deviceId, String deviceName, int samplingRate, String url){
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
-        logger.info("[WemoMonitor] Starting monitor.");
+        this.apiUrl = url;
+        logger.info("[WeMoInsightMonitor] Starting monitor.");
         start();
     }
 
@@ -79,9 +80,9 @@ public class WemoMonitor extends PollingMonitor {
 
     @Override
     public void saveCurrentState() {
-        logger.info("[WemoMonitor] Saving current state");
+        logger.info("[WeMoInsightMonitor] Saving current state");
         DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
         sendToDeviceController(wemo);
-        logger.info("[WemoMonitor] State saved: "+wemo.toString());
+        logger.info("[WeMoInsightMonitor] State saved: "+wemo.toString());
     }
 }
