@@ -2,9 +2,8 @@ package edu.cmu.sei.kalki.Monitors;
 
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.JSchException;
 
-public class NeoMonitor extends PollingMonitor {
+public class UdooNeoMonitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
@@ -29,21 +28,23 @@ public class NeoMonitor extends PollingMonitor {
 
     private Map<String, String> attributes = new HashMap<String, String>();
 
-    public NeoMonitor(int deviceId, String ip, String username, String password, int samplingRate){
-        this(deviceId, ip, samplingRate);
+    public UdooNeoMonitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
+        this(deviceId, ip, samplingRate, url);
         this.username = username;
         this.password = password;
         this.isPollable = true;
     }
 
-    public NeoMonitor(int deviceId, String ip, int samplingRate){
-        logger.info("[NeoMonitor] Starting Neo Monitor for device: " + deviceId);
+    public UdooNeoMonitor(int deviceId, String ip, int samplingRate, String url){
+        super();
+        logger.info("[UdooNeoMonitor] Starting Neo Monitor for device: " + deviceId);
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
         this.password = "udooer";
         this.pollInterval = samplingRate;
         this.isPollable = true;
+        this.apiUrl = url;
         setSensors();
         start();
     }
@@ -70,7 +71,7 @@ public class NeoMonitor extends PollingMonitor {
         public Map<String, String> parseResponse(List<String> responses) {
             Map<String, String> result = new HashMap<String, String>();
             if (responses.size() < 1){
-                logger.severe("[NeoMonitor] Missing response from Udoo Neo.");
+                logger.severe("[UdooNeoMonitor] Missing response from Udoo Neo.");
             }
             else {
                 String response = responses.get(0);
@@ -145,37 +146,43 @@ public class NeoMonitor extends PollingMonitor {
             channel.setInputStream(null);
             ((ChannelExec)channel).setErrStream(System.err);
 
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(channel.getInputStream()));
             channel.connect();
 
-            Map<String, String> results = new HashMap<String, String>();
-
-            // read the output from the command
+            InputStream inStream = channel.getInputStream();
+            logger.info("[UdooNeoMonitor] Sent commands to device");
             List<String> lines = new ArrayList<String>();
-            String s = stdInput.readLine();
-            while(s != null){
-                lines.add(s);
-                s = stdInput.readLine();
+
+            int c = inStream.read();
+            StringBuilder string = new StringBuilder();
+            while (c > -1) {
+                if (inStream.available() == 0) { // read the newline char
+                    lines.add(string.toString());
+                    string = new StringBuilder();
+                } else {
+                    string.append((char)c);
+                }
+                c = inStream.read();
             }
 
+            channel.disconnect();
+            session.disconnect();
+
+            Map<String, String> results = new HashMap<String, String>();
             for(NeoSensor sensor: sensors){
                 results.putAll(sensor.parseResponse(lines));
             }
 
             attributes = results;
             convertRawReadings();
-            channel.disconnect();
-            session.disconnect();
-
         } catch (JSchException e1){
-            logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
+            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
         }
         catch (IOException e) {
-            logger.severe("[NeoMonitor] Exception happened - here's what I know: ");
+            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
         }
-
+        return;
     }
 
     public void convertRawReadings(){
@@ -206,13 +213,13 @@ public class NeoMonitor extends PollingMonitor {
     }
 
     private void convertTempReading(String suffix, double coefficient) {
-        double reading = Double.valueOf(attributes.get("temp_"+suffix)) * coefficient;
+        double reading = Double.valueOf(attributes.get("temp"+suffix)) * coefficient;
         attributes.replace("temp"+suffix, String.valueOf(reading));
     }
 
     @Override
     public void saveCurrentState() {
-        logger.info("[NeoMonitor] Saving current state");
+        logger.info("[UdooNeoMonitor] Saving current state");
         status = new DeviceStatus(deviceId, attributes);
         sendToDeviceController(status);
     }

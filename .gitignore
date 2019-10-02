@@ -11,11 +11,12 @@ build/*
 # BlueJ files
 *.ctxt
 
+!gradle-wrapper.jar
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear

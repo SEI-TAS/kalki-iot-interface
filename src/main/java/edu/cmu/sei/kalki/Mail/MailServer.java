@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 public class MailServer {
 
     private static Logger logger = Logger.getLogger("myLogger");
@@ -31,6 +34,7 @@ public class MailServer {
     }
 
     public static void notify(String fromEmail){
+        logger.info("notify! "+fromEmail);
         for(EventObserver o : mailServer.mailObservers){
             o.notify(fromEmail);
         }
@@ -41,23 +45,23 @@ public class MailServer {
             logger.info("Initializing mail server");
 
             try{
-                Properties prop = new Properties();
-                String fileName = "iot-interface.config";
-                InputStream is = new FileInputStream(fileName);
-                prop.load(is);
 
-                int port = Integer.parseInt(prop.getProperty("MAIL_PORT"));
+                InputStream fs = new FileInputStream("config.json");
+                JSONTokener parser = new JSONTokener(fs);
+                JSONObject config = new JSONObject(parser);
+                int port = config.getInt("MAIL_PORT");
+                fs.close();
+
                 mailServer = new MailServer(port);
-
-                logger.info("Succesfully initialized mail Server.");
+                logger.info("[MailServer] Succesfully initialized mail Server.");
             }
             catch(IOException e){
-                logger.severe("Error intializing mail server.");
+                logger.severe("[MailServer] Error intializing mail server.");
                 System.exit(-1);
             }
 
         } else {
-            logger.info("Mail Server already initialized");
+            logger.info("[MailServer] Mail Server already initialized");
         }
     }
 }

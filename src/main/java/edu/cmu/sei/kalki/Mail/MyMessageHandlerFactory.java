@@ -27,24 +27,24 @@ public class MyMessageHandlerFactory implements MessageHandlerFactory {
         }
 
         public void from(String from) throws RejectException {
-            //System.out.println("FROM:"+from);
+//            System.out.println("FROM:"+from);
             MailServer.notify(from);
         }
 
         public void recipient(String recipient) throws RejectException {
-            //System.out.println("RECIPIENT:"+recipient);
+//            System.out.println("RECIPIENT:"+recipient);
         }
 
         public void data(InputStream data) throws IOException {
-            //System.out.println("MAIL DATA");
-            //System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
-            //System.out.println(this.convertStreamToString(data));
-            //System.out.println("Image goes here");
-            //System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
+//            System.out.println("MAIL DATA");
+//            System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
+//            System.out.println(this.convertStreamToString(data));
+//            System.out.println("Image goes here");
+//            System.out.println("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
         }
 
         public void done() {
-            //System.out.println("Finished");
+//            System.out.println("Finished");
         }
 
         public String convertStreamToString(InputStream is) {

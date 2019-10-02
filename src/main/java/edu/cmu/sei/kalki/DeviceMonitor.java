@@ -10,8 +10,10 @@ import java.util.logging.Logger;
 public class DeviceMonitor {
     private Logger logger = Logger.getLogger("iot-interface");
     private HashMap<Integer, IotMonitor> monitors;
+    private String apiUrl;
 
-    public DeviceMonitor() {
+    public DeviceMonitor(String url) {
+        apiUrl = url;
         monitors = new HashMap<Integer, IotMonitor>();
     }
 
@@ -21,7 +23,7 @@ public class DeviceMonitor {
      */
     public void startMonitor(Device device) {
         logger.info("[DeviceMonitor] Starting monitor for device: "+device.getId());
-        IotMonitor mon = IotMonitor.fromDevice(device);
+        IotMonitor mon = IotMonitor.fromDevice(device, apiUrl);
         monitors.put(device.getId(), mon);
     }
 
