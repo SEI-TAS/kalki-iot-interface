@@ -14,7 +14,7 @@ public class IotInterface {
             apiUrl = args[0];
         } catch (ArrayIndexOutOfBoundsException e) { }
 
-        DeviceMonitor monitor = new DeviceMonitor("http://"+apiUrl+"/device-controller-api/new-status");
+        DeviceMonitor monitor = new DeviceMonitor("http://"+apiUrl+"/device-controller-api/");
         logger.info("[IotInterface] DeviceMonitor initialized.");
         ApiServerStartup.start(monitor);
         logger.info("[IotInterface] APIServerStartup started.");
