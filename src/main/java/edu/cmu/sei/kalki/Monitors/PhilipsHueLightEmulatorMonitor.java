@@ -71,12 +71,15 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
             logger.info("Connected to bridge");
             String lastIpAddress = bridge.getResourceCache().getBridgeConfiguration().getIpAddress();
             logger.info("IP is : " + lastIpAddress);
+            logger.info("device ip is: "+ip);
+            if(!comparePorts(ip, lastIpAddress))
+                return;
             logger.info("Username is: " + username);
             if(pollingEnabled){
                 phHueSDK.disableAllHeartbeat();
                 phHueSDK.enableHeartbeat(bridge, getHeartbeatInterval());
             }
-            randomLights();
+            setStatuses(bridge);
         }
 
         @Override
@@ -130,6 +133,37 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
         }
     }
 
+    private boolean comparePorts(String deviceUrl, String bridgeUrl){
+        String[] dev = deviceUrl.split(":");
+        String[] bridge = bridgeUrl.split(":");
+
+        if(dev[1].equals(bridge[1]))
+            return true;
+
+        return false;
+    }
+
+    public void setStatuses(PHBridge bridge) {
+        PHBridgeResourcesCache cache = bridge.getResourceCache();
+        // And now you can get any resource you want, for example:
+        List<PHLight> myLights = cache.getAllLights();
+        lights = new ArrayList<DeviceStatus>();
+        for(PHLight light : myLights){
+            PHLightState state = light.getLastKnownLightState();
+            String id = light.getUniqueId();
+            if (id == null){
+                id = UUID.randomUUID().toString();
+                light.setUniqueId(id);
+            }
+            DeviceStatus newLight = new DeviceStatus(deviceId);
+            newLight.addAttribute("brightness", state.getBrightness().toString());
+            newLight.addAttribute("hue", state.getHue().toString());
+            newLight.addAttribute("isOn", state.isOn().toString());
+            newLight.addAttribute("lightId", id);
+            lights.add(newLight);
+        }
+    }
+
     /**
      * Connects to bridge using the given ip.
      * @param ip address of the bridge.
@@ -178,24 +212,6 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
         if (bridge == null){
             logger.severe("Null Bridge");
             return;
-        }
-        PHBridgeResourcesCache cache = bridge.getResourceCache();
-        // And now you can get any resource you want, for example:
-        List<PHLight> myLights = cache.getAllLights();
-        lights = new ArrayList<DeviceStatus>();
-        for(PHLight light : myLights){
-            PHLightState state = light.getLastKnownLightState();
-            String id = light.getUniqueId();
-            if (id == null){
-                id = UUID.randomUUID().toString();
-                light.setUniqueId(id);
-            }
-            DeviceStatus newLight = new DeviceStatus(deviceId);
-            newLight.addAttribute("brightness", state.getBrightness().toString());
-            newLight.addAttribute("hue", state.getHue().toString());
-            newLight.addAttribute("isOn", state.isOn().toString());
-            newLight.addAttribute("lightId", id);
-            lights.add(newLight);
         }
     }
 
