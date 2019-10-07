@@ -1,11 +1,13 @@
 package edu.cmu.sei.kalki.commanders;
 
 import com.philips.lighting.hue.listener.PHLightListener;
+import edu.cmu.sei.kalki.utils.DeviceControllerApi;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 
 import com.philips.lighting.hue.sdk.*;
 import com.philips.lighting.model.*;
+import edu.cmu.sei.ttg.kalki.models.StageLog;
 import org.json.JSONObject;
 
 import java.io.OutputStreamWriter;
@@ -19,7 +21,7 @@ public class PhleCommandSender {
     private static PHHueSDK phHueSDK;
     private static Logger logger = Logger.getLogger("iot-interface");
 
-    public static void sendCommands(Device device, List<DeviceCommand> commands){
+    public static void sendCommands(Device device, List<DeviceCommand> commands, String apiUrl){
         logger.info("[PhleCommandSender] Sending commands to PHLE: "+device.getId());
         connectToHue(device);
 
@@ -41,10 +43,12 @@ public class PhleCommandSender {
                     case "turn-on":
                         logger.info("[PhleCommandSender] Sending 'turn-on' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), i+1,"true");
+                        logSendCommand(device, command.getName(), apiUrl);
                         break;
                     case "turn-off":
                         logger.info("[PhleCommandSender] Sending 'turn-off' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), i+1,"false");
+                        logSendCommand(device, command.getName(), apiUrl);
                         break;
                     case "set-name":
                     case "set-brightness":
@@ -58,6 +62,12 @@ public class PhleCommandSender {
             }
         }
 
+    }
+
+    private static void logSendCommand(Device device, String command, String apiUrl) {
+        logger.info("[PhleCommandSender] Logging that a command was sent to the device.");
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
+        DeviceControllerApi.sendLog(log, apiUrl);
     }
 
     private static void sendIsOn(String ip, int lightId, String isOn) {

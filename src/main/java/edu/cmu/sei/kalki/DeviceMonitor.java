@@ -3,6 +3,7 @@ package edu.cmu.sei.kalki;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.kalki.Monitors.IotMonitor;
 import edu.cmu.sei.kalki.Monitors.PollingMonitor;
+import edu.cmu.sei.ttg.kalki.models.StageLog;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -15,6 +16,10 @@ public class DeviceMonitor {
     public DeviceMonitor(String url) {
         apiUrl = url;
         monitors = new HashMap<Integer, IotMonitor>();
+    }
+
+    public String getApiUrl(){
+        return apiUrl;
     }
 
     /**
@@ -39,11 +44,21 @@ public class DeviceMonitor {
                 logger.info("[DeviceMonitor] Found monitor, updating sampling rate");
                 mon.setPollInterval(device.getSamplingRate());
                 monitors.replace(device.getId(), mon);
+                logUpdateMonitor(device);
             }
         } else {
             logger.severe("[DeviceMonitor] No monitor found for given device "+device.getId()+". Starting one...");
             startMonitor(device);
         }
+    }
 
+    /**
+     * Sends a StageLog to the DeviceControllerApi to record updating a sampling rate
+     * @param device Device the monitor was updated for
+     */
+    private void logUpdateMonitor(Device device) {
+        logger.info("[DeviceMonitor] Logging monitor start for device: "+device.getId());
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, "Increased sampling rate for device: "+device.getId());
+        log.insert();
     }
 }
