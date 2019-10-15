@@ -27,9 +27,14 @@ public class DeviceMonitor {
      * @param device
      */
     public void startMonitor(Device device) {
-        logger.info("[DeviceMonitor] Starting monitor for device: "+device.getId());
-        IotMonitor mon = IotMonitor.fromDevice(device, apiUrl);
-        monitors.put(device.getId(), mon);
+        if(device.getSamplingRate() == 0){
+            logger.info("[DeviceMonitor] Sampling rate of 0. Not starting monitor.");
+        }
+        else {
+            logger.info("[DeviceMonitor] Starting monitor for device: "+device.getId());
+            IotMonitor mon = IotMonitor.fromDevice(device, apiUrl);
+            monitors.put(device.getId(), mon);
+        }
     }
 
     /**
