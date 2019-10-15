@@ -28,6 +28,7 @@ public class SendCommandServlet extends ApiServlet {
         // read body of request
         JSONObject requestBody = parseRequestBody(request, response);
 
+        logger.info("[SendCommandServlet] Request body:"+requestBody.toString());
         // get Device from body
         Device device;
         try {

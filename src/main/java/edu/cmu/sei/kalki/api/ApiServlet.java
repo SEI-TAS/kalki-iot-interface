@@ -45,9 +45,10 @@ public class ApiServlet extends HttpServlet {
         String ip = deviceData.getString("ip");
         int statusHistorySize = deviceData.getInt("statusHistorySize");
         int samplingRate = deviceData.getInt("samplingRate");
+        int defaultSamplingRate = deviceData.getInt("defaultSamplingRate");
         DeviceSecurityState currentState = deviceData.optJSONObject("currentState")!=null ? parseSecurityState(deviceData.getJSONObject("currentState")):null;
         Alert lastAlert = deviceData.optJSONObject("lastAlert")!=null ? parseAlert(deviceData.getJSONObject("lastAlert")):null;
-        Device device = new Device(name, description, deviceType, group, ip, statusHistorySize, samplingRate, currentState, lastAlert);
+        Device device = new Device(name, description, deviceType, group, ip, statusHistorySize, samplingRate, defaultSamplingRate,currentState, lastAlert);
         device.setId(id);
         return device;
     }
