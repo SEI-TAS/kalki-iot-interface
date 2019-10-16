@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki;
 
+import edu.cmu.sei.kalki.utils.DeviceControllerApi;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.kalki.Monitors.IotMonitor;
 import edu.cmu.sei.kalki.Monitors.PollingMonitor;
@@ -64,6 +65,8 @@ public class DeviceMonitor {
     private void logUpdateMonitor(Device device) {
         logger.info("[DeviceMonitor] Logging monitor start for device: "+device.getId());
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, "Increased sampling rate for device: "+device.getId());
-        log.insert();
+        DeviceControllerApi.sendLog(log, apiUrl);
     }
+
+
 }
