@@ -46,7 +46,7 @@ public class DeviceMonitor {
         IotMonitor mon = monitors.get(device.getId());
         if(mon != null && mon.getPollInterval() != device.getSamplingRate()){
             logger.info("[DeviceMonitor] Updating monitor for device: "+device.getId());
-            if(mon.isPollable()){
+            if(mon.isPollable() && device.getSamplingRate() > 0){
                 logger.info("[DeviceMonitor] Found monitor, updating sampling rate");
                 mon.setPollInterval(device.getSamplingRate());
                 monitors.replace(device.getId(), mon);
