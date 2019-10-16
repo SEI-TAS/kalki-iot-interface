@@ -55,8 +55,13 @@ public abstract class IotMonitor {
     }
 
     public void setPollInterval(int pollInterval) {
-        return;
+        this.pollInterval = pollInterval;
     }
+
+    public int getPollInterval() {
+        return pollInterval;
+    }
+
 
     protected void sendToDeviceController(DeviceStatus status) {
         DeviceControllerApi.sendStatus(status, apiUrl);

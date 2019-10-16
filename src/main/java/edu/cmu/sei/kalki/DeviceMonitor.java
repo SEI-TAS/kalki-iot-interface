@@ -44,7 +44,7 @@ public class DeviceMonitor {
      */
     public void updateMonitor(Device device) {
         IotMonitor mon = monitors.get(device.getId());
-        if(mon != null){
+        if(mon != null && mon.getPollInterval() != device.getSamplingRate()){
             logger.info("[DeviceMonitor] Updating monitor for device: "+device.getId());
             if(mon.isPollable()){
                 logger.info("[DeviceMonitor] Found monitor, updating sampling rate");
@@ -63,7 +63,7 @@ public class DeviceMonitor {
      * @param device Device the monitor was updated for
      */
     private void logUpdateMonitor(Device device) {
-        logger.info("[DeviceMonitor] Logging monitor start for device: "+device.getId());
+        logger.info("[DeviceMonitor] Logging monitor update for device: "+device.getId());
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, "Increased sampling rate for device: "+device.getId());
         DeviceControllerApi.sendLog(log, apiUrl);
     }

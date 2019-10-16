@@ -13,6 +13,7 @@ public class DLinkCameraMonitor extends IotMonitor implements EventObserver {
         MailServer.initialize();
         MailServer.registerObserver(this);
         isPollable = false;
+        this.pollInterval = samplingRate;
         logger.info("[DLinkCameraMonitor] Monitor started for device: "+deviceId);
         this.deviceId = deviceId;
     }
