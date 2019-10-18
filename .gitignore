@@ -7,15 +7,16 @@ build/*
 .gradle/
 # Log file
 *.log
-
+.DS_Store
 # BlueJ files
 *.ctxt
+
+!gradle-wrapper.jar
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
