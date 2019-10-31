@@ -42,8 +42,6 @@ public class VizioMonitor extends PollingMonitor {
     private String deviceName;
     private Boolean isOn;
     private int deviceId;
-    //private String authCode = "Zmwq86v1kj";
-    //private String authCode = "Zvh5l45708";
     private String authCode = "Zfo377mxmc";
     private String ip;
     private int port = 7345;
@@ -75,7 +73,6 @@ public class VizioMonitor extends PollingMonitor {
 
     public String issueCommand(String path){
         String targetURL = "https://" + ip + ":" + Integer.toString(port) + path;
-        logger.info(targetURL);
         try{
 
 
@@ -95,30 +92,19 @@ public class VizioMonitor extends PollingMonitor {
             // add request headers
             request.addHeader("AUTH", authCode);
             request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
-//            logger.info("[VizioMomitor] Executing request to " + targetURL);
 
             CloseableHttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                // return it as a String
                 String result = EntityUtils.toString(entity);
                 response.close();
                 httpClient.close();
                 return result;
             }
             return "Error";
-        } catch (IOException e){
-            logger.info("[VizioMonitor] Error: "+ e);
-            return "Error";
-        } catch (NoSuchAlgorithmException e) {
-            logger.info("[VizioMonitor] Error: "+ e);
-            return "Error";
-        } catch (KeyStoreException e) {
-            logger.info("[VizioMonitor] Error: "+ e);
-            return "Error";
-        } catch (KeyManagementException e) {
-            logger.info("[VizioMonitor] Error: "+ e);
+        } catch (IOException | NoSuchAlgorithmException | KeyStoreException | KeyManagementException e){
+            logger.severe("[VizioMonitor] Error: "+ e);
             return "Error";
         }
     }
