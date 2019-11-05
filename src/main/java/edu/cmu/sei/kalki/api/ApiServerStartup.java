@@ -13,7 +13,7 @@ public class ApiServerStartup {
     /**
      * Starts a Jetty server, with handler for notifications
      */
-    public static void start(DeviceMonitor monitor) {
+    public static void start(DeviceMonitor monitor) throws Exception {
         try {
             Server httpServer = new Server(SERVER_PORT);
             ServletContextHandler handler = new ServletContextHandler(httpServer, API_URL);
@@ -26,6 +26,7 @@ public class ApiServerStartup {
             logger.info("[ApiServerStartup] HTTP server started at " + httpServer.getURI().toString());
         } catch (Exception e) {
             logger.severe("[ApiServerStartup] Error starting IoT Interface API Server: "+e.getMessage());
+            throw e;
         }
     }
 }
