@@ -66,7 +66,7 @@ public class WemoCommandSender {
     }
 
     private static void logSendCommand(Device device, String command, String apiUrl) {
-        logger.info("[PhleCommandSender] Logging that a command was sent to the device.");
+        logger.info("[WemoCommandSender] Logging that a command was sent to the device.");
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
         DeviceControllerApi.sendLog(log, apiUrl);
     }

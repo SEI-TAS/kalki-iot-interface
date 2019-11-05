@@ -25,8 +25,7 @@ public class ApiServerStartup {
 
             logger.info("[ApiServerStartup] HTTP server started at " + httpServer.getURI().toString());
         } catch (Exception e) {
-            logger.severe("[ApiServerStartup] Error starting IoT Interface API Server");
-            logger.severe(e.getMessage());
+            logger.severe("[ApiServerStartup] Error starting IoT Interface API Server: "+e.getMessage());
         }
     }
 }
