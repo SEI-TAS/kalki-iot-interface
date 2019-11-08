@@ -37,7 +37,7 @@ public class WemoCommandSender {
     }
 
     private static void sendCommand(Device device, DeviceCommand command) {
-        args[2] = device.getName();
+        args[2] = device.getIp();
         args[3] = command.getName();
         String s = null;
 

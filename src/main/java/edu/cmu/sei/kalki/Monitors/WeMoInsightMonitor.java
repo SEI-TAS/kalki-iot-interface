@@ -13,15 +13,15 @@ import org.json.JSONObject;
 
 public class WeMoInsightMonitor extends PollingMonitor {
 
-    private String deviceName;
+    private String deviceIp;
     private Boolean isOn;
     private int deviceId;
 
     private Map<String, String> attributes;
     private DeviceStatus status;
 
-    public WeMoInsightMonitor(int deviceId, String deviceName, int samplingRate, String url){
-        this.deviceName = deviceName;
+    public WeMoInsightMonitor(int deviceId, String ip, int samplingRate, String url){
+        this.deviceIp = ip;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
@@ -41,7 +41,7 @@ public class WeMoInsightMonitor extends PollingMonitor {
             String[] args = new String[]{
                     "python",
                     "wemo.py",
-                    deviceName,
+                    deviceIp,
                     "status"
             };
             Process p = Runtime.getRuntime().exec(args);
@@ -62,7 +62,7 @@ public class WeMoInsightMonitor extends PollingMonitor {
                     attributes.put(key, value);
                 }
 
-                s = s.replace("Switch: " + deviceName, "");
+                s = s.replace("Switch: " + deviceIp, "");
                 isOn = s.contains("on");
             }
 
