@@ -1,14 +1,15 @@
-# iot-monitor
-## requirements
-ouimeaux 0.8 library. To install: `pip install -I ouimeaux==0.8`
-- Note: there is an incorrect import being used in the subscribe.py script for ouimeaux 0.8. to fix:
-  - locate the `subscribe.py` of the ouimeaux python package at `<python install location>/dist-packages/ouimeaux/subscribe.py`
-  - change the line `from gevent.wsgi import WSGIServer` to `from gevent.pywsgi import WSGIServer`
-  
-Kalki controller component that monitors and polls information from IoT devices
+# Kalki-IoT-Interface
+Kalki component that monitors and polls information from IoT devices, as well as sends commands to them.
 
-To run: ./gradlew run
+## Requirements
+- Ouimeaux python library. To install: `sudo bash python_venv_setup.sh`
+- Kalki-db library. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
 
+## To run: 
+```
+$ source ouimeaux/bin/activate
+$ ./gradlew run
+```
 
 ####DLink Camera
 Camera must first be connected to the wifi network via the my dlink phone app.
