@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.lang.StringBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +32,6 @@ public class WeMoInsightMonitor extends PollingMonitor {
 
     @Override
     public void pollDevice() {
-        String s = null;
         attributes = new HashMap<String, String>();
         try {
 
@@ -53,19 +52,20 @@ public class WeMoInsightMonitor extends PollingMonitor {
                     InputStreamReader(p.getErrorStream()));
 
             // read the output from the command
-            while ((s = stdInput.readLine()) != null) {
-                logger.info(s);
-                JSONObject json = new JSONObject(s);
+            StringBuilder st = new StringBuilder();
+	    String s = null;
+	    while ((s = stdInput.readLine()) != null) {
+		st.append(s);
+                //s = s.replace("Switch: " + deviceIp, "");
+                //isOn = s.contains("on");
+            }
+	    logger.info("Output from device: "+st.toString());
+                JSONObject json = new JSONObject(st.toString());
                 for(Object keyObj : json.keySet()){
                     String key = (String) keyObj;
                     String value = (String) json.get(key).toString();
                     attributes.put(key, value);
                 }
-
-                s = s.replace("Switch: " + deviceIp, "");
-                isOn = s.contains("on");
-            }
-
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
                 logger.severe(s);
@@ -74,6 +74,7 @@ public class WeMoInsightMonitor extends PollingMonitor {
             logger.severe("Error polling Wemo Insight: " + e.toString());
         } catch (JSONException e) {
             logger.severe("Error parsing JSON respons from Wemo Insight: " + deviceId + ". " + e.getMessage());
+	    e.printStackTrace();
         }
 
     }
