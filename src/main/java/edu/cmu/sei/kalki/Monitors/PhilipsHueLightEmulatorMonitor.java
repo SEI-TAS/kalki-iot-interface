@@ -32,7 +32,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
 
     private int deviceId;
-    private String authCode = "927bfc7c145594fc0b7b8b689ba37e9";
+    private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
     private int port = 8000;
 
