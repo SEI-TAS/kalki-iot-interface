@@ -1,4 +1,5 @@
 package edu.cmu.sei.kalki;
+import edu.cmu.sei.kalki.Monitors.PhilipsHueLightEmulatorMonitor;
 import edu.cmu.sei.kalki.api.*;
 import edu.cmu.sei.ttg.kalki.models.Device;
 
@@ -13,10 +14,12 @@ public class IotInterface {
         try {
             apiUrl = args[0];
         } catch (ArrayIndexOutOfBoundsException e) { }
+        PhilipsHueLightEmulatorMonitor monitor = new PhilipsHueLightEmulatorMonitor(1, "localhost", 8000, 3000);
+//        monitor.start();
 
-        DeviceMonitor monitor = new DeviceMonitor("http://"+apiUrl+"/device-controller-api/");
+//        DeviceMonitor monitor = new DeviceMonitor("http://"+apiUrl+"/device-controller-api/");
         logger.info("[IotInterface] DeviceMonitor initialized.");
-        ApiServerStartup.start(monitor);
+//        ApiServerStartup.start(monitor);
         logger.info("[IotInterface] APIServerStartup started.");
     }
 }
