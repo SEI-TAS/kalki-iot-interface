@@ -30,11 +30,14 @@ public class DeviceMonitor {
     public void startMonitor(Device device) {
         if(device.getSamplingRate() == 0){
             logger.info("[DeviceMonitor] Sampling rate of 0. Not starting monitor.");
+            logUpdateMonitor(device, "0 sampling rate");
         }
         else {
             logger.info("[DeviceMonitor] Starting monitor for device: "+device.getId());
             IotMonitor mon = IotMonitor.fromDevice(device, apiUrl);
             monitors.put(device.getId(), mon);
+            logUpdateMonitor(device, "Monitor started");
+
         }
     }
 
@@ -50,8 +53,11 @@ public class DeviceMonitor {
                 logger.info("[DeviceMonitor] Found monitor, updating sampling rate");
                 mon.setPollInterval(device.getSamplingRate());
                 monitors.replace(device.getId(), mon);
-                logUpdateMonitor(device);
+                logUpdateMonitor(device, "Updated monitor");
+            } else {
+                logUpdateMonitor(device, "Monitor not updated");
             }
+
         } else {
             logger.severe("[DeviceMonitor] No monitor found for given device "+device.getId()+". Starting one...");
             startMonitor(device);
@@ -62,9 +68,9 @@ public class DeviceMonitor {
      * Sends a StageLog to the DeviceControllerApi to record updating a sampling rate
      * @param device Device the monitor was updated for
      */
-    private void logUpdateMonitor(Device device) {
+    private void logUpdateMonitor(Device device, String info) {
         logger.info("[DeviceMonitor] Logging monitor update for device: "+device.getId());
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, "Increased sampling rate for device: "+device.getId());
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, info);
         DeviceControllerApi.sendLog(log, apiUrl);
     }
 
