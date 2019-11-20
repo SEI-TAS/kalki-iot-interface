@@ -128,6 +128,7 @@ public class UdooNeoMonitor extends PollingMonitor {
     public void pollDevice() {
         try {
 
+            attributes = new HashMap<String, String>();
             String command = "";
             for(NeoSensor sensor: sensors){
                 command += sensor.getCommand();
@@ -167,20 +168,19 @@ public class UdooNeoMonitor extends PollingMonitor {
             channel.disconnect();
             session.disconnect();
 
-            Map<String, String> results = new HashMap<String, String>();
             for(NeoSensor sensor: sensors){
-                results.putAll(sensor.parseResponse(lines));
+                attributes.putAll(sensor.parseResponse(lines));
             }
-
-            attributes = results;
             convertRawReadings();
         } catch (JSchException e1){
             logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
+            attributes = new HashMap<String, String>();
         }
         catch (IOException e) {
             logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
+            attributes = new HashMap<String, String>();
         }
         return;
     }

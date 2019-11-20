@@ -1,4 +1,5 @@
 package edu.cmu.sei.kalki;
+import edu.cmu.sei.kalki.Monitors.PhilipsHueLightEmulatorMonitor;
 import edu.cmu.sei.kalki.api.*;
 import java.util.logging.Logger;
 
@@ -10,6 +11,7 @@ public class IotInterface {
 
         try {
             apiUrl = args[0];
+
         } catch (ArrayIndexOutOfBoundsException e) {
             logger.info("[IotInterface] No alternative API IP+port specified. Defaulting to: "+apiUrl);
         }

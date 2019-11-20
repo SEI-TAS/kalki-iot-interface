@@ -1,228 +1,131 @@
 package edu.cmu.sei.kalki.Monitors;
 
-import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
-import com.philips.lighting.hue.sdk.*;
-import com.philips.lighting.model.*;
+import java.io.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-//Adapted from https://github.com/PhilipsHue/PhilipsHueSDK-Java-MultiPlatform-Android/tree/master/JavaDesktopApp
+import javax.net.ssl.*;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 
 public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
-    private PHHueSDK phHueSDK;
-    private String username;
+
+    private int deviceId;
+    private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
-    private static final int MAX_HUE=65535;
+    private int port = 8000;
 
     private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
-    private DeviceStatus status;
+    Set<String> lightKeys = new HashSet<String>();
 
-    public PhilipsHueLightEmulatorMonitor( int deviceId, String ip, int samplingRate, String url) {
-        super();
-        this.isPollable = true;
-        logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor for device: "+deviceId);
-        this.apiUrl = url;
-        this.ip = ip;
-
-        PHHueSDK phHueSDK = PHHueSDK.create();
-        phHueSDK.getNotificationManager().registerSDKListener(listener);
-        this.pollInterval = samplingRate;
-        this.phHueSDK = PHHueSDK.getInstance();
+    public PhilipsHueLightEmulatorMonitor(int deviceId, String ip, int port, int samplingRate){
         this.deviceId = deviceId;
-        this.username = "f450ab20effc384c3298bbcf745272a";
+        this.pollInterval = samplingRate;
+        this.isPollable = true;
+        this.ip = ip;
+        this.port = port;
+        logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor.");
         start();
     }
 
-    @Override
-    public void start(){
-        connectToDevice();
-        super.start();
-    }
 
-    public void findBridges() {
-        phHueSDK = PHHueSDK.getInstance();
-        PHBridgeSearchManager sm = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
-        sm.search(true, true);
-    }
 
-    private PHSDKListener listener = new PHSDKListener() {
+    public String issueCommand(String path){
+        String targetURL = "http://" + ip + ":" + Integer.toString(port) + "/api/" + authCode + "/" + path;
+        logger.info(targetURL);
+        try{
 
-        @Override
-        public void onAccessPointsFound(List<PHAccessPoint> accessPointsList) {
-            logger.info("Found AccessPoints!");
+            int timeout = 5;
+            RequestConfig config = RequestConfig.custom()
+                    .setConnectTimeout(timeout * 1000)
+                    .setConnectionRequestTimeout(timeout * 1000)
+                    .setSocketTimeout(timeout * 1000).build();
+            CloseableHttpClient httpClient =
+                    HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+            HttpGet request = new HttpGet(targetURL);
 
-        }
 
-        @Override
-        public void onAuthenticationRequired(PHAccessPoint accessPoint) {
-            // Start the Pushlink Authentication.
-            logger.info("AuthenticationRequired");
-            phHueSDK.startPushlinkAuthentication(accessPoint);
-        }
+            CloseableHttpResponse response = httpClient.execute(request);
 
-        @Override
-        public void onBridgeConnected(PHBridge bridge, String username) {
-            phHueSDK.setSelectedBridge(bridge);
-            logger.info("Connected to bridge");
-            String lastIpAddress = bridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-            logger.info("IP is : " + lastIpAddress);
-            logger.info("device ip is: "+ip);
-            if(!comparePorts(ip, lastIpAddress))
-                return;
-            logger.info("Username is: " + username);
-            if(pollingEnabled){
-                phHueSDK.disableAllHeartbeat();
-                phHueSDK.enableHeartbeat(bridge, getHeartbeatInterval());
+            HttpEntity entity = response.getEntity();
+            logger.info(entity.toString());
+            if (entity != null) {
+                logger.info("converting to string");
+                String result = EntityUtils.toString(entity);
+                logger.info("closing up");
+                response.close();
+                httpClient.close();
+                return result;
             }
-            setStatuses(bridge);
+            return "Error";
+        } catch (IOException e) {
+            logger.severe("[PhilipsHueLightEmulatorMonitor] Error: "+ e);
+            return "Error";
         }
-
-        @Override
-        public void onCacheUpdated(List<Integer> arg0, PHBridge arg1) {
-        }
-
-        @Override
-        public void onConnectionLost(PHAccessPoint arg0) {
-        }
-
-        @Override
-        public void onConnectionResumed(PHBridge arg0) {
-        }
-
-        @Override
-        public void onError(int code, final String message) {
-
-            if (code == PHHueError.BRIDGE_NOT_RESPONDING) {
-                logger.info("Bridge not responding: " + message);
-            }
-            else if (code == PHMessageType.PUSHLINK_BUTTON_NOT_PRESSED) {
-                logger.info("Button not pressed: " + message);
-            }
-            else if (code == PHMessageType.PUSHLINK_AUTHENTICATION_FAILED) {
-                    logger.info("Authentication failed: " + message);
-            }
-            else if (code == PHMessageType.BRIDGE_NOT_FOUND) {
-                logger.info("Bridge not found: " + message);
-            }
-        }
-
-        @Override
-        public void onParsingErrors(List<PHHueParsingError> parsingErrorsList) {  
-            for (PHHueParsingError parsingError: parsingErrorsList) {
-                logger.info("ParsingError : " + parsingError.getMessage());
-            }
-        } 
-    };
-
-    public void randomLights() {
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        PHBridgeResourcesCache cache = bridge.getResourceCache();
-
-        List<PHLight> allLights = cache.getAllLights();
-        Random rand = new Random();
-
-        for (PHLight light : allLights) {
-            PHLightState lightState = new PHLightState();
-            lightState.setHue(rand.nextInt(MAX_HUE));
-            bridge.updateLightState(light, lightState); // If no bridge response is required then use this simpler form.
-        }
-    }
-
-    private boolean comparePorts(String deviceUrl, String bridgeUrl){
-        String[] dev = deviceUrl.split(":");
-        String[] bridge = bridgeUrl.split(":");
-
-        if(dev[1].equals(bridge[1]))
-            return true;
-
-        return false;
-    }
-
-    public void setStatuses(PHBridge bridge) {
-        PHBridgeResourcesCache cache = bridge.getResourceCache();
-        // And now you can get any resource you want, for example:
-        List<PHLight> myLights = cache.getAllLights();
-        lights = new ArrayList<DeviceStatus>();
-        for(PHLight light : myLights){
-            PHLightState state = light.getLastKnownLightState();
-            String id = light.getUniqueId();
-            if (id == null){
-                id = UUID.randomUUID().toString();
-                light.setUniqueId(id);
-            }
-            DeviceStatus newLight = new DeviceStatus(deviceId);
-            newLight.addAttribute("brightness", state.getBrightness().toString());
-            newLight.addAttribute("hue", state.getHue().toString());
-            newLight.addAttribute("isOn", state.isOn().toString());
-            newLight.addAttribute("lightId", id);
-            lights.add(newLight);
-        }
-    }
-
-    /**
-     * Connects to bridge using the given ip.
-     * @param ip address of the bridge.
-     * @return true if there was sufficient information to attempt a connection.
-     */
-    public boolean connectToAccessPoint(String ip) {
-        if (username==null || ip == null) {
-            logger.info("Missing Last Username or Last IP.  Last known connection not found.");
-            return false;
-        }
-        PHAccessPoint accessPoint = new PHAccessPoint();
-        accessPoint.setIpAddress(ip);
-        accessPoint.setUsername(username);
-        phHueSDK.connect(accessPoint);
-        return true;
-    }
-
-    @Override
-    public void startPolling(){
-        super.startPolling();
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        if (bridge != null){
-            phHueSDK.enableHeartbeat(bridge, getHeartbeatInterval());
-        }
-    }
-
-    /**
-     * Heartbeat interval needs to be slightly less than the pollInterval to guarantee correctness.
-     * @return
-     */
-    private int getHeartbeatInterval(){
-        return Math.max(pollInterval/3, pollInterval-300);
-    }
-
-    @Override
-    public void stopPolling() {
-        super.stopPolling();
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        phHueSDK.disableHeartbeat(bridge);
     }
 
     @Override
     public void pollDevice() {
-        PHHueSDK phHueSDK = PHHueSDK.getInstance();
-        PHBridge bridge = phHueSDK.getSelectedBridge();
-        if (bridge == null){
-            logger.severe("Null Bridge");
-            return;
+        lights = new ArrayList<DeviceStatus>();
+        String response = issueCommand("lights");
+        logger.info("[PhilipsHueLightEmulatorMonitor]  Getting current status from response " + response);
+        try {
+            JSONObject json = new JSONObject(response);
+            Iterator<String> keys = json.keys();
+            while(keys.hasNext()) { // Each key is a different light, build set of keys to report empty statuses when device can't be reached
+                String key = keys.next();
+                if (!lightKeys.contains(key)) {
+                    lightKeys.add(key);
+                }
+            }
+            for (String key : lightKeys){
+                DeviceStatus light = new DeviceStatus(deviceId);
+                light.addAttribute("lightId", key);
+                JSONObject lightJson = json.getJSONObject(key);
+                String name = lightJson.getString("name");
+                JSONObject state = lightJson.getJSONObject("state");
+                String brightness = Integer.toString(state.getInt("bri"));
+                String hue = Integer.toString(state.getInt("hue"));
+                String isOn = Boolean.toString(state.getBoolean("on"));
+                light.addAttribute("hue", hue);
+                light.addAttribute("isOn", isOn);
+                light.addAttribute("brightness", brightness);
+                light.addAttribute("name", name);
+                lights.add(light);
+            }
+
+        } catch (JSONException err){
+            logger.severe("[PhilipsHueLightEmulatorMonitor] Error: " + err.toString());
         }
     }
+
 
     @Override
     public void saveCurrentState() {
-        for(DeviceStatus light : lights){
+        for (DeviceStatus light : lights) {
             sendToDeviceController(light);
+            logger.info("[PhilipsHueLightEmulatorMonitor] State saved: "+ light.toString());
         }
-    }
-
-    public void connectToDevice() {
-        connectToAccessPoint(ip);
     }
 }
