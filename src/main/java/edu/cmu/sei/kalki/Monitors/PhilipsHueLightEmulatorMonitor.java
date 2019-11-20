@@ -30,8 +30,6 @@ import org.apache.http.util.EntityUtils;
 
 public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
-
-    private int deviceId;
     private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
 
