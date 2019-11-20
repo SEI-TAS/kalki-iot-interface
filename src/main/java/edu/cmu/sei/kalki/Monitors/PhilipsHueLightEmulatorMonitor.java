@@ -99,7 +99,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
                     lightKeys.add(key);
                 }
             }
-            for (String key : lightKeys){
+            for (String key : lightKeys) {
                 DeviceStatus light = new DeviceStatus(deviceId);
                 light.addAttribute("lightId", key);
                 JSONObject lightJson = json.getJSONObject(key);
@@ -114,9 +114,12 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
                 light.addAttribute("name", name);
                 lights.add(light);
             }
-
         } catch (JSONException err){
             logger.severe("[PhilipsHueLightEmulatorMonitor] Error: " + err.toString());
+            for (String key : lightKeys){
+                DeviceStatus light = new DeviceStatus(deviceId);
+                lights.add(light);
+            }
         }
     }
 
