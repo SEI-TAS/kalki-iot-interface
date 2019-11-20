@@ -43,6 +43,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.ip = ip;
+        this.apiUrl = url;
         logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor.");
         start();
     }
