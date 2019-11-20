@@ -82,6 +82,7 @@ public class ApiServlet extends HttpServlet {
         int deviceId = alert.getInt("deviceId");
         Integer deviceStatusId = alert.getInt("deviceStatusId");
         int alertTypeId = alert.getInt("alertTypeId");
-        return new Alert(id, name, timestamp, alerterId, deviceId, deviceStatusId, alertTypeId);
+        String info = alert.getString("info");
+        return new Alert(id, name, timestamp, alerterId, deviceId, deviceStatusId, alertTypeId, info);
     }
 }

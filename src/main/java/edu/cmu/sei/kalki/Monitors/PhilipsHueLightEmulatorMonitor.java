@@ -34,17 +34,16 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
     private int deviceId;
     private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
-    private int port = 8000;
 
     private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
     Set<String> lightKeys = new HashSet<String>();
 
-    public PhilipsHueLightEmulatorMonitor(int deviceId, String ip, int port, int samplingRate){
+    public PhilipsHueLightEmulatorMonitor(int deviceId, String ip, int samplingRate, String url){
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.ip = ip;
-        this.port = port;
+        this.apiUrl = url;
         logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor.");
         start();
     }
@@ -52,7 +51,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
 
     public String issueCommand(String path){
-        String targetURL = "http://" + ip + ":" + Integer.toString(port) + "/api/" + authCode + "/" + path;
+        String targetURL = "http://" + ip + "/api/" + authCode + "/" + path;
         logger.info(targetURL);
         try{
 
