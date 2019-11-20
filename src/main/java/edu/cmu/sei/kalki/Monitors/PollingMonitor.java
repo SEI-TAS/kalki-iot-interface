@@ -1,19 +1,25 @@
 package edu.cmu.sei.kalki.Monitors;
 
+import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
+import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class PollingMonitor extends IotMonitor {
 
     /**
-     * Polls the device for updates.
+     * Polls the device for updates. Adds all device attributes to status.
      */
-    public abstract void pollDevice();
+    public abstract void pollDevice(DeviceStatus Status);
 
     /**
      * Saves the current state of the iot device to the database
      */
-    public abstract void saveCurrentState();
+    public void saveCurrentState(DeviceStatus status){
+        sendToDeviceController(status);
+        logger.info("Sent status to device controller:" + status.toString());
+    }
 
     /**
      * Connect to the device and begin monitoring.
@@ -50,8 +56,9 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     class PollTask extends TimerTask {
         public void run() {
-            pollDevice();
-            saveCurrentState();
+            DeviceStatus status = new DeviceStatus(deviceId);
+            pollDevice(status); // pollDevice adds attributes to currentStatus
+            saveCurrentState(status);
         }
     }
 
