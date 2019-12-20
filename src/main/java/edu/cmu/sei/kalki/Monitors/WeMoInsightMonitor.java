@@ -15,7 +15,6 @@ public class WeMoInsightMonitor extends PollingMonitor {
 
     private String deviceIp;
     private Boolean isOn;
-    private int deviceId;
 
     private Map<String, String> attributes;
     private DeviceStatus status;

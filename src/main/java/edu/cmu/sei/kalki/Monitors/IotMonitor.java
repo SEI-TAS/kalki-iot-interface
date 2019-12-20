@@ -14,7 +14,7 @@ public abstract class IotMonitor {
     protected boolean isPollable;
     protected boolean pollingEnabled = true;
     protected boolean timerGoing = false;
-    public int deviceId;
+    protected int deviceId;
 
     protected final Logger logger = Logger.getLogger("iot-interface");
 
