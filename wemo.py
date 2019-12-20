@@ -11,10 +11,10 @@ try:
     device = Insight("http://"+insight_ip+":49153/setup.xml")
     if command == "turn-off":
         device.off()
-        print "Insight turned off:", device.name
+        print("Insight turned off: " + device.name)
     elif command == "turn-on":
         device.on()
-        print "Insight turned on:", device.name
+        print("Insight turned on: " + device.name)
     elif command == "status":
         result = device.insight_params
         result['today_kwh'] = device.today_kwh
@@ -26,6 +26,6 @@ try:
             result['isOn'] = False
         print(result)
     else:
-        print ""
-except:
-    print ""
+        print("Unknown command")
+except Exception as e:
+    print("Exception happened " + str(e))
