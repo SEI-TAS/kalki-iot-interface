@@ -36,7 +36,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     protected void startPolling() {
         pollTimer = new Timer();
-        pollTimer.schedule(new PollTask(), pollInterval, pollInterval);
+        pollTimer.schedule(new PollTask(deviceId), pollInterval, pollInterval);
         timerGoing = true;
     }
 
@@ -55,8 +55,14 @@ public abstract class PollingMonitor extends IotMonitor {
      * Started from startPolling
      */
     class PollTask extends TimerTask {
+        private int deviceId;
+
+        public PollTask(int deviceId){
+            this.deviceId = deviceId;
+        }
+
         public void run() {
-            DeviceStatus status = new DeviceStatus(deviceId);
+            DeviceStatus status = new DeviceStatus(this.deviceId);
             pollDevice(status); // pollDevice adds attributes to currentStatus
             saveCurrentState(status);
         }
