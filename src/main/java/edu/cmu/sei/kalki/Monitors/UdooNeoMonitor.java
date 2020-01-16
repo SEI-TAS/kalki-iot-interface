@@ -24,9 +24,6 @@ public class UdooNeoMonitor extends PollingMonitor {
     private String password;
     private String ip;
     private int deviceId;
-    private DeviceStatus status;
-
-    private Map<String, String> attributes = new HashMap<String, String>();
 
     public UdooNeoMonitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
         this(deviceId, ip, samplingRate, url);
@@ -125,10 +122,11 @@ public class UdooNeoMonitor extends PollingMonitor {
     }
 
     @Override
-    public void pollDevice() {
+    public void pollDevice(DeviceStatus status) {
         try {
 
-            attributes = new HashMap<String, String>();
+            Map<String, String> attributes = new HashMap<String, String>();
+
             String command = "";
             for(NeoSensor sensor: sensors){
                 command += sensor.getCommand();
@@ -171,39 +169,40 @@ public class UdooNeoMonitor extends PollingMonitor {
             for(NeoSensor sensor: sensors){
                 attributes.putAll(sensor.parseResponse(lines));
             }
-            convertRawReadings();
+            convertRawReadings(attributes);
+            for (String key : attributes.keySet()){
+                status.addAttribute(key, attributes.get(key));
+            }
         } catch (JSchException e1){
             logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
-            attributes = new HashMap<String, String>();
         }
         catch (IOException e) {
             logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
-            attributes = new HashMap<String, String>();
         }
         return;
     }
 
-    public void convertRawReadings(){
+    public void convertRawReadings(Map<String,String> attributes){
         //convert accelerometer readings to g's
         double accelCoefficient = 0.000244 / 4;
-        convertThreeAxisReading("accelerometer", accelCoefficient);
+        convertThreeAxisReading("accelerometer", accelCoefficient, attributes);
         //convert gyroscope readings to degrees/second
         double gyroCoefficient = 0.0625;
-        convertThreeAxisReading("gyroscope", gyroCoefficient);
+        convertThreeAxisReading("gyroscope", gyroCoefficient, attributes);
         //convert magnetometer readings to micro Teslas
         double magCoefficient = 0.1;
-        convertThreeAxisReading("magnetometer", magCoefficient);
+        convertThreeAxisReading("magnetometer", magCoefficient, attributes);
 
         //convert temperature readings to celsius
         double tempCoefficient = 1/1000;
-        convertTempReading("input", tempCoefficient);
-        convertTempReading("max", tempCoefficient);
-        convertTempReading("max_hyst", tempCoefficient);
+        convertTempReading("input", tempCoefficient, attributes);
+        convertTempReading("max", tempCoefficient, attributes);
+        convertTempReading("max_hyst", tempCoefficient, attributes);
     }
 
-    private void convertThreeAxisReading(String sensor, double coefficient){
+    private void convertThreeAxisReading(String sensor, double coefficient, Map<String,String> attributes){
         double xReading = Double.valueOf(attributes.get(sensor+"X")) * coefficient;
         double yReading = Double.valueOf(attributes.get(sensor+"Y")) * coefficient;
         double zReading = Double.valueOf(attributes.get(sensor+"Z")) * coefficient;
@@ -212,15 +211,9 @@ public class UdooNeoMonitor extends PollingMonitor {
         attributes.replace(sensor+"Z", String.valueOf(zReading));
     }
 
-    private void convertTempReading(String suffix, double coefficient) {
+    private void convertTempReading(String suffix, double coefficient, Map<String,String> attributes) {
         double reading = Double.valueOf(attributes.get("temp"+suffix)) * coefficient;
         attributes.replace("temp"+suffix, String.valueOf(reading));
     }
 
-    @Override
-    public void saveCurrentState() {
-        logger.info("[UdooNeoMonitor] Saving current state");
-        status = new DeviceStatus(deviceId, attributes);
-        sendToDeviceController(status);
-    }
 }

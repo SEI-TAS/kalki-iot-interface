@@ -44,17 +44,25 @@ public class WemoCommandSender {
         try {
             Process p = Runtime.getRuntime().exec(args);
 
+            logger.info("[WemoCommandSender] Python script executed");
+
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(p.getInputStream()));
+
+            logger.info("[WemoCommandSender] Input stream captured");
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(p.getErrorStream()));
 
+            logger.info("[WemoCommandSender] Error stream captured");
+
+            logger.info("[WemoCommandSender] Processing input stream");
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
                 logger.info("[WemoCommandSender] " + s);
             }
 
+            logger.info("[WemoCommandSender] Processing error stream");
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
                 logger.severe("[WemoCommandSender] Error with wemo.py: "+s);

@@ -30,13 +30,8 @@ import org.apache.http.util.EntityUtils;
 
 public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
 
-
-    private int deviceId;
     private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
-
-    private List<DeviceStatus> lights = new ArrayList<DeviceStatus>();
-    Set<String> lightKeys = new HashSet<String>();
 
     public PhilipsHueLightEmulatorMonitor(int deviceId, String ip, int samplingRate, String url){
         this.deviceId = deviceId;
@@ -85,49 +80,28 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
     }
 
     @Override
-    public void pollDevice() {
-        lights = new ArrayList<DeviceStatus>();
+    public void pollDevice(DeviceStatus status) {
         String response = issueCommand("lights");
         logger.info("[PhilipsHueLightEmulatorMonitor]  Getting current status from response " + response);
         try {
             JSONObject json = new JSONObject(response);
-            Iterator<String> keys = json.keys();
-            while(keys.hasNext()) { // Each key is a different light, build set of keys to report empty statuses when device can't be reached
-                String key = keys.next();
-                if (!lightKeys.contains(key)) {
-                    lightKeys.add(key);
-                }
-            }
-            for (String key : lightKeys) {
-                DeviceStatus light = new DeviceStatus(deviceId);
-                light.addAttribute("lightId", key);
-                JSONObject lightJson = json.getJSONObject(key);
-                String name = lightJson.getString("name");
-                JSONObject state = lightJson.getJSONObject("state");
-                String brightness = Integer.toString(state.getInt("bri"));
-                String hue = Integer.toString(state.getInt("hue"));
-                String isOn = Boolean.toString(state.getBoolean("on"));
-                light.addAttribute("hue", hue);
-                light.addAttribute("isOn", isOn);
-                light.addAttribute("brightness", brightness);
-                light.addAttribute("name", name);
-                lights.add(light);
-            }
+            Set<String> keys = json.keySet();
+
+            String key = keys.iterator().next(); //Assumes only one light is connected, does not verify
+            status.addAttribute("lightId", key);
+            JSONObject lightJson = json.getJSONObject(key);
+            String name = lightJson.getString("name");
+            JSONObject state = lightJson.getJSONObject("state");
+            String brightness = Integer.toString(state.getInt("bri"));
+            String hue = Integer.toString(state.getInt("hue"));
+            String isOn = Boolean.toString(state.getBoolean("on"));
+            status.addAttribute("hue", hue);
+            status.addAttribute("isOn", isOn);
+            status.addAttribute("brightness", brightness);
+            status.addAttribute("name", name);
         } catch (JSONException err){
             logger.severe("[PhilipsHueLightEmulatorMonitor] Error: " + err.toString());
-            for (String key : lightKeys){
-                DeviceStatus light = new DeviceStatus(deviceId);
-                lights.add(light);
-            }
         }
     }
 
-
-    @Override
-    public void saveCurrentState() {
-        for (DeviceStatus light : lights) {
-            sendToDeviceController(light);
-            logger.info("[PhilipsHueLightEmulatorMonitor] State saved: "+ light.toString());
-        }
-    }
 }

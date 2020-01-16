@@ -15,7 +15,6 @@ public class WeMoInsightMonitor extends PollingMonitor {
 
     private String deviceIp;
     private Boolean isOn;
-    private int deviceId;
 
     private Map<String, String> attributes;
     private DeviceStatus status;
@@ -31,7 +30,7 @@ public class WeMoInsightMonitor extends PollingMonitor {
     }
 
     @Override
-    public void pollDevice() {
+    public void pollDevice(DeviceStatus status) {
         attributes = new HashMap<String, String>();
         try {
 
@@ -70,6 +69,9 @@ public class WeMoInsightMonitor extends PollingMonitor {
             while ((s = stdError.readLine()) != null) {
                 logger.severe(s);
             }
+            for (String key : attributes.keySet()){
+                status.addAttribute(key, attributes.get(key));
+            }
         } catch (IOException e) {
             logger.severe("Error polling Wemo Insight: " + e.toString());
         } catch (JSONException e) {
@@ -77,13 +79,5 @@ public class WeMoInsightMonitor extends PollingMonitor {
 	    e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void saveCurrentState() {
-        logger.info("[WeMoInsightMonitor] Saving current state");
-        DeviceStatus wemo = new DeviceStatus(deviceId, attributes);
-        sendToDeviceController(wemo);
-        logger.info("[WeMoInsightMonitor] State saved: "+wemo.toString());
     }
 }
