@@ -57,7 +57,7 @@ public abstract class DeviceCommandSender {
      * @param command The name of the command
      */
     protected void logSendCommand(String command) {
-        logger.info("[PhleCommandSender] Logging that a command was sent to the device.");
+        logger.info("[DeviceCommandSender] Logging that a command was sent to the device.");
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
         DeviceControllerApi.sendLog(log, apiUrl);
     }

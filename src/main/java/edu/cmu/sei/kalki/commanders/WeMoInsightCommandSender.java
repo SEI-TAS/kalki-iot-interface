@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
-public class WemoCommandSender extends DeviceCommandSender {
+public class WeMoInsightCommandSender extends DeviceCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static String[] args = new String[]{
             "python",
@@ -19,7 +19,7 @@ public class WemoCommandSender extends DeviceCommandSender {
 
     @Override
     public void sendCommands() {
-        logger.info("[WemoCommandSender] Sending commands to device: "+device.getId());
+        logger.info("[WeMoInsightCommandSender] Sending commands to device: "+device.getId());
 
         for(DeviceCommand command: commands) {
             switch (command.getName()){
@@ -29,7 +29,7 @@ public class WemoCommandSender extends DeviceCommandSender {
                     logSendCommand(command.getName());
                     break;
                 default:
-                    logger.severe("[WemoCommandSender] Command: " + command.getName() + " is not a valid command for a Wemo Insight");
+                    logger.severe("[WeMoInsightCommandSender] Command: " + command.getName() + " is not a valid command for a Wemo Insight");
             }
         }
     }
@@ -42,31 +42,31 @@ public class WemoCommandSender extends DeviceCommandSender {
         try {
             Process p = Runtime.getRuntime().exec(args);
 
-            logger.info("[WemoCommandSender] Python script executed");
+            logger.info("[WeMoInsightCommandSender] Python script executed");
 
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(p.getInputStream()));
 
-            logger.info("[WemoCommandSender] Input stream captured");
+            logger.info("[WeMoInsightCommandSender] Input stream captured");
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(p.getErrorStream()));
 
-            logger.info("[WemoCommandSender] Error stream captured");
+            logger.info("[WeMoInsightCommandSender] Error stream captured");
 
-            logger.info("[WemoCommandSender] Processing input stream");
+            logger.info("[WeMoInsightCommandSender] Processing input stream");
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
-                logger.info("[WemoCommandSender] " + s);
+                logger.info("[WeMoInsightCommandSender] " + s);
             }
 
-            logger.info("[WemoCommandSender] Processing error stream");
+            logger.info("[WeMoInsightCommandSender] Processing error stream");
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
-                logger.severe("[WemoCommandSender] Error with wemo.py: "+s);
+                logger.severe("[WeMoInsightCommandSender] Error with wemo.py: "+s);
             }
         } catch (IOException e) {
-            logger.severe("[WemoCommandSender] Error reading response from " + device.getId() + ") " + device.getName());
+            logger.severe("[WeMoInsightCommandSender] Error reading response from " + device.getId() + ") " + device.getName());
             logger.severe(e.getMessage());
         }
     }

@@ -11,17 +11,17 @@ import java.net.HttpURLConnection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-public class PhleCommandSender extends DeviceCommandSender {
+public class PhilipsHueLightEmulatorCommandSender extends DeviceCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
 
     @Override
     public void sendCommands() {
-        logger.info("[PhleCommandSender] Sending commands to PHLE: "+device.getId());
+        logger.info("[PhilipsHueLightEmulatorCommandSender] Sending commands to PHLE: "+device.getId());
 
 
         JSONObject lights = getAllLights(device.getIp());
         if(lights == null){
-            logger.severe("[PhleCommandSender] Unable to get lights from bridge");
+            logger.severe("[PhilipsHueLightEmulatorCommandSender] Unable to get lights from bridge");
             return;
         }
         Iterator<String> lightIds = lights.keys();
@@ -30,12 +30,12 @@ public class PhleCommandSender extends DeviceCommandSender {
             for(DeviceCommand command: this.commands){
                 switch (command.getName()){
                     case "turn-on":
-                        logger.info("[PhleCommandSender] Sending 'turn-on' command to PHLE: " + device.getId());
+                        logger.info("[PhilipsHueLightEmulatorCommandSender] Sending 'turn-on' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), id,"true");
                         logSendCommand(command.getName());
                         break;
                     case "turn-off":
-                        logger.info("[PhleCommandSender] Sending 'turn-off' command to PHLE: " + device.getId());
+                        logger.info("[PhilipsHueLightEmulatorCommandSender] Sending 'turn-off' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), id,"false");
                         logSendCommand(command.getName());
                         break;
@@ -46,7 +46,7 @@ public class PhleCommandSender extends DeviceCommandSender {
                     case "set-group":
                     case "set-scene":
                     default:
-                        logger.severe("[PhleCommandSender] Command: " + command.getName() + " not supported for Phillips Hue Light Emulator.");
+                        logger.severe("[PhilipsHueLightEmulatorCommandSender] Command: " + command.getName() + " not supported for Phillips Hue Light Emulator.");
                 }
             }
         }
@@ -67,7 +67,7 @@ public class PhleCommandSender extends DeviceCommandSender {
             httpCon.getInputStream();
             httpCon.disconnect();
         } catch (Exception e) {
-            logger.severe("[PhleCommandSender] Error sending command to device!");
+            logger.severe("[PhilipsHueLightEmulatorCommandSender] Error sending command to device!");
             logger.severe(e.getMessage());
         }
     }
@@ -88,7 +88,7 @@ public class PhleCommandSender extends DeviceCommandSender {
             json = new JSONObject(response.toString());
             httpCon.disconnect();
         } catch (Exception e) {
-            logger.severe("[PhleCommandSender] Error getting all lights.");
+            logger.severe("[PhilipsHueLightEmulatorCommandSender] Error getting all lights.");
             logger.severe(e.getMessage());
         }
         return json;
