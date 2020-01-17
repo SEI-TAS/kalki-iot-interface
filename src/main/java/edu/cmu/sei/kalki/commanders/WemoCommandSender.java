@@ -1,17 +1,14 @@
 package edu.cmu.sei.kalki.commanders;
 
-import edu.cmu.sei.kalki.utils.DeviceControllerApi;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.logging.Logger;
 
-public class WemoCommandSender {
+public class WemoCommandSender extends DeviceCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static String[] args = new String[]{
             "python",
@@ -20,7 +17,8 @@ public class WemoCommandSender {
             "command"
     };
 
-    public static void sendCommands(Device device, List<DeviceCommand> commands, String apiUrl) {
+    @Override
+    public void sendCommands() {
         logger.info("[WemoCommandSender] Sending commands to device: "+device.getId());
 
         for(DeviceCommand command: commands) {
@@ -28,7 +26,7 @@ public class WemoCommandSender {
                 case "turn-on":
                 case "turn-off":
                     sendCommand(device, command);
-                    logSendCommand(device, command.getName(), apiUrl);
+                    logSendCommand(command.getName());
                     break;
                 default:
                     logger.severe("[WemoCommandSender] Command: " + command.getName() + " is not a valid command for a Wemo Insight");
@@ -71,12 +69,6 @@ public class WemoCommandSender {
             logger.severe("[WemoCommandSender] Error reading response from " + device.getId() + ") " + device.getName());
             logger.severe(e.getMessage());
         }
-    }
-
-    private static void logSendCommand(Device device, String command, String apiUrl) {
-        logger.info("[WemoCommandSender] Logging that a command was sent to the device.");
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
-        DeviceControllerApi.sendLog(log, apiUrl);
     }
 
 }

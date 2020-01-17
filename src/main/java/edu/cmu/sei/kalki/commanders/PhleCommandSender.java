@@ -1,13 +1,6 @@
 package edu.cmu.sei.kalki.commanders;
 
-import com.philips.lighting.hue.listener.PHLightListener;
-import edu.cmu.sei.kalki.utils.DeviceControllerApi;
-import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
-
-import com.philips.lighting.hue.sdk.*;
-import com.philips.lighting.model.*;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -16,14 +9,13 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-public class PhleCommandSender {
+public class PhleCommandSender extends DeviceCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
 
-    public static void sendCommands(Device device, List<DeviceCommand> commands, String apiUrl){
+    @Override
+    public void sendCommands() {
         logger.info("[PhleCommandSender] Sending commands to PHLE: "+device.getId());
 
 
@@ -35,17 +27,17 @@ public class PhleCommandSender {
         Iterator<String> lightIds = lights.keys();
         while(lightIds.hasNext()){
             int id = Integer.parseInt(lightIds.next());
-            for(DeviceCommand command: commands){
+            for(DeviceCommand command: this.commands){
                 switch (command.getName()){
                     case "turn-on":
                         logger.info("[PhleCommandSender] Sending 'turn-on' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), id,"true");
-                        logSendCommand(device, command.getName(), apiUrl);
+                        logSendCommand(command.getName());
                         break;
                     case "turn-off":
                         logger.info("[PhleCommandSender] Sending 'turn-off' command to PHLE: " + device.getId());
                         sendIsOn(device.getIp(), id,"false");
-                        logSendCommand(device, command.getName(), apiUrl);
+                        logSendCommand(command.getName());
                         break;
                     case "set-name":
                     case "set-brightness":
@@ -59,12 +51,6 @@ public class PhleCommandSender {
             }
         }
 
-    }
-
-    private static void logSendCommand(Device device, String command, String apiUrl) {
-        logger.info("[PhleCommandSender] Logging that a command was sent to the device.");
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
-        DeviceControllerApi.sendLog(log, apiUrl);
     }
 
     private static void sendIsOn(String ip, int lightId, String isOn) {
