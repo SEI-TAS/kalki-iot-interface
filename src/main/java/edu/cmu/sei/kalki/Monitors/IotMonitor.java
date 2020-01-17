@@ -23,7 +23,8 @@ public abstract class IotMonitor {
     public static IotMonitor fromDevice(Device device, String apiUrl){
         Logger logger = Logger.getLogger("iot-interface");
         try {
-            String classPath = "edu.cmu.sei.kalki.Monitors."+getDeviceTypeMonitorClassName(device.getType().getName());
+            String deviceTypeName = device.getType().getName();
+            String classPath = "edu.cmu.sei.kalki.devicetypes."+deviceTypeName.replace("\\s+", "")+".Monitor";
             Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE, String.class);
             IotMonitor mon = (IotMonitor) con.newInstance(device.getId(), device.getIp(), device.getSamplingRate(), apiUrl);
             return mon;
@@ -33,21 +34,6 @@ public abstract class IotMonitor {
 
             return null;
         }
-    }
-
-    /**
-     * Removes spaces from device type's name and append 'Monitor'
-     * @param devTypeName
-     * @return device type's monitor class name
-     */
-    private static String getDeviceTypeMonitorClassName(String devTypeName) {
-        String[] temp = devTypeName.split(" ");
-        String name = "";
-        for(int i=0;i<temp.length;i++){
-            name+=temp[i];
-        }
-        name+="Monitor";
-        return name;
     }
 
     public boolean isPollable() {

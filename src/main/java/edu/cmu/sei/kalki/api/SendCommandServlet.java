@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.cmu.sei.kalki.DeviceMonitor;
-import edu.cmu.sei.kalki.commanders.DeviceCommandSender;
+import edu.cmu.sei.kalki.commandsender.DeviceCommandSender;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 import org.eclipse.jetty.http.HttpStatus;

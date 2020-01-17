@@ -1,5 +1,6 @@
-package edu.cmu.sei.kalki.Monitors;
+package edu.cmu.sei.kalki.devicetypes.UdooNeo;
 
+import edu.cmu.sei.kalki.Monitors.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.JSchException;
 
-public class UdooNeoMonitor extends PollingMonitor {
+public class Monitor extends PollingMonitor {
 
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
@@ -25,16 +26,16 @@ public class UdooNeoMonitor extends PollingMonitor {
     private String ip;
     private int deviceId;
 
-    public UdooNeoMonitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
         this(deviceId, ip, samplingRate, url);
         this.username = username;
         this.password = password;
         this.isPollable = true;
     }
 
-    public UdooNeoMonitor(int deviceId, String ip, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, int samplingRate, String url){
         super();
-        logger.info("[UdooNeoMonitor] Starting Neo Monitor for device: " + deviceId);
+        logger.info("[Monitor] Starting Neo Monitor for device: " + deviceId);
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
@@ -68,7 +69,7 @@ public class UdooNeoMonitor extends PollingMonitor {
         public Map<String, String> parseResponse(List<String> responses) {
             Map<String, String> result = new HashMap<String, String>();
             if (responses.size() < 1){
-                logger.severe("[UdooNeoMonitor] Missing response from Udoo Neo.");
+                logger.severe("[Monitor] Missing response from Udoo Neo.");
             }
             else {
                 String response = responses.get(0);
@@ -148,7 +149,7 @@ public class UdooNeoMonitor extends PollingMonitor {
             channel.connect();
 
             InputStream inStream = channel.getInputStream();
-            logger.info("[UdooNeoMonitor] Sent commands to device");
+            logger.info("[Monitor] Sent commands to device");
             List<String> lines = new ArrayList<String>();
 
             int c = inStream.read();
@@ -174,11 +175,11 @@ public class UdooNeoMonitor extends PollingMonitor {
                 status.addAttribute(key, attributes.get(key));
             }
         } catch (JSchException e1){
-            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
+            logger.severe("[Monitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
         }
         catch (IOException e) {
-            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
+            logger.severe("[Monitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
         }
         return;

@@ -1,5 +1,6 @@
-package edu.cmu.sei.kalki.Monitors;
+package edu.cmu.sei.kalki.devicetypes.PhilipsHueLightEmulator;
 
+import edu.cmu.sei.kalki.Monitors.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.*;
@@ -28,18 +29,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 
-public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
+public class Monitor extends PollingMonitor {
 
     private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
 
-    public PhilipsHueLightEmulatorMonitor(int deviceId, String ip, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, int samplingRate, String url){
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.ip = ip;
         this.apiUrl = url;
-        logger.info("[PhilipsHueLightEmulatorMonitor] Starting monitor.");
+        logger.info("[Monitor] Starting monitor.");
         start();
     }
 
@@ -74,7 +75,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
             }
             return "Error";
         } catch (IOException e) {
-            logger.severe("[PhilipsHueLightEmulatorMonitor] Error: "+ e);
+            logger.severe("[Monitor] Error: "+ e);
             return "Error";
         }
     }
@@ -82,7 +83,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
     @Override
     public void pollDevice(DeviceStatus status) {
         String response = issueCommand("lights");
-        logger.info("[PhilipsHueLightEmulatorMonitor]  Getting current status from response " + response);
+        logger.info("[Monitor]  Getting current status from response " + response);
         try {
             JSONObject json = new JSONObject(response);
             Set<String> keys = json.keySet();
@@ -100,7 +101,7 @@ public class PhilipsHueLightEmulatorMonitor extends PollingMonitor {
             status.addAttribute("brightness", brightness);
             status.addAttribute("name", name);
         } catch (JSONException err){
-            logger.severe("[PhilipsHueLightEmulatorMonitor] Error: " + err.toString());
+            logger.severe("[Monitor] Error: " + err.toString());
         }
     }
 

@@ -1,9 +1,8 @@
-package edu.cmu.sei.kalki.commanders;
+package edu.cmu.sei.kalki.commandsender;
 
 import edu.cmu.sei.kalki.utils.DeviceControllerApi;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 import edu.cmu.sei.ttg.kalki.models.StageLog;
 
 import java.lang.reflect.Constructor;
@@ -28,28 +27,14 @@ public abstract class DeviceCommandSender {
 
     public static void processCommands(Device device, List<DeviceCommand> commands, String apiUrl){
         try {
-            String classPath = "edu.cmu.kalki.commanders."+getDeviceTypeCommandSenderClassName(device.getType().getName());
+            String deviceTypeName = device.getType().getName();
+            String classPath = "edu.cmu.kalki.devicetypes."+deviceTypeName.replace("\\s+","")+".CommandSender";
             Constructor con = Class.forName(classPath).getConstructor(Device.class, List.class, String.class);
             DeviceCommandSender commandSender = (DeviceCommandSender) con.newInstance(device, commands, apiUrl);
             commandSender.sendCommands();
         } catch (Exception e) {
             logger.severe("[DeviceCommandSender] Error: there are no commands for a "+device.getType().getName());
         }
-    }
-
-    /**
-     * Removes spaces from device type's name and append 'Monitor'
-     * @param devTypeName
-     * @return device type's monitor class name
-     */
-    private static String getDeviceTypeCommandSenderClassName(String devTypeName) {
-        String[] temp = devTypeName.split(" ");
-        String name = "";
-        for(int i=0;i<temp.length;i++){
-            name+=temp[i];
-        }
-        name+="CommandSender";
-        return name;
     }
 
     /**

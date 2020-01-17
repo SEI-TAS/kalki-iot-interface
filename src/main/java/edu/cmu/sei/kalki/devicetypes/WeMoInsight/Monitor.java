@@ -1,5 +1,6 @@
-package edu.cmu.sei.kalki.Monitors;
+package edu.cmu.sei.kalki.devicetypes.WeMoInsight;
 
+import edu.cmu.sei.kalki.Monitors.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.BufferedReader;
@@ -11,7 +12,7 @@ import java.lang.StringBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WeMoInsightMonitor extends PollingMonitor {
+public class Monitor extends PollingMonitor {
 
     private String deviceIp;
     private Boolean isOn;
@@ -19,13 +20,13 @@ public class WeMoInsightMonitor extends PollingMonitor {
     private Map<String, String> attributes;
     private DeviceStatus status;
 
-    public WeMoInsightMonitor(int deviceId, String ip, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, int samplingRate, String url){
         this.deviceIp = ip;
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.apiUrl = url;
-        logger.info("[WeMoInsightMonitor] Starting monitor.");
+        logger.info("[Monitor] Starting monitor.");
         start();
     }
 
