@@ -56,33 +56,33 @@ public class CommandSender extends IotCommandSender {
             String[] args = setArgs(device.getIp(), command);
             Process p = Runtime.getRuntime().exec(args);
 
-            logger.info("[CommandSender] Python script executed");
+            logger.info("[WemoCommandSender] Python script executed");
 
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(p.getInputStream()));
 
-            logger.info("[CommandSender] Input stream captured");
+            logger.info("[WemoCommandSender] Input stream captured");
 
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(p.getErrorStream()));
 
-            logger.info("[CommandSender] Error stream captured");
+            logger.info("[WemoCommandSender] Error stream captured");
 
-            logger.info("[CommandSender] Processing input stream");
+            logger.info("[WemoCommandSender] Processing input stream");
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
                 logger.info("[CommandSender] " + s);
             }
 
-            logger.info("[CommandSender] Processing error stream");
+            logger.info("[WemoCommandSender] Processing error stream");
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
-                logger.severe("[CommandSender] Error with wemo.py: "+s);
+                logger.severe("[WemoCommandSender] Error with wemo.py: "+s);
             }
 
             logSendCommand(command);
         } catch (IOException e) {
-            logger.severe("[CommandSender] Error reading response from " + device.getId() + ") " + device.getName());
+            logger.severe("[WemoCommandSender] Error reading response from " + device.getId() + ") " + device.getName());
             logger.severe(e.getMessage());
         }
     }

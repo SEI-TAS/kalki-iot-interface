@@ -4,9 +4,6 @@ import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.StageLog;
 import org.json.JSONObject;
 
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.logging.Logger;
 
 public class DeviceControllerApi {
@@ -42,14 +39,7 @@ public class DeviceControllerApi {
      */
     private static void sendToApi(JSONObject object, String apiUrl){
         try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("POST");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            out.write(object.toString());
-            out.close();
-            httpCon.getInputStream();
+            HttpRequest.postRequest(object, apiUrl);
         } catch (Exception e) {
             logger.severe("[DeviceControllerApi] Error sending object to DeviceController: "+object.toString());
             logger.severe(e.getMessage());

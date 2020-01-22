@@ -35,7 +35,7 @@ public class Monitor extends PollingMonitor {
 
     public Monitor(int deviceId, String ip, int samplingRate, String url){
         super();
-        logger.info("[Monitor] Starting Neo Monitor for device: " + deviceId);
+        logger.info("[UdooNeoMonitor] Starting Neo Monitor for device: " + deviceId);
         this.ip = ip;
         this.deviceId = deviceId;
         this.username = "udooer";
@@ -75,7 +75,7 @@ public class Monitor extends PollingMonitor {
         public Map<String, String> parseResponse(List<String> responses) {
             Map<String, String> result = new HashMap<String, String>();
             if (responses.size() < 1){
-                logger.severe("[Monitor] Missing response from Udoo Neo.");
+                logger.severe("[UdooNeoMonitor] Missing response from Udoo Neo.");
             }
             else {
                 String response = responses.get(0);
@@ -165,7 +165,7 @@ public class Monitor extends PollingMonitor {
             channel.connect();
 
             InputStream inStream = channel.getInputStream();
-            logger.info("[Monitor] Sent commands to device");
+            logger.info("[UdooNeoMonitor] Sent commands to device");
             List<String> lines = new ArrayList<String>();
 
             int c = inStream.read();
@@ -191,11 +191,11 @@ public class Monitor extends PollingMonitor {
                 status.addAttribute(key, attributes.get(key));
             }
         } catch (JSchException e1){
-            logger.severe("[Monitor] Exception happened - here's what I know: ");
+            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
         }
         catch (IOException e) {
-            logger.severe("[Monitor] Exception happened - here's what I know: ");
+            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
         }
         return;

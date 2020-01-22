@@ -26,7 +26,7 @@ public class Monitor extends PollingMonitor {
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.apiUrl = url;
-        logger.info("[Monitor] Starting monitor.");
+        logger.info("[WemoMonitor] Starting monitor.");
         start();
     }
 
@@ -57,19 +57,17 @@ public class Monitor extends PollingMonitor {
 
             // read the output from the command
             StringBuilder st = new StringBuilder();
-	    String s = null;
-	    while ((s = stdInput.readLine()) != null) {
-		st.append(s);
-                //s = s.replace("Switch: " + deviceIp, "");
-                //isOn = s.contains("on");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                st.append(s);
             }
-	    logger.info("Output from device: "+st.toString());
-                JSONObject json = new JSONObject(st.toString());
-                for(Object keyObj : json.keySet()){
-                    String key = (String) keyObj;
-                    String value = (String) json.get(key).toString();
-                    attributes.put(key, value);
-                }
+	        logger.info("Output from device: "+st.toString());
+            JSONObject json = new JSONObject(st.toString());
+            for(Object keyObj : json.keySet()){
+                String key = (String) keyObj;
+                String value = (String) json.get(key).toString();
+                attributes.put(key, value);
+            }
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
                 logger.severe(s);
@@ -78,10 +76,10 @@ public class Monitor extends PollingMonitor {
                 status.addAttribute(key, attributes.get(key));
             }
         } catch (IOException e) {
-            logger.severe("Error polling Wemo Insight: " + e.toString());
+            logger.severe("[WemoMonitor] Error polling Wemo Insight: " + e.toString());
         } catch (JSONException e) {
-            logger.severe("Error parsing JSON respons from Wemo Insight: " + deviceId + ". " + e.getMessage());
-	    e.printStackTrace();
+            logger.severe("[WemoMonitor] Error parsing JSON response from Wemo Insight: " + deviceId + ". " + e.getMessage());
+	        e.printStackTrace();
         }
 
     }
