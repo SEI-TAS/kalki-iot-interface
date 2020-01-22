@@ -30,6 +30,10 @@ public class Monitor extends PollingMonitor {
         start();
     }
 
+    /**
+     * Executes the wemo python script to get a WemoInsight's status
+     * @param status The DeviceStatus to be sent to the DeviceControllerApi
+     */
     @Override
     public void pollDevice(DeviceStatus status) {
         attributes = new HashMap<String, String>();

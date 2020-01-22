@@ -37,7 +37,11 @@ public class Monitor extends PollingMonitor {
     }
 
 
-
+    /**
+     * Makes a get request to the PHLE REST API at the given path
+     * @param path The endpoint of the api
+     * @return String representation of the response from the API
+     */
     public String issueCommand(String path){
         String targetURL = "http://" + ip + "/api/" + authCode + "/" + path;
         logger.info(targetURL);
@@ -72,6 +76,10 @@ public class Monitor extends PollingMonitor {
         }
     }
 
+    /**
+     * Gets the state of the lights from the PHLE bridge
+     * @param status The DeviceStatus to be inserted
+     */
     @Override
     public void pollDevice(DeviceStatus status) {
         String response = issueCommand("lights");

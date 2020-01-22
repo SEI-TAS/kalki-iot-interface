@@ -21,6 +21,12 @@ import java.util.logging.Logger;
 public class SendCommandServlet extends ApiServlet {
     private Logger logger = Logger.getLogger("iot-interface");
 
+    /**
+     * Extracts the device and commands from the request and initiates command sending
+     * @param request
+     * @param response
+     * @throws ServletException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         logger.info("[SendCommandServlet] Handling request");

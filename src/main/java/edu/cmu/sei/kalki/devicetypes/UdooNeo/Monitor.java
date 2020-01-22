@@ -47,11 +47,17 @@ public class Monitor extends PollingMonitor {
         start();
     }
 
+    /**
+     * Abstract class for the sensors on an Udoo Neo
+     */
     public abstract class NeoSensor{
         public abstract String getCommand();
         public abstract Map<String, String> parseResponse(List<String> response);
     }
 
+    /**
+     * Class to interface with an Udoo Sensor with X,Y,Z values
+     */
     public class NeoXYZSensor extends NeoSensor {
 
         private String name;
@@ -83,6 +89,9 @@ public class Monitor extends PollingMonitor {
         }
     }
 
+    /**
+     * Class to interface with an Udoo Temperature Sensor
+     */
     public class TemperatureSensor extends NeoSensor {
 
         List<String> fields = new ArrayList<String>();
@@ -115,6 +124,9 @@ public class Monitor extends PollingMonitor {
         }
     }
 
+    /**
+     * Sets the sensors that are available on the Udoo Neo
+     */
     public void setSensors(){
         sensors.add(new NeoXYZSensor("accelerometer"));
         sensors.add(new NeoXYZSensor("gyroscope"));
@@ -122,6 +134,10 @@ public class Monitor extends PollingMonitor {
         sensors.add(new TemperatureSensor());
     }
 
+    /**
+     * Connects to device, gets raw sensor readings, and converts to human-readable values
+     * @param status The DeviceStatus to be sent to the DeviceControllerApi
+     */
     @Override
     public void pollDevice(DeviceStatus status) {
         try {
@@ -185,6 +201,10 @@ public class Monitor extends PollingMonitor {
         return;
     }
 
+    /**
+     * Helper method to convert the raw readings of sensors to human-readable values
+     * @param attributes
+     */
     public void convertRawReadings(Map<String,String> attributes){
         //convert accelerometer readings to g's
         double accelCoefficient = 0.000244 / 4;
@@ -203,6 +223,12 @@ public class Monitor extends PollingMonitor {
         convertTempReading("max_hyst", tempCoefficient, attributes);
     }
 
+    /**
+     * Helper method to replace X,Y,Z values with converted value
+     * @param sensor The sensor with X,Y,Z values
+     * @param coefficient The conversion rate
+     * @param attributes The device status attributes(sensor + X,Y, or Z)
+     */
     private void convertThreeAxisReading(String sensor, double coefficient, Map<String,String> attributes){
         double xReading = Double.valueOf(attributes.get(sensor+"X")) * coefficient;
         double yReading = Double.valueOf(attributes.get(sensor+"Y")) * coefficient;
@@ -212,6 +238,12 @@ public class Monitor extends PollingMonitor {
         attributes.replace(sensor+"Z", String.valueOf(zReading));
     }
 
+    /**
+     * Helper method to replace temperature value with converted value
+     * @param suffix The different temperature value
+     * @param coefficient The conversion rate
+     * @param attributes The device status attributes(sensor + suffix)
+     */
     private void convertTempReading(String suffix, double coefficient, Map<String,String> attributes) {
         double reading = Double.valueOf(attributes.get("temp"+suffix)) * coefficient;
         attributes.replace("temp"+suffix, String.valueOf(reading));

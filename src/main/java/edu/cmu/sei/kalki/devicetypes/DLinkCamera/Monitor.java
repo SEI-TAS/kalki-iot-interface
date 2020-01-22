@@ -18,6 +18,12 @@ public class Monitor extends IotMonitor implements EventObserver {
         logger.info("[Monitor] Monitor started for device: "+deviceId);
         this.deviceId = deviceId;
     }
+
+    /**
+     * The camera is configured to send a notification to listenEmail on motion detected.
+     * This method sends a status to the DeviceController on an appropriate message
+     * @param message The notification from the camera
+     */
     public void notify(String message){
         if (message.equals(listenEmail)){
             DeviceStatus status = new DeviceStatus(deviceId);

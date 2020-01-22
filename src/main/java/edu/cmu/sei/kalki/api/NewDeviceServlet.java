@@ -16,6 +16,12 @@ import java.util.logging.Logger;
 public class NewDeviceServlet extends ApiServlet {
     private Logger logger = Logger.getLogger("iot-interface");
 
+    /**
+     * Extracts the Device from the request body and starts a monitor for it
+     * @param request
+     * @param response
+     * @throws ServletException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         logger.info("[NewDeviceServlet] Handling request.");
