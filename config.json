@@ -1,4 +1,4 @@
 {
-    "MAIL_PORT":25000,
+    "MAIL_PORT": "25000",
     "device_controller_api": "10.27.153.3:9090"
 }

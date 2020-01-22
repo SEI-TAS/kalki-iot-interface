@@ -1,26 +1,30 @@
 package edu.cmu.sei.kalki;
 import edu.cmu.sei.kalki.api.*;
+import edu.cmu.sei.kalki.utils.Config;
+
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class IotInterface {
     private static Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
-        String apiUrl = "10.27.153.3:9090";
 
         try {
-            apiUrl = args[0];
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info("[IotInterface] No alternative API IP+port specified. Defaulting to: "+apiUrl);
+            Config.load("config.json");
+        } catch (IOException e) {
+            logger.severe("[IotInterface] Error parsing the config.json. Exiting.");
+            e.printStackTrace();
+            System.exit(-1);
         }
+
+        String apiUrl = Config.data.get("device_controller_api");
 
         MonitorManager monitor = new MonitorManager("http://"+apiUrl+"/device-controller-api/");
         logger.info("[IotInterface] MonitorManager initialized.");
 
-        boolean success = startApiServer(monitor);
-        if(!success)
-            return;
+        if(!startApiServer(monitor))
+            System.exit(-1);
     }
 
     private static boolean startApiServer(MonitorManager monitor) {
