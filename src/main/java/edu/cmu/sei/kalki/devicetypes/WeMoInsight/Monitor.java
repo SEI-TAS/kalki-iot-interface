@@ -1,6 +1,6 @@
 package edu.cmu.sei.kalki.devicetypes.WeMoInsight;
 
-import edu.cmu.sei.kalki.Monitors.PollingMonitor;
+import edu.cmu.sei.kalki.utils.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.BufferedReader;

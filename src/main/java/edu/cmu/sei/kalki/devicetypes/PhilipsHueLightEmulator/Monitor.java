@@ -1,15 +1,9 @@
 package edu.cmu.sei.kalki.devicetypes.PhilipsHueLightEmulator;
 
-import edu.cmu.sei.kalki.Monitors.PollingMonitor;
+import edu.cmu.sei.kalki.utils.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.*;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 import org.apache.http.client.ClientProtocolException;
@@ -17,8 +11,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.net.ssl.*;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;

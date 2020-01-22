@@ -1,6 +1,5 @@
-package edu.cmu.sei.kalki.Monitors;
+package edu.cmu.sei.kalki.utils;
 
-import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.util.Timer;

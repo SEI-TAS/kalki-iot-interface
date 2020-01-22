@@ -15,15 +15,15 @@ public class IotInterface {
             logger.info("[IotInterface] No alternative API IP+port specified. Defaulting to: "+apiUrl);
         }
 
-        DeviceMonitor monitor = new DeviceMonitor("http://"+apiUrl+"/device-controller-api/");
-        logger.info("[IotInterface] DeviceMonitor initialized.");
+        MonitorManager monitor = new MonitorManager("http://"+apiUrl+"/device-controller-api/");
+        logger.info("[IotInterface] MonitorManager initialized.");
 
         boolean success = startApiServer(monitor);
         if(!success)
             return;
     }
 
-    private static boolean startApiServer(DeviceMonitor monitor) {
+    private static boolean startApiServer(MonitorManager monitor) {
         boolean success = false;
         int attempts = 0;
 

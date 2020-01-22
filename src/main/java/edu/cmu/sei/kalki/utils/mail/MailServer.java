@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.Mail;
+package edu.cmu.sei.kalki.utils.mail;
 
 import org.subethamail.smtp.server.SMTPServer;
 
@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.json.JSONObject;
@@ -61,7 +60,7 @@ public class MailServer {
             }
 
         } else {
-            logger.info("[MailServer] Mail Server already initialized");
+            logger.info("[MailServer] mail Server already initialized");
         }
     }
 }

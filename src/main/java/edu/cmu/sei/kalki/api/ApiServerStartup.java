@@ -1,6 +1,6 @@
 package edu.cmu.sei.kalki.api;
 
-import edu.cmu.sei.kalki.DeviceMonitor;
+import edu.cmu.sei.kalki.MonitorManager;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ public class ApiServerStartup {
     /**
      * Starts a Jetty server, with handler for notifications
      */
-    public static void start(DeviceMonitor monitor) throws Exception {
+    public static void start(MonitorManager monitor) throws Exception {
         try {
             Server httpServer = new Server(SERVER_PORT);
             ServletContextHandler handler = new ServletContextHandler(httpServer, API_URL);

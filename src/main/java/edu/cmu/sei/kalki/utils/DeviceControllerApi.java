@@ -15,16 +15,31 @@ public class DeviceControllerApi {
     private static final String statusEndpoint = "new-status";
     private static final String logEndpoint = "new-stage-log";
 
+    /**
+     * Method to send a device status to the DeviceControllerApi
+     * @param status
+     * @param apiUrl
+     */
     public static void sendStatus(DeviceStatus status, String apiUrl) {
         JSONObject json = new JSONObject(status.toString());
         sendToApi(json, apiUrl+statusEndpoint);
     }
 
+    /**
+     * Method to send a Stage Log to the DeviceControllerApi
+     * @param log
+     * @param apiUrl
+     */
     public static void sendLog(StageLog log, String apiUrl) {
         JSONObject json = new JSONObject(log.toString());
         sendToApi(json, apiUrl+logEndpoint);
     }
 
+    /**
+     * Helper method to send a json object to the DeviceControllerApi
+     * @param object
+     * @param apiUrl
+     */
     private static void sendToApi(JSONObject object, String apiUrl){
         try {
             URL url = new URL(apiUrl);

@@ -4,8 +4,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.cmu.sei.kalki.DeviceMonitor;
-import edu.cmu.sei.kalki.commandsender.DeviceCommandSender;
+import edu.cmu.sei.kalki.CommandManager;
+import edu.cmu.sei.kalki.MonitorManager;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 import org.eclipse.jetty.http.HttpStatus;
@@ -49,8 +49,8 @@ public class SendCommandServlet extends ApiServlet {
         response.setStatus(HttpStatus.OK_200);
 
         logger.info("[SendCommandServlet] Sending commands to device: "+device.toString());
-        DeviceMonitor monitor = (DeviceMonitor) getServletContext().getAttribute("monitor");
-        DeviceCommandSender.processCommands(device, commandList, monitor.getApiUrl());
+        MonitorManager monitor = (MonitorManager) getServletContext().getAttribute("monitor");
+        CommandManager.processCommands(device, commandList, monitor.getApiUrl());
     }
 
     private List<DeviceCommand> parseCommandList(JSONArray commandList) {
