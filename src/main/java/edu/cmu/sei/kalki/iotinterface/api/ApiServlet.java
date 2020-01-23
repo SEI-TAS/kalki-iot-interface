@@ -1,7 +1,6 @@
-package edu.cmu.sei.kalki.api;
+package edu.cmu.sei.kalki.iotinterface.api;
 
 import edu.cmu.sei.ttg.kalki.models.*;
-import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,8 +12,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+/**
+ * Base class for ApiServlets to handle requests from the DeviceController
+ */
 public class ApiServlet extends HttpServlet {
 
+    /**
+     * Method to extract body of an HTTP request and convert it to a JSON object
+     * @param request
+     * @param response
+     * @return
+     * @throws ServletException
+     */
     protected JSONObject parseRequestBody(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         JSONObject requestBody;
         try {
@@ -36,6 +45,12 @@ public class ApiServlet extends HttpServlet {
         return requestBody;
     }
 
+    /**
+     * Method to convert a JSONObject to a Device
+     * @param deviceData
+     * @return
+     * @throws JSONException
+     */
     protected Device parseDevice(JSONObject deviceData) throws JSONException {
         int id = deviceData.getInt("id");
         String name = deviceData.getString("name");
@@ -53,18 +68,33 @@ public class ApiServlet extends HttpServlet {
         return device;
     }
 
+    /**
+     * Method to convert a JSONObject to a DeviceType
+     * @param type
+     * @return
+     */
     protected DeviceType parseDeviceType(JSONObject type) {
         int id = type.getInt("id");
         String name = type.getString("name");
         return new DeviceType(id, name);
     }
 
+    /**
+     * Method to convert a JSONObject to a Group
+     * @param group
+     * @return
+     */
     protected Group parseGroup(JSONObject group) {
         int id = group.getInt("id");
         String name = group.getString("name");
         return new Group(id, name);
     }
 
+    /**
+     * Method to convert a JSONObject to a DeviceSecurityState
+     * @param state
+     * @return
+     */
     protected DeviceSecurityState parseSecurityState(JSONObject state) {
         int id = state.getInt("id");
         int deviceId = state.getInt("deviceId");
@@ -74,6 +104,11 @@ public class ApiServlet extends HttpServlet {
         return new DeviceSecurityState(id, deviceId, stateId, timestamp, name);
     }
 
+    /**
+     * Method to convert a JSONObject to an Alert
+     * @param alert
+     * @return
+     */
     protected Alert parseAlert(JSONObject alert) {
         int id = alert.getInt("id");
         String name = alert.getString("name");

@@ -1,5 +1,6 @@
-package edu.cmu.sei.kalki.Monitors;
+package edu.cmu.sei.kalki.iotinterface.devicetypes.UdooNeo;
 
+import edu.cmu.sei.kalki.iotinterface.devicetypes.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.IOException;
@@ -17,40 +18,36 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.JSchException;
 
-public class UdooNeoMonitor extends PollingMonitor {
-
+public class Monitor extends PollingMonitor {
+    private static final String logId = "[UdooNeoMonitor]";
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
     private String username;
     private String password;
-    private String ip;
-    private int deviceId;
 
-    public UdooNeoMonitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
-        this(deviceId, ip, samplingRate, url);
+    public Monitor(int deviceId, String ip, int samplingRate, String username, String password){
+        super(deviceId, ip, true, samplingRate);
         this.username = username;
         this.password = password;
-        this.isPollable = true;
-    }
-
-    public UdooNeoMonitor(int deviceId, String ip, int samplingRate, String url){
-        super();
-        logger.info("[UdooNeoMonitor] Starting Neo Monitor for device: " + deviceId);
-        this.ip = ip;
-        this.deviceId = deviceId;
-        this.username = "udooer";
-        this.password = "udooer";
-        this.pollInterval = samplingRate;
-        this.isPollable = true;
-        this.apiUrl = url;
+        logger.info(logId + " Starting Neo Monitor for device: " + deviceId);
         setSensors();
         start();
     }
 
+    public Monitor(int deviceId, String ip, int samplingRate){
+        this(deviceId, ip, samplingRate, "udooer", "udooer");
+    }
+
+    /**
+     * Abstract class for the sensors on an Udoo Neo
+     */
     public abstract class NeoSensor{
         public abstract String getCommand();
         public abstract Map<String, String> parseResponse(List<String> response);
     }
 
+    /**
+     * Class to interface with an Udoo Sensor with X,Y,Z values
+     */
     public class NeoXYZSensor extends NeoSensor {
 
         private String name;
@@ -68,7 +65,7 @@ public class UdooNeoMonitor extends PollingMonitor {
         public Map<String, String> parseResponse(List<String> responses) {
             Map<String, String> result = new HashMap<String, String>();
             if (responses.size() < 1){
-                logger.severe("[UdooNeoMonitor] Missing response from Udoo Neo.");
+                logger.severe(logId + " Missing response from Udoo Neo.");
             }
             else {
                 String response = responses.get(0);
@@ -82,6 +79,9 @@ public class UdooNeoMonitor extends PollingMonitor {
         }
     }
 
+    /**
+     * Class to interface with an Udoo Temperature Sensor
+     */
     public class TemperatureSensor extends NeoSensor {
 
         List<String> fields = new ArrayList<String>();
@@ -114,6 +114,9 @@ public class UdooNeoMonitor extends PollingMonitor {
         }
     }
 
+    /**
+     * Sets the sensors that are available on the Udoo Neo
+     */
     public void setSensors(){
         sensors.add(new NeoXYZSensor("accelerometer"));
         sensors.add(new NeoXYZSensor("gyroscope"));
@@ -121,6 +124,10 @@ public class UdooNeoMonitor extends PollingMonitor {
         sensors.add(new TemperatureSensor());
     }
 
+    /**
+     * Connects to device, gets raw sensor readings, and converts to human-readable values
+     * @param status The DeviceStatus to be sent to the DeviceControllerApi
+     */
     @Override
     public void pollDevice(DeviceStatus status) {
         try {
@@ -135,7 +142,7 @@ public class UdooNeoMonitor extends PollingMonitor {
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            Session session = jsch.getSession(username, ip, 22);
+            Session session = jsch.getSession(username, deviceIp, 22);
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
@@ -148,7 +155,7 @@ public class UdooNeoMonitor extends PollingMonitor {
             channel.connect();
 
             InputStream inStream = channel.getInputStream();
-            logger.info("[UdooNeoMonitor] Sent commands to device");
+            logger.info(logId + " Sent commands to poll device");
             List<String> lines = new ArrayList<String>();
 
             int c = inStream.read();
@@ -174,16 +181,20 @@ public class UdooNeoMonitor extends PollingMonitor {
                 status.addAttribute(key, attributes.get(key));
             }
         } catch (JSchException e1){
-            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
+            logger.severe(logId + " Exception happened - here's what I know: ");
             logger.severe(e1.getMessage());
         }
         catch (IOException e) {
-            logger.severe("[UdooNeoMonitor] Exception happened - here's what I know: ");
+            logger.severe(logId + " Exception happened - here's what I know: ");
             logger.severe(e.getMessage());
         }
         return;
     }
 
+    /**
+     * Helper method to convert the raw readings of sensors to human-readable values
+     * @param attributes
+     */
     public void convertRawReadings(Map<String,String> attributes){
         //convert accelerometer readings to g's
         double accelCoefficient = 0.000244 / 4;
@@ -202,6 +213,12 @@ public class UdooNeoMonitor extends PollingMonitor {
         convertTempReading("max_hyst", tempCoefficient, attributes);
     }
 
+    /**
+     * Helper method to replace X,Y,Z values with converted value
+     * @param sensor The sensor with X,Y,Z values
+     * @param coefficient The conversion rate
+     * @param attributes The device status attributes(sensor + X,Y, or Z)
+     */
     private void convertThreeAxisReading(String sensor, double coefficient, Map<String,String> attributes){
         double xReading = Double.valueOf(attributes.get(sensor+"X")) * coefficient;
         double yReading = Double.valueOf(attributes.get(sensor+"Y")) * coefficient;
@@ -211,6 +228,12 @@ public class UdooNeoMonitor extends PollingMonitor {
         attributes.replace(sensor+"Z", String.valueOf(zReading));
     }
 
+    /**
+     * Helper method to replace temperature value with converted value
+     * @param suffix The different temperature value
+     * @param coefficient The conversion rate
+     * @param attributes The device status attributes(sensor + suffix)
+     */
     private void convertTempReading(String suffix, double coefficient, Map<String,String> attributes) {
         double reading = Double.valueOf(attributes.get("temp"+suffix)) * coefficient;
         attributes.replace("temp"+suffix, String.valueOf(reading));

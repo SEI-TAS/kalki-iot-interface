@@ -1,17 +1,12 @@
-package edu.cmu.sei.kalki.Mail;
+package edu.cmu.sei.kalki.iotinterface.utils.mail;
 
+import edu.cmu.sei.kalki.iotinterface.utils.Config;
 import org.subethamail.smtp.server.SMTPServer;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 public class MailServer {
 
@@ -43,25 +38,10 @@ public class MailServer {
     public static void initialize() {
         if (mailServer == null){
             logger.info("Initializing mail server");
-
-            try{
-
-                InputStream fs = new FileInputStream("config.json");
-                JSONTokener parser = new JSONTokener(fs);
-                JSONObject config = new JSONObject(parser);
-                int port = config.getInt("MAIL_PORT");
-                fs.close();
-
-                mailServer = new MailServer(port);
-                logger.info("[MailServer] Succesfully initialized mail Server.");
-            }
-            catch(IOException e){
-                logger.severe("[MailServer] Error intializing mail server.");
-                System.exit(-1);
-            }
-
+            mailServer = new MailServer(Integer.valueOf(Config.data.get("MAIL_PORT")));
+            logger.info("[MailServer] Successfully initialized mail Server.");
         } else {
-            logger.info("[MailServer] Mail Server already initialized");
+            logger.info("[MailServer] mail Server already initialized");
         }
     }
 }
