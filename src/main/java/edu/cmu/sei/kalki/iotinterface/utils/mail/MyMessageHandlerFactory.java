@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.Mail;
+package edu.cmu.sei.kalki.iotinterface.utils.mail;
 
 import org.subethamail.smtp.*;
 

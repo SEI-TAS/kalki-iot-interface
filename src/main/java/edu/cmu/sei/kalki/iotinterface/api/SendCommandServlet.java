@@ -1,11 +1,10 @@
-package edu.cmu.sei.kalki.api;
+package edu.cmu.sei.kalki.iotinterface.api;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.cmu.sei.kalki.DeviceMonitor;
-import edu.cmu.sei.kalki.commanders.DeviceCommandSender;
+import edu.cmu.sei.kalki.iotinterface.CommandManager;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 import org.eclipse.jetty.http.HttpStatus;
@@ -21,6 +20,12 @@ import java.util.logging.Logger;
 public class SendCommandServlet extends ApiServlet {
     private Logger logger = Logger.getLogger("iot-interface");
 
+    /**
+     * Extracts the device and commands from the request and initiates command sending
+     * @param request
+     * @param response
+     * @throws ServletException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         logger.info("[SendCommandServlet] Handling request");
@@ -49,8 +54,7 @@ public class SendCommandServlet extends ApiServlet {
         response.setStatus(HttpStatus.OK_200);
 
         logger.info("[SendCommandServlet] Sending commands to device: "+device.toString());
-        DeviceMonitor monitor = (DeviceMonitor) getServletContext().getAttribute("monitor");
-        DeviceCommandSender.sendCommands(device, commandList, monitor.getApiUrl());
+        CommandManager.processCommands(device, commandList);
     }
 
     private List<DeviceCommand> parseCommandList(JSONArray commandList) {
