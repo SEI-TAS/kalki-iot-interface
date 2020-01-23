@@ -1,6 +1,5 @@
 package edu.cmu.sei.kalki.devicetypes.UdooNeo;
 
-import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.kalki.utils.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
