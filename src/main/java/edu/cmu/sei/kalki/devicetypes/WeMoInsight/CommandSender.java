@@ -75,10 +75,13 @@ public class CommandSender extends IotCommandSender {
             }
 
             logger.info("[WemoCommandSender] Processing error stream");
+            StringBuilder error = new StringBuilder();
             // read any errors from the attempted command
             while ((s = stdError.readLine()) != null) {
-                logger.severe("[WemoCommandSender] Error with wemo.py: "+s);
+                error.append(s+"\n");
             }
+            if(error.toString().length()>0)
+                logger.severe("[WemoCommandSender] Error with wemo.py: "+error.toString());
 
             logSendCommand(command);
         } catch (IOException e) {

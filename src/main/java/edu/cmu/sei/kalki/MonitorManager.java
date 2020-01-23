@@ -69,8 +69,7 @@ public class MonitorManager {
         Logger logger = Logger.getLogger("iot-interface");
         try {
             // Remove white spaces from device type name
-            String deviceTypeName = device.getType().getName();
-            deviceTypeName.replace("\\s+","");
+            String deviceTypeName = device.getType().getName().replaceAll("\\s+","");
 
             // Get IotMonitor constructor via reflection
             String classPath = "edu.cmu.sei.kalki.devicetypes."+deviceTypeName+".Monitor";

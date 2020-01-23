@@ -21,11 +21,10 @@ public class CommandManager {
     public static void processCommands(Device device, List<DeviceCommand> commands){
         try {
             // Remove white spaces from device type name
-            String deviceTypeName = device.getType().getName();
-            deviceTypeName.replace("\\s+","");
+            String deviceTypeName = device.getType().getName().replaceAll("\\s+","");
 
             // Get command sender constructor via reflection
-            String classPath = "edu.cmu.kalki.devicetypes."+deviceTypeName+".CommandSender";
+            String classPath = "edu.cmu.sei.kalki.devicetypes."+deviceTypeName+".CommandSender";
             Constructor con = Class.forName(classPath).getConstructor(Device.class, List.class);
 
             // Create instance and send sommands
@@ -33,6 +32,7 @@ public class CommandManager {
             commandSender.sendCommands();
         } catch (Exception e) { // No command sender found for the given device type
             logger.severe("[CommandManager] Error: there are no commands for a "+device.getType().getName());
+            logger.severe("[CommandManager] Error: "+e);
         }
     }
 }
