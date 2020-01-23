@@ -12,15 +12,13 @@ public class IotCommandSender {
 
     protected Device device;
     protected List<DeviceCommand> commands;
-    protected String apiUrl;
 
 
     public IotCommandSender(){}
 
-    public IotCommandSender(Device device, List<DeviceCommand> commands, String apiUrl){
+    public IotCommandSender(Device device, List<DeviceCommand> commands){
         this.device = device;
         this.commands = commands;
-        this.apiUrl = apiUrl;
     }
 
     public void sendCommands() {
@@ -41,6 +39,6 @@ public class IotCommandSender {
     protected void logSendCommand(String command) {
         logger.info("[IotCommandSender] Logging that a command was sent to the device.");
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
-        DeviceControllerApi.sendLog(log, apiUrl);
+        DeviceControllerApi.sendLog(log);
     }
 }

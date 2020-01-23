@@ -1,4 +1,11 @@
 {
     "MAIL_PORT": "25000",
-    "device_controller_api": "10.27.153.3:9090"
+    "dlink_notification_email": "camera1@dlink.com",
+    "iot_int_api_path": "/iot-interface-api",
+    "new_device_path": "/new-device",
+    "update_device_path": "update-device",
+    "send_command_path": "/send-command",
+    "device_controller_api": "10.27.153.3:9090",
+    "new_status_path": "/new-status",
+    "new_stage_log_path": "/new-stage-log"
 }

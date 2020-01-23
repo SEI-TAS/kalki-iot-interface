@@ -55,8 +55,7 @@ public class SendCommandServlet extends ApiServlet {
         response.setStatus(HttpStatus.OK_200);
 
         logger.info("[SendCommandServlet] Sending commands to device: "+device.toString());
-        MonitorManager monitor = (MonitorManager) getServletContext().getAttribute("monitor");
-        CommandManager.processCommands(device, commandList, monitor.getApiUrl());
+        CommandManager.processCommands(device, commandList);
     }
 
     private List<DeviceCommand> parseCommandList(JSONArray commandList) {

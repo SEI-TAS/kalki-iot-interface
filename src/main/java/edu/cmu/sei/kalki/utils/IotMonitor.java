@@ -6,7 +6,6 @@ import java.util.Timer;
 import java.util.logging.Logger;
 
 public abstract class IotMonitor {
-    protected String apiUrl;
     protected Timer pollTimer = new Timer();
     protected int pollInterval;
     protected boolean isPollable;
@@ -30,6 +29,6 @@ public abstract class IotMonitor {
     }
 
     protected void sendToDeviceController(DeviceStatus status) {
-        DeviceControllerApi.sendStatus(status, apiUrl);
+        DeviceControllerApi.sendStatus(status);
     }
 }

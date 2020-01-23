@@ -13,8 +13,8 @@ import java.util.List;
 public class CommandSender extends IotCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
 
-    public CommandSender(Device device, List<DeviceCommand> commands, String apiUrl) {
-        super(device, commands, apiUrl);
+    public CommandSender(Device device, List<DeviceCommand> commands) {
+        super(device, commands);
     }
 
 

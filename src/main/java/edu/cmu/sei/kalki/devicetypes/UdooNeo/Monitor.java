@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.devicetypes.UdooNeo;
 
+import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.kalki.utils.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
@@ -26,14 +27,14 @@ public class Monitor extends PollingMonitor {
     private String ip;
     private int deviceId;
 
-    public Monitor(int deviceId, String ip, String username, String password, int samplingRate, String url){
-        this(deviceId, ip, samplingRate, url);
+    public Monitor(int deviceId, String ip, String username, String password, int samplingRate){
+        this(deviceId, ip, samplingRate);
         this.username = username;
         this.password = password;
         this.isPollable = true;
     }
 
-    public Monitor(int deviceId, String ip, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, int samplingRate){
         super();
         logger.info("[UdooNeoMonitor] Starting Neo Monitor for device: " + deviceId);
         this.ip = ip;
@@ -42,7 +43,6 @@ public class Monitor extends PollingMonitor {
         this.password = "udooer";
         this.pollInterval = samplingRate;
         this.isPollable = true;
-        this.apiUrl = url;
         setSensors();
         start();
     }

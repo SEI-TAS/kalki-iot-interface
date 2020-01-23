@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.devicetypes.PhilipsHueLightEmulator;
 
+import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.kalki.utils.HttpRequest;
 import edu.cmu.sei.kalki.utils.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
@@ -26,12 +27,11 @@ public class Monitor extends PollingMonitor {
     private String authCode = "newdeveloper"; //Default username works for most GET operations
     private String ip;
 
-    public Monitor(int deviceId, String ip, int samplingRate, String url){
+    public Monitor(int deviceId, String ip, int samplingRate){
         this.deviceId = deviceId;
         this.pollInterval = samplingRate;
         this.isPollable = true;
         this.ip = ip;
-        this.apiUrl = url;
         logger.info("[PhleMonitor] Starting monitor.");
         start();
     }

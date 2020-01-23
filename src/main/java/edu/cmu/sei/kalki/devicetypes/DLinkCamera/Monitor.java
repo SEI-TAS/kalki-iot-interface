@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.devicetypes.DLinkCamera;
 
+import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.kalki.utils.mail.EventObserver;
 import edu.cmu.sei.kalki.utils.mail.MailServer;
 import edu.cmu.sei.kalki.utils.IotMonitor;
@@ -7,16 +8,15 @@ import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 public class Monitor extends IotMonitor implements EventObserver {
 
-    private String listenEmail = "camera1@dlink.com";
+    private final String listenEmail = Config.data.get("dlink_notification_email");
 
-    public Monitor(int deviceId, String ip, int samplingRate, String url){
-        this.apiUrl = url;
+    public Monitor(int deviceId, String ip, int samplingRate){
+        this.isPollable = false;
+        this.pollInterval = samplingRate;
+        this.deviceId = deviceId;
         MailServer.initialize();
         MailServer.registerObserver(this);
-        isPollable = false;
-        this.pollInterval = samplingRate;
         logger.info("[Monitor] Monitor started for device: "+deviceId);
-        this.deviceId = deviceId;
     }
 
     /**

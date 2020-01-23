@@ -18,13 +18,14 @@ public class IotInterface {
             System.exit(-1);
         }
 
-        String apiUrl = Config.data.get("device_controller_api");
-
-        MonitorManager monitor = new MonitorManager("http://"+apiUrl+"/device-controller-api/");
+        MonitorManager monitor = new MonitorManager();
         logger.info("[IotInterface] MonitorManager initialized.");
 
-        if(!startApiServer(monitor))
+        if(!startApiServer(monitor)){
+            logger.info("[IotInterface] APIServerStartup failed. Exiting.");
             System.exit(-1);
+        }
+
     }
 
     private static boolean startApiServer(MonitorManager monitor) {

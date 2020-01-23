@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki;
 
+import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.kalki.utils.DeviceControllerApi;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.kalki.utils.IotMonitor;
@@ -12,15 +13,9 @@ import java.util.logging.Logger;
 public class MonitorManager {
     private Logger logger = Logger.getLogger("iot-interface");
     private HashMap<Integer, IotMonitor> monitors;
-    private String apiUrl;
 
-    public MonitorManager(String url) {
-        apiUrl = url;
+    public MonitorManager() {
         monitors = new HashMap<>();
-    }
-
-    public String getApiUrl(){
-        return apiUrl;
     }
 
     /**
@@ -34,7 +29,7 @@ public class MonitorManager {
         }
         else {
             logger.info("[MonitorManager] Starting monitor for device: "+device.getId());
-            IotMonitor mon = fromDevice(device, apiUrl);
+            IotMonitor mon = fromDevice(device);
             monitors.put(device.getId(), mon);
             logUpdateMonitor(device, "Monitor started");
 
@@ -70,7 +65,7 @@ public class MonitorManager {
      * @param apiUrl The DeviceControllerApi url
      * @return The instance of the device's monitor
      */
-    public static IotMonitor fromDevice(Device device, String apiUrl){
+    public static IotMonitor fromDevice(Device device){
         Logger logger = Logger.getLogger("iot-interface");
         try {
             // Remove white spaces from device type name
@@ -79,10 +74,10 @@ public class MonitorManager {
 
             // Get IotMonitor constructor via reflection
             String classPath = "edu.cmu.sei.kalki.devicetypes."+deviceTypeName+".Monitor";
-            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE, String.class);
+            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE);
 
             // Create and return instance of specific IotMonitor
-            IotMonitor mon = (IotMonitor) con.newInstance(device.getId(), device.getIp(), device.getSamplingRate(), apiUrl);
+            IotMonitor mon = (IotMonitor) con.newInstance(device.getId(), device.getIp(), device.getSamplingRate());
             return mon;
         } catch (Exception e2){
             e2.printStackTrace();
@@ -99,7 +94,7 @@ public class MonitorManager {
     private void logUpdateMonitor(Device device, String info) {
         logger.info("[MonitorManager] Logging monitor update for device: "+device.getId());
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, info);
-        DeviceControllerApi.sendLog(log, apiUrl);
+        DeviceControllerApi.sendLog(log);
     }
 
 

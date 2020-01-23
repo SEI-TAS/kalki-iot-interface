@@ -1,13 +1,14 @@
 package edu.cmu.sei.kalki.api;
 
 import edu.cmu.sei.kalki.MonitorManager;
+import edu.cmu.sei.kalki.utils.Config;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import java.util.logging.Logger;
 
 public class ApiServerStartup {
     private static Logger logger = Logger.getLogger("iot-interface");
-    private static final String API_URL = "/iot-interface-api";
+    private static final String API_URL = Config.data.get("iot_int_api_path");
     private static final int SERVER_PORT = 5050;
 
     /**
@@ -17,9 +18,9 @@ public class ApiServerStartup {
         try {
             Server httpServer = new Server(SERVER_PORT);
             ServletContextHandler handler = new ServletContextHandler(httpServer, API_URL);
-            handler.addServlet(NewDeviceServlet.class, "/new-device");
-            handler.addServlet(UpdateDeviceServlet.class, "/update-device");
-            handler.addServlet(SendCommandServlet.class, "/send-command");
+            handler.addServlet(NewDeviceServlet.class, Config.data.get("new_device_path"));
+            handler.addServlet(UpdateDeviceServlet.class, Config.data.get("update_device_path"));
+            handler.addServlet(SendCommandServlet.class, Config.data.get("send_command_path"));
             handler.setAttribute("monitor", monitor);
             httpServer.start();
 
