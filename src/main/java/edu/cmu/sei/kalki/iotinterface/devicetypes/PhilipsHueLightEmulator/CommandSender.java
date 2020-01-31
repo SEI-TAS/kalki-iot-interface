@@ -20,45 +20,41 @@ public class CommandSender extends IotCommandSender {
 
     public CommandSender(Device device, List<DeviceCommand> commands) {
         super(device, commands);
-        lights = PHLEApi.getAllLights(device.getIp(), authCode);
     }
 
     /**
-     * Sends commands to each light associated with the given PHLE bridge
-     * @param command Currently supports turn-on & turn-off
+     * Implements a command called "turn-on" (or "turn_on").
      */
-    @Override
-    protected void sendCommand(DeviceCommand command) {
-        logger.info(logId + " Sending commands to PHLE: " + device.getId());
-
-        if(lights== null){
-            logger.severe(logId + " Unable to get lights from bridge");
-            return;
-        }
-        Iterator<String> lightIds = lights.keys();
-        while(lightIds.hasNext()){
-            int id = Integer.parseInt(lightIds.next());
-            switch (command.getName()){
-                case "turn-on":
-                    logger.info(logId + " Sending 'turn-on' command to PHLE: " + device.getId());
-                    PHLEApi.sendIsOn(device.getIp(), authCode, id,"true");
-                    logSendCommand(command.getName());
-                    break;
-                case "turn-off":
-                    logger.info(logId + " Sending 'turn-off' command to PHLE: " + device.getId());
-                    PHLEApi.sendIsOn(device.getIp(), authCode, id,"false");
-                    logSendCommand(command.getName());
-                    break;
-                case "set-name":
-                case "set-brightness":
-                case "set-color":
-                case "set-schedule":
-                case "set-group":
-                case "set-scene":
-                default:
-                    logger.severe(logId + " Command: " + command.getName() + " not supported for Phillips Hue Light Emulator.");
-            }
-        }
+    protected void command_turn_on() {
+        turnOnOrOff(true);
     }
 
+    /**
+     * Implements a command called "turn-off" (or "turn_off").
+     */
+    protected void command_turn_off() {
+        turnOnOrOff(false);
+    }
+
+    /**
+     * Handles both turn on or off commands.
+     * @param turnOn true if we want to turn on, false otherwise.
+     */
+    private void turnOnOrOff(boolean turnOn) {
+        if(lights == null){
+            lights = PHLEApi.getAllLights(device.getIp(), authCode);
+            if(lights == null) {
+                logger.severe(logId + " Unable to get lights from bridge");
+                return;
+            }
+        }
+
+        String turnOnString = turnOn ? "true" : "false";
+        Iterator<String> lightIds = lights.keys();
+        while(lightIds.hasNext()) {
+            int id = Integer.parseInt(lightIds.next());
+            logger.info(logId + " Sending command to light id: " + id);
+            PHLEApi.sendIsOn(device.getIp(), authCode, id, turnOnString);
+        }
+    }
 }

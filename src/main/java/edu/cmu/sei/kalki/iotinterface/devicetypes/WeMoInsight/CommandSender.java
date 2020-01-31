@@ -15,20 +15,17 @@ public class CommandSender extends IotCommandSender {
         super(device, commands);
     }
 
-    @Override
-    protected void sendCommand(DeviceCommand command) {
-        switch (command.getName()){
-            case "turn-on":
-            case "turn-off":
-                WemoScript.executeScript(command.getName(), device.getIp());
-                logSendCommand(command.getName());
-                break;
-            default:
-                logger.severe(logId + " Command: " + command.getName() + " is not a valid command for a Wemo Insight");
-                return;
-        }
+    /**
+     * Implements a command called "turn-on" (or "turn_on").
+     */
+    protected void command_turn_on() {
+        WemoScript.executeScript("turn-on", device.getIp());
     }
 
-
-
+    /**
+     * Implements a command called "turn-off" (or "turn_off").
+     */
+    protected void command_turn_off() {
+        WemoScript.executeScript("turn-off", device.getIp());
+    }
 }
