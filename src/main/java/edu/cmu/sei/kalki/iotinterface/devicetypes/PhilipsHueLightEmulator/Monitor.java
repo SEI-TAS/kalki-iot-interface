@@ -26,7 +26,7 @@ public class Monitor extends PollingMonitor {
      */
     @Override
     public void pollDevice(DeviceStatus status) {
-        JSONObject json = PHLEApi.issueCommand(deviceIp, authCode, "", "GET", null);
+        JSONObject json = PHLEApi.getAllLights(deviceIp, authCode);
         try {
             Set<String> keys = json.keySet();
 

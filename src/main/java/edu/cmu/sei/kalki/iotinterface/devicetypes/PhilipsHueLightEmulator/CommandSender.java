@@ -20,7 +20,7 @@ public class CommandSender extends IotCommandSender {
 
     public CommandSender(Device device, List<DeviceCommand> commands) {
         super(device, commands);
-        lights = getAllLights(device.getIp());
+        lights = PHLEApi.getAllLights(device.getIp(), authCode);
     }
 
     /**
@@ -41,12 +41,12 @@ public class CommandSender extends IotCommandSender {
             switch (command.getName()){
                 case "turn-on":
                     logger.info(logId + " Sending 'turn-on' command to PHLE: " + device.getId());
-                    sendIsOn(device.getIp(), id,"true");
+                    PHLEApi.sendIsOn(device.getIp(), authCode, id,"true");
                     logSendCommand(command.getName());
                     break;
                 case "turn-off":
                     logger.info(logId + " Sending 'turn-off' command to PHLE: " + device.getId());
-                    sendIsOn(device.getIp(), id,"false");
+                    PHLEApi.sendIsOn(device.getIp(), authCode, id,"false");
                     logSendCommand(command.getName());
                     break;
                 case "set-name":
@@ -61,23 +61,4 @@ public class CommandSender extends IotCommandSender {
         }
     }
 
-    /**
-     * Sets the light's state 'isOn' property
-     * @param ip The ip of the bridge
-     * @param lightId The id of the light on the bridge
-     * @param isOn String value of a boolean determining 'isOn'
-     */
-    private void sendIsOn(String ip, int lightId, String isOn) {
-        JSONObject body = new JSONObject("{\"on\":" + isOn + "}");
-        PHLEApi.issueCommand(ip, authCode, lightId + "/state", "PUT", body);
-    }
-
-    /**
-     * Get all the lights associated with the PHLE bridge
-     * @param ip The ip of the PHLE bridge
-     * @return JSON object representing all lights connected to the bridge
-     */
-    private JSONObject getAllLights(String ip) {
-        return PHLEApi.issueCommand(ip, authCode, "", "GET", null);
-    }
 }
