@@ -1,6 +1,5 @@
 package edu.cmu.sei.kalki.iotinterface.devicetypes.PhilipsHueLightEmulator;
 
-import edu.cmu.sei.kalki.iotinterface.utils.HttpRequest;
 import edu.cmu.sei.kalki.iotinterface.devicetypes.IotCommandSender;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
@@ -62,10 +61,6 @@ public class CommandSender extends IotCommandSender {
         }
     }
 
-    private String getPhleBasePath() {
-        return "/api/" + authCode + " /lights/";
-    }
-
     /**
      * Sets the light's state 'isOn' property
      * @param ip The ip of the bridge
@@ -73,14 +68,8 @@ public class CommandSender extends IotCommandSender {
      * @param isOn String value of a boolean determining 'isOn'
      */
     private void sendIsOn(String ip, int lightId, String isOn) {
-        try {
-            JSONObject body = new JSONObject("{\"on\":"+isOn+"}");
-            String apiUrl = "http://" + ip + getPhleBasePath() + lightId + "/state";
-            HttpRequest.putRequest(body, apiUrl);
-        } catch (Exception e) {
-            logger.severe(logId + " Error sending command to device!");
-            logger.severe(e.getMessage());
-        }
+        JSONObject body = new JSONObject("{\"on\":" + isOn + "}");
+        PHLEApi.issueCommand(ip, authCode, lightId + "/state", "PUT", body);
     }
 
     /**
@@ -89,13 +78,6 @@ public class CommandSender extends IotCommandSender {
      * @return JSON object representing all lights connected to the bridge
      */
     private JSONObject getAllLights(String ip) {
-        JSONObject json = null;
-        try {
-            json = HttpRequest.getRequest("http://" + ip + getPhleBasePath());
-        } catch (Exception e) {
-            logger.severe(logId + " Error getting all lights.");
-            logger.severe(e.getMessage());
-        }
-        return json;
+        return PHLEApi.issueCommand(ip, authCode, "", "GET", null);
     }
 }

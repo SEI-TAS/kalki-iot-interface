@@ -1,6 +1,5 @@
 package edu.cmu.sei.kalki.iotinterface.devicetypes.PhilipsHueLightEmulator;
 
-import edu.cmu.sei.kalki.iotinterface.utils.HttpRequest;
 import edu.cmu.sei.kalki.iotinterface.devicetypes.PollingMonitor;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
@@ -21,29 +20,13 @@ public class Monitor extends PollingMonitor {
         start();
     }
 
-
-    /**
-     * Makes a get request to the PHLE REST API at the given path
-     * @param path The endpoint of the api
-     * @return String representation of the response from the API
-     */
-    public JSONObject issueCommand(String path){
-        String targetURL = "http://" + deviceIp + "/api/" + authCode + "/" + path;
-        try{
-            return HttpRequest.getRequest(targetURL);
-        } catch (Exception e) {
-            logger.severe(logId + " Error getting a response from the bridge: "+ e);
-            return new JSONObject("{\"error\": \"Error\"}");
-        }
-    }
-
     /**
      * Gets the state of the lights from the PHLE bridge
      * @param status The DeviceStatus to be inserted
      */
     @Override
     public void pollDevice(DeviceStatus status) {
-        JSONObject json = issueCommand("lights");
+        JSONObject json = PHLEApi.issueCommand(deviceIp, authCode, "", "GET", null);
         try {
             Set<String> keys = json.keySet();
 
