@@ -21,20 +21,16 @@ import com.jcraft.jsch.JSchException;
 public class Monitor extends PollingMonitor {
     private static final String logId = "[UdooNeoMonitor]";
     private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
-    private String username;
-    private String password;
 
-    public Monitor(int deviceId, String ip, int samplingRate, String username, String password){
+    // TODO: This should be part of the device information.
+    private String username = "udooer";
+    private String password = "udooer";
+
+    public Monitor(int deviceId, String ip, int samplingRate){
         super(deviceId, ip, true, samplingRate);
-        this.username = username;
-        this.password = password;
         logger.info(logId + " Starting Neo Monitor for device: " + deviceId);
         setSensors();
         start();
-    }
-
-    public Monitor(int deviceId, String ip, int samplingRate){
-        this(deviceId, ip, samplingRate, "udooer", "udooer");
     }
 
     /**

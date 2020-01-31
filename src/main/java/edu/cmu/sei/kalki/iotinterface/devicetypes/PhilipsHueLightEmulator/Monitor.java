@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 public class Monitor extends PollingMonitor {
     private static final String logId = "[PhleMonitor]";
+
+    // TODO: This should be part of the device information.
     private String authCode = "newdeveloper"; //Default username works for most GET operations
 
     public Monitor(int deviceId, String ip, int samplingRate){

@@ -13,10 +13,10 @@ import java.util.List;
 public class CommandSender extends IotCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static final String logId = "[WemoCommandSender]";
+
     public CommandSender(Device device, List<DeviceCommand> commands) {
         super(device, commands);
     }
-
 
     @Override
     protected void sendCommand(DeviceCommand command) {

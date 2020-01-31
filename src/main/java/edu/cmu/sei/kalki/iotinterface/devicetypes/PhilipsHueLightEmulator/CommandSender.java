@@ -13,7 +13,10 @@ import java.util.logging.Logger;
 public class CommandSender extends IotCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static final String logId = "[PhleCommandSender]";
-    private static final String phleBasePath = "/api/newdeveloper/lights/";
+
+    // TODO: This should be part of the device information.
+    private String authCode = "newdeveloper"; //Default username works for most GET operations
+
     private JSONObject lights;
 
     public CommandSender(Device device, List<DeviceCommand> commands) {
@@ -27,7 +30,7 @@ public class CommandSender extends IotCommandSender {
      */
     @Override
     protected void sendCommand(DeviceCommand command) {
-        logger.info(logId + " Sending commands to PHLE: "+device.getId());
+        logger.info(logId + " Sending commands to PHLE: " + device.getId());
 
         if(lights== null){
             logger.severe(logId + " Unable to get lights from bridge");
@@ -59,16 +62,20 @@ public class CommandSender extends IotCommandSender {
         }
     }
 
+    private String getPhleBasePath() {
+        return "/api/" + authCode + " /lights/";
+    }
+
     /**
      * Sets the light's state 'isOn' property
      * @param ip The ip of the bridge
      * @param lightId The id of the light on the bridge
      * @param isOn String value of a boolean determining 'isOn'
      */
-    private static void sendIsOn(String ip, int lightId, String isOn) {
+    private void sendIsOn(String ip, int lightId, String isOn) {
         try {
             JSONObject body = new JSONObject("{\"on\":"+isOn+"}");
-            String apiUrl = "http://"+ip+ phleBasePath +lightId+"/state";
+            String apiUrl = "http://" + ip + getPhleBasePath() + lightId + "/state";
             HttpRequest.putRequest(body, apiUrl);
         } catch (Exception e) {
             logger.severe(logId + " Error sending command to device!");
@@ -81,10 +88,10 @@ public class CommandSender extends IotCommandSender {
      * @param ip The ip of the PHLE bridge
      * @return JSON object representing all lights connected to the bridge
      */
-    private static JSONObject getAllLights(String ip) {
+    private JSONObject getAllLights(String ip) {
         JSONObject json = null;
         try {
-            json = HttpRequest.getRequest("http://"+ip+phleBasePath);
+            json = HttpRequest.getRequest("http://" + ip + getPhleBasePath());
         } catch (Exception e) {
             logger.severe(logId + " Error getting all lights.");
             logger.severe(e.getMessage());
