@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.iotinterface.utils.mail;
+package edu.cmu.sei.kalki.iotinterface.devicetypes.DLinkCamera.mail;
 
 import edu.cmu.sei.kalki.iotinterface.utils.Config;
 import org.subethamail.smtp.server.SMTPServer;
@@ -35,13 +35,13 @@ public class MailServer {
         }
     }
 
-    public static void initialize() {
+    public static void initialize(int port) {
         if (mailServer == null){
             logger.info("Initializing mail server");
-            mailServer = new MailServer(Integer.valueOf(Config.data.get("MAIL_PORT")));
-            logger.info("[MailServer] Successfully initialized mail Server.");
+            mailServer = new MailServer(port);
+            logger.info("[MailServer] Successfully initialized mail server.");
         } else {
-            logger.info("[MailServer] mail Server already initialized");
+            logger.info("[MailServer] mail server already initialized");
         }
     }
 }

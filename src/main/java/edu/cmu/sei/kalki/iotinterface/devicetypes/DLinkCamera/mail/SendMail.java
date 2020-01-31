@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.iotinterface.utils.mail;
+package edu.cmu.sei.kalki.iotinterface.devicetypes.DLinkCamera.mail;
 
 import java.util.*;
 import javax.mail.*;
