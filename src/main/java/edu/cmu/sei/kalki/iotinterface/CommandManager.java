@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 public class CommandManager {
     private static Logger logger = Logger.getLogger("iot-interface");
+    private final static String LOG_ID = "[CommandManager]";
 
     public CommandManager(){}
 
@@ -24,15 +25,17 @@ public class CommandManager {
             String deviceTypeName = device.getType().getName().replaceAll("\\s+","");
 
             // Get command sender constructor via reflection
-            String classPath = "edu.cmu.sei.kalki.devicetypes."+deviceTypeName+".CommandSender";
+            String classPath = "edu.cmu.sei.kalki.iotinterface.devicetypes." + deviceTypeName + ".CommandSender";
+            logger.info(LOG_ID + "ComandSender class to load: " + classPath);
             Constructor con = Class.forName(classPath).getConstructor(Device.class, List.class);
 
-            // Create instance and send sommands
+            // Create instance and send commands
             IotCommandSender commandSender = (IotCommandSender) con.newInstance(device, commands);
             commandSender.sendCommands();
         } catch (Exception e) { // No command sender found for the given device type
-            logger.severe("[CommandManager] Error: there are no commands for a "+device.getType().getName());
-            logger.severe("[CommandManager] Error: "+e);
+            logger.severe(LOG_ID + "Error: error executing commands for device type " + device.getType().getName());
+            logger.severe(LOG_ID + "Error: "+ e);
+            e.printStackTrace();
         }
     }
 }
