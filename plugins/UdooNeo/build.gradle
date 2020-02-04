@@ -1,0 +1,5 @@
+
+dependencies {
+    compile project(':common')
+    compile 'com.jcraft:jsch:0.1.55'
+}

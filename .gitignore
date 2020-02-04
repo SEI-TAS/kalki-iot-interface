@@ -1,6 +1,7 @@
 MyHue.properties
 *.iml
 build/*
+**/build
 .idea*
 # Compiled class file
 *.class

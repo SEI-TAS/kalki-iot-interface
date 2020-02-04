@@ -1,0 +1,5 @@
+
+dependencies {
+    compile project(':common')
+    compile group: 'org.json', name: 'json', version: '20171018'
+}
