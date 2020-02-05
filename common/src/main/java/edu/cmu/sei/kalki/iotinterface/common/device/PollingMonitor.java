@@ -1,17 +1,20 @@
 package edu.cmu.sei.kalki.iotinterface.common.device;
 
+import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class PollingMonitor extends IotMonitor {
+    private static final String LOG_ID = "[PollingMonitor]";
+
     protected int pollInterval;
     protected Timer pollTimer;
     private boolean timerGoing;
 
-    public PollingMonitor(int deviceId, String deviceIp, boolean isPollable, int pollInterval) {
-        super(deviceId, deviceIp, isPollable);
+    public PollingMonitor(Device device, boolean isPollable, int pollInterval) {
+        super(device, isPollable);
         this.pollInterval = pollInterval;
         this.pollTimer = new Timer();
         this.timerGoing = false;
@@ -34,7 +37,7 @@ public abstract class PollingMonitor extends IotMonitor {
      * Connect to the device and begin monitoring.
      */
     public void start(){
-        logger.info("[PollingMonitor] Starting monitor!");
+        logger.info(LOG_ID + " Starting monitor for device " + device.getName());
         startPolling();
     }
 
@@ -45,7 +48,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     protected void startPolling() {
         pollTimer = new Timer();
-        pollTimer.schedule(new PollTask(deviceId), pollInterval, pollInterval);
+        pollTimer.schedule(new PollTask(device.getId()), pollInterval, pollInterval);
         timerGoing = true;
     }
 
@@ -54,7 +57,7 @@ public abstract class PollingMonitor extends IotMonitor {
      */
     protected void stopPolling() {
         if (timerGoing){
-            logger.info("[PollingMonitor] Stopping monitor!");
+            logger.info(LOG_ID + " Stopping monitor for device " + device.getName());
             pollTimer.cancel();
         }
     }

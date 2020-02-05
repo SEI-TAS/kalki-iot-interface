@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.WeMoInsight;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
+import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import org.json.JSONException;
@@ -9,9 +10,8 @@ import org.json.JSONObject;
 public class Monitor extends PollingMonitor {
     private static final String logId = "[WemoMonitor]";
 
-    public Monitor(int deviceId, String ip, int samplingRate) {
-        super(deviceId, ip, true, samplingRate);
-        logger.info(logId + " Starting monitor.");
+    public Monitor(Device device, int samplingRate) {
+        super(device, true, samplingRate);
         start();
     }
 
@@ -22,7 +22,7 @@ public class Monitor extends PollingMonitor {
     @Override
     public void pollDevice(DeviceStatus status) {
         try {
-            String output = WemoScript.executeScript("status", this.deviceIp);
+            String output = WemoScript.executeScript("status", device.getIp());
 
             if(output != null) {
                 JSONObject json = new JSONObject(output);
@@ -34,7 +34,7 @@ public class Monitor extends PollingMonitor {
                 }
             }
         } catch (JSONException e) {
-            logger.severe(logId + " Error parsing JSON response from Wemo Insight: " + deviceId + ". " + e.getMessage());
+            logger.severe(logId + " Error parsing JSON response from Wemo Insight: " + device.getName() + ". " + e.getMessage());
 	        e.printStackTrace();
         }
 

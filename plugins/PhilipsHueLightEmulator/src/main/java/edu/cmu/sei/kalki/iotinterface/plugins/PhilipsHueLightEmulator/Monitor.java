@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.PhilipsHueLightEmulator;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
+import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.util.Set;
@@ -14,9 +15,8 @@ public class Monitor extends PollingMonitor {
     // TODO: This should be part of the device information.
     private String authCode = "newdeveloper"; //Default username works for most GET operations
 
-    public Monitor(int deviceId, String ip, int samplingRate){
-        super(deviceId, ip, true, samplingRate);
-        logger.info(logId + " Starting monitor.");
+    public Monitor(Device device, int samplingRate){
+        super(device, true, samplingRate);
         start();
     }
 
@@ -26,7 +26,7 @@ public class Monitor extends PollingMonitor {
      */
     @Override
     public void pollDevice(DeviceStatus status) {
-        JSONObject json = PHLEApi.getAllLights(deviceIp, authCode);
+        JSONObject json = PHLEApi.getAllLights(device.getIp(), authCode);
         try {
             Set<String> keys = json.keySet();
 

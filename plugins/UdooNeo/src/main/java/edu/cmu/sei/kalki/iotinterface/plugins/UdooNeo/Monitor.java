@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.UdooNeo;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
+import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.io.IOException;
@@ -26,9 +27,8 @@ public class Monitor extends PollingMonitor {
     private String username = "udooer";
     private String password = "udooer";
 
-    public Monitor(int deviceId, String ip, int samplingRate){
-        super(deviceId, ip, true, samplingRate);
-        logger.info(logId + " Starting Neo Monitor for device: " + deviceId);
+    public Monitor(Device device, int samplingRate){
+        super(device, true, samplingRate);
         setSensors();
         start();
     }
@@ -138,7 +138,7 @@ public class Monitor extends PollingMonitor {
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            Session session = jsch.getSession(username, deviceIp, 22);
+            Session session = jsch.getSession(username, device.getIp(), 22);
             session.setPassword(password);
             session.setConfig(config);
             session.connect();
