@@ -72,7 +72,10 @@ public abstract class IotCommandSender {
      */
     private void logSendCommand(String command) {
         logger.info(LOG_ID + " Logging that a command was sent to the device.");
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: "+command);
-        DeviceControllerApi.sendLog(log);
+        if(device.getCurrentState() != null)
+        {
+            StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.FINISH, "Sent command to device: " + command);
+            DeviceControllerApi.sendLog(log);
+        }
     }
 }
