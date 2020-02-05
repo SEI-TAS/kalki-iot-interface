@@ -12,10 +12,11 @@ public class IntegrationTests
     public static void commandSenderTests() {
         // Test
         DeviceType deviceType = new DeviceType();
-        //deviceType.setName("WeMo Insight");
-        deviceType.setName("Philips Hue Light Emulator");
+        deviceType.setName("WeMo Insight");
+        //deviceType.setName("Philips Hue Light Emulator");
         Device device = new Device();
         device.setId(1);
+        device.setName("Wemo 1");
         device.setIp("127.0.0.1");
         device.setType(deviceType);
         List<DeviceCommand> commands = new ArrayList<>();

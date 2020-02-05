@@ -12,7 +12,7 @@ build/*
 # BlueJ files
 *.ctxt
 ouimeaux-env/
-
+temp/
 !gradle-wrapper.jar
 
 # Mobile Tools for Java (J2ME)
