@@ -1,20 +1,18 @@
 package edu.cmu.sei.kalki.iotinterface.app;
 import edu.cmu.sei.kalki.iotinterface.app.api.*;
 import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class IotInterface {
     private static Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
-        commandSenderTest();
+        if(args.length >= 1 && args[0].equals("test"))
+        {
+            IntegrationTests.commandSenderTests();
+        }
 
         try {
             Config.load("config.json");
@@ -59,21 +57,4 @@ public class IotInterface {
             logger.severe("[IotInterface] Error attempting to sleep");
         }
     }
-
-    private static void commandSenderTest() {
-        // Test
-        DeviceType deviceType = new DeviceType();
-        //deviceType.setName("WeMo Insight");
-        deviceType.setName("Philips Hue Light Emulator");
-        Device device = new Device();
-        device.setId(1);
-        device.setIp("127.0.0.1");
-        device.setType(deviceType);
-        List<DeviceCommand> commands = new ArrayList<>();
-        DeviceCommand command = new DeviceCommand();
-        command.setName("turn-on");
-        commands.add(command);
-        CommandManager.processCommands(device, commands);
-    }
-
 }
