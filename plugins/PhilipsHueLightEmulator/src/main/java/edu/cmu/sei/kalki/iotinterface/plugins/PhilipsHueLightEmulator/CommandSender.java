@@ -47,6 +47,7 @@ public class CommandSender extends IotCommandSender {
                 logger.severe(logId + " Unable to get lights from bridge");
                 return;
             }
+            logger.info("Lights info: " + lights.toString());
         }
 
         String turnOnString = turnOn ? "true" : "false";
