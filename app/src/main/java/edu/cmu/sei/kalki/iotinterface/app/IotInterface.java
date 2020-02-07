@@ -17,7 +17,7 @@ public class IotInterface {
             }
             else if(args[1].equals("phle"))
             {
-                IntegrationTests.testWemoTurnOn();
+                IntegrationTests.testPHLETurnOn();
             }
         }
 
