@@ -14,7 +14,6 @@ public class PHLEApi
         return "/api/" + authCode + " /lights";
     }
 
-
     /**
      * Sets the light's state 'isOn' property
      * @param ip The ip of the bridge
@@ -23,7 +22,7 @@ public class PHLEApi
      */
     public static void sendIsOn(String ip, String authCode, int lightId, String isOn) {
         JSONObject body = new JSONObject("{\"on\":" + isOn + "}");
-        PHLEApi.issueCommand(ip, authCode, lightId + "/state", "PUT", body);
+        PHLEApi.issueCommand(ip, authCode, "" + lightId + "/state", "PUT", body);
     }
 
     /**
@@ -42,6 +41,7 @@ public class PHLEApi
      */
     public static JSONObject issueCommand(String deviceIp, String authCode, String path, String method, JSONObject payload){
         String targetURL = "http://" + deviceIp + getPhleBasePath(authCode) + "/" + path;
+        logger.info("Sending command: " + targetURL);
         try{
             if("GET".equals(method)) {
                 return HttpRequest.getRequest(targetURL);
