@@ -11,7 +11,7 @@ public class PHLEApi
     private static final String logId = "[PHLEApi]";
 
     private static String getPhleBasePath(String authCode) {
-        return "/api/" + authCode + " /lights";
+        return "/api/" + authCode + "/lights";
     }
 
     /**
