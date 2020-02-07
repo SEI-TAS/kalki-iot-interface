@@ -9,19 +9,25 @@ import java.util.List;
 
 public class IntegrationTests
 {
-    public static void commandSenderTests() {
-        // Test
+    public static void testWemoTurnOn () {
+        commandSenderTests("WeMo Insight", "Wemo 1", "10.27.151.121", "turn-on");
+    }
+
+    public static void testPHLETurnOn () {
+        commandSenderTests("Philips Hue Light Emulator", "PHLE 1", "10.27.151.106", "turn-on");
+    }
+
+    public static void commandSenderTests(String deviceTypeName, String deviceName, String deviceIp, String commandName) {
         DeviceType deviceType = new DeviceType();
-        deviceType.setName("WeMo Insight");
-        //deviceType.setName("Philips Hue Light Emulator");
+        deviceType.setName(deviceTypeName);
         Device device = new Device();
         device.setId(1);
-        device.setName("Wemo 1");
-        device.setIp("127.0.0.1");
+        device.setName(deviceName);
+        device.setIp(deviceIp);
         device.setType(deviceType);
         List<DeviceCommand> commands = new ArrayList<>();
         DeviceCommand command = new DeviceCommand();
-        command.setName("turn-on");
+        command.setName(commandName);
         commands.add(command);
 
         CommandManager.processCommands(device, commands);

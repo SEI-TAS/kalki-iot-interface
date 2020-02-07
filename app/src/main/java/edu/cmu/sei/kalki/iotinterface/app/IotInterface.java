@@ -9,9 +9,16 @@ public class IotInterface {
     private static Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
-        if(args.length >= 1 && args[0].equals("test"))
+        if(args.length >= 2 && args[0].equals("test"))
         {
-            IntegrationTests.commandSenderTests();
+            if(args[1].equals("wemo"))
+            {
+                IntegrationTests.testWemoTurnOn();
+            }
+            else if(args[1].equals("phle"))
+            {
+                IntegrationTests.testWemoTurnOn();
+            }
         }
 
         try {
