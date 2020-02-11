@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+ouimeaux = "==0.8.2"
+greenlet = "==0.4.15"
+
+[dev-packages]
+
+[requires]
+python_version = "2.7"
