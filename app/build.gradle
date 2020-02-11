@@ -4,12 +4,12 @@ mainClassName = 'edu.cmu.sei.kalki.iotinterface.app.IotInterface'
 
 dependencies {
     compile project(':common')
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
+    compile group: 'org.json', name: 'json', version: '20171018'
+    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
+
     compile project(':plugins/DLinkCamera')
     compile project(':plugins/PhilipsHueLightEmulator')
     compile project(':plugins/UdooNeo')
     compile project(':plugins/WeMoInsight')
-
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
-    compile group: 'org.json', name: 'json', version: '20171018'
-    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
 }
