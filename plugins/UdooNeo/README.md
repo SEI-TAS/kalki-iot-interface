@@ -14,3 +14,11 @@ None.
 ### Data Node Setup
 
 None.
+
+## API Implementation
+
+Supported information commands:
+- Accelerometer status
+- Gyroscope status
+- Magnetometer status
+- Temperature status

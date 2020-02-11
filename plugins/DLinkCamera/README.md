@@ -17,3 +17,8 @@ same name configured in the Control Node Dashboard for the device (removing all 
 ### Data Node Setup
 
 None.
+
+## API Implementation
+
+Supported information commands:
+- Motion detected (pushed by email from device).

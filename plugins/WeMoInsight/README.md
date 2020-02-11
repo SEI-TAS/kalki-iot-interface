@@ -19,3 +19,12 @@ $ bash pipenv_setup.sh
 ```
 - This will create a folder called temp/wemo on the root of the IoT-Inteface folder, where the script and its dependencies
 will be set up (and automatically called later).
+
+## API Implementation
+
+Supported action commands:
+- turn-on
+- turn-off
+
+Supported information commands:
+- status

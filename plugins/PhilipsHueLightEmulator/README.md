@@ -21,3 +21,13 @@ To set up a different user, you must first get a username / token that you will 
 The command to get the username token is found at scripts/getHueUser.bash. 
 
 With a physical bridge, you will need to press the button on the bridge before sending this request.
+
+## API Implementation
+
+Supported action commands:
+- Set on a specific light
+- Set off a specific light
+
+Supported information commands:
+- Lights status
+
