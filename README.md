@@ -2,31 +2,28 @@
 Kalki component that monitors and polls information from IoT devices, as well as sends commands to them.
 
 ## Requirements
-- Ouimeaux python library. To install: `sudo bash python_venv_setup.sh`
 - Kalki-db library. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
 
 ## To run: 
 ```
-$ source ouimeaux/bin/activate
-$ ./gradlew run
+$ bash run.sh
 ```
 
-#### DLink Camera
-Camera must first be connected to the wifi network via the my dlink phone app.
+## Adding New IoT Device API Plugins
+To add an API implementation for a new device type, follow these steps:
 
-The camera must also be configured via the web GUI to change the motion detection settings. Cameras are identified by the monitor by the sending email address specified in these settings.
-
-
-#### WeMo Insight
-WeMo must first be connected to wifi via the WeMo phone app.
-The WeMo is discovered by its name, which can be set in the app and must be specified when adding the device to be monitored.
-
-#### Udoo Neo
-The Udoo Neo is monitored through ssh connections, so your machine's ssh keys must first be put on the Udoo Neo, or authentication settings must otherwise be altered to allow for easy communication with the Udoo Neo.
-
-#### Hue Bridge
-To use the Hue Bridge emulator, you must first get a username / token that you will use when sending requests to the bridge.
-
-The command to get the username token is found at scripts/getHueUser.bash. 
-
-With a physical bridge, you will need to press the button on the bridge before sending this request.
+1. Add a new project for the API to the repo: 
+    1. Create a subfolder `/plugins/<DeviceTypeName>`, and add a `build.gradle` file that at least contains: `dependencies {compile project(':common')}`
+    1. Create a `src/main/java` folder inside it, along with a package inside it called `edu.cmu.sei.kalki.iotinterface.plugins.<DeviceTypeName>`
+    1. Modify `settings.gradle` in the root of the repo, and add the line `include ":plugins/<DeviceTypeName>`
+    1. Modiffy `app/build.gradle` and add the dependency `compile project(':plugins/DeviceTypeName>')`
+1. Implement either a Monitor or a CommandSender class, or both, for this device type:
+    1. For Monitors:
+        1. Create a class called `Monitor.java` inside the package created above, and inherit from `IotMonitor` or `PollingMonitor`
+        1. Make sure the constructor calls the base constructor
+        1. If deriving from `PollingMonitor`, override the `pollDevice()` method, and fill the `DeviceStatus` param that is received with the polled information
+    1. For Command Senders
+        1. Create a class called `CommandSender.java` inside the package created above, and inherit from `IotCommandSender`
+        1. Make sure the constructor calls the base constructor
+        1. Create a method called `command_<command_name>()` for each command to be supported.
+        

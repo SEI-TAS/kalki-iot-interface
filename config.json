@@ -1,7 +1,0 @@
-{
-    "MAIL_PORT": "25000",
-    "dlink_notification_email": "camera1@dlink.com",
-    "iot_interface_api_port": "5050",
-    "device_controller_api_ip": "10.27.153.3",
-    "device_controller_api_port": "9090"
-}
