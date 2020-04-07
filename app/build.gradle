@@ -8,8 +8,8 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20171018'
     compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '0.0.4-SNAPSHOT'
 
-    compile project(':plugins/DLinkCamera')
-    compile project(':plugins/PhilipsHueLightEmulator')
-    compile project(':plugins/UdooNeo')
-    compile project(':plugins/WeMoInsight')
+    compile project(':plugins:DLinkCamera')
+    compile project(':plugins:PhilipsHueLightEmulator')
+    compile project(':plugins:UdooNeo')
+    compile project(':plugins:WeMoInsight')
 }
