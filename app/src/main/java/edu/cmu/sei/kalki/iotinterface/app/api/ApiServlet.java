@@ -1,6 +1,6 @@
 package edu.cmu.sei.kalki.iotinterface.app.api;
 
-import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.kalki.db.models.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +63,8 @@ public class ApiServlet extends HttpServlet {
         int defaultSamplingRate = deviceData.getInt("defaultSamplingRate");
         DeviceSecurityState currentState = deviceData.optJSONObject("currentState")!=null ? parseSecurityState(deviceData.getJSONObject("currentState")):null;
         Alert lastAlert = deviceData.optJSONObject("lastAlert")!=null ? parseAlert(deviceData.getJSONObject("lastAlert")):null;
-        Device device = new Device(name, description, deviceType, group, ip, statusHistorySize, samplingRate, defaultSamplingRate,currentState, lastAlert);
+        DataNode datNode = deviceData.optJSONObject("dataNode")!=null ? parseDataNode(deviceData.getJSONObject("dataNode")):null;
+        Device device = new Device(name, description, deviceType, group, ip, statusHistorySize, samplingRate, defaultSamplingRate,currentState, lastAlert, datNode);
         device.setId(id);
         return device;
     }
@@ -119,5 +120,17 @@ public class ApiServlet extends HttpServlet {
         int alertTypeId = alert.getInt("alertTypeId");
         String info = alert.getString("info");
         return new Alert(id, name, timestamp, alerterId, deviceId, deviceStatusId, alertTypeId, info);
+    }
+
+    /**
+     * Method to convert a JSONObject to an DataNode
+     * @param dataNode
+     * @return
+     */
+    protected DataNode parseDataNode(JSONObject dataNode) {
+        int id = dataNode.getInt("id");
+        String name = dataNode.getString("name");
+        String ipAddress = dataNode.getString("ipAddress");
+        return new DataNode(id, name, ipAddress);
     }
 }

@@ -2,8 +2,8 @@ package edu.cmu.sei.kalki.iotinterface.common;
 
 import edu.cmu.sei.kalki.iotinterface.common.utils.HttpRequest;
 import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.StageLog;
 import org.json.JSONObject;
 
 import java.util.logging.Logger;

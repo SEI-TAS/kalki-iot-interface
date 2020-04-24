@@ -2,9 +2,9 @@ package edu.cmu.sei.kalki.iotinterface.app;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
 import edu.cmu.sei.kalki.iotinterface.common.DeviceControllerApi;
-import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.iotinterface.common.device.IotMonitor;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
+import edu.cmu.sei.kalki.db.models.StageLog;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;

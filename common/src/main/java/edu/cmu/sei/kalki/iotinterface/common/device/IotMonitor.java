@@ -1,7 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.common.device;
 
 import edu.cmu.sei.kalki.iotinterface.common.DeviceControllerApi;
-import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.kalki.db.models.*;
 
 import java.util.logging.Logger;
 

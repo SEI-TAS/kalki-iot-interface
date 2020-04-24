@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.PhilipsHueLightEmulator;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.Set;
 

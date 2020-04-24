@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.iotinterface.app;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.IotCommandSender;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceCommand;
 
 import java.lang.reflect.Constructor;
 import java.util.List;

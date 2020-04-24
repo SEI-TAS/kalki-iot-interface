@@ -1,7 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.common.device;
 
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.Timer;
 import java.util.TimerTask;
