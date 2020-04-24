@@ -1,5 +1,8 @@
 apply plugin: 'application'
 
+group 'edu.cmu.sei.ttg'
+version '1.4.0'
+
 mainClassName = 'edu.cmu.sei.kalki.iotinterface.app.IotInterface'
 
 dependencies {
