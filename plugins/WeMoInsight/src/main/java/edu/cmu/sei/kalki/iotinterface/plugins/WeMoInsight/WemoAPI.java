@@ -35,7 +35,7 @@ public class WemoAPI
     public static String executeScript(String command, String deviceIp){
         try {
             List<String> params = setParams(deviceIp, command);
-            List<String> outputs = CommandExecutor.executeCommand(params);
+            List<String> outputs = CommandExecutor.executeCommand(params, ".");
 
             StringBuilder sb = new StringBuilder();
             for (String s : outputs)
