@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class WemoDockerScript
+public class WemoAPI
 {
     private static final String LOG_ID = "[WemoScript] ";
-    private static final String WEMO_SCRIPT_FOLDER = "../temp/wemo/";
 
     private static Logger logger = Logger.getLogger("iot-interface");
 
@@ -36,7 +35,7 @@ public class WemoDockerScript
     public static String executeScript(String command, String deviceIp){
         try {
             List<String> params = setParams(deviceIp, command);
-            List<String> outputs = CommandExecutor.executeCommand(params, WEMO_SCRIPT_FOLDER);
+            List<String> outputs = CommandExecutor.executeCommand(params);
 
             StringBuilder sb = new StringBuilder();
             for (String s : outputs)
