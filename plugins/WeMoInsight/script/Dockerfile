@@ -6,7 +6,7 @@ RUN pip install pipenv
 COPY Pipfile /plugins/wemo/
 COPY Pipfile.lock /plugins/wemo/
 WORKDIR /plugins/wemo/
-RUN apk --no-cache add build-base libffi-dev  && \
+RUN apk --no-cache add build-base libffi-dev bash && \
     pipenv install --system --deploy --ignore-pipfile && \
     apk del build-base libffi-dev
 
