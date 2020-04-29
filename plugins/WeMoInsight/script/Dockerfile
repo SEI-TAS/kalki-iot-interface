@@ -1,5 +1,11 @@
 FROM python:2.7-alpine
 
+# Clear proxy.
+ENV http_proxy=""
+ENV https_proxy=""
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+
 RUN pip install pipenv
 
 # Installing Python deps without a venv (not needed in container).

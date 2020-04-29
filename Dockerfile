@@ -1,5 +1,11 @@
 FROM openjdk:8-alpine
 
+# Clear proxy.
+ENV http_proxy=""
+ENV https_proxy=""
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+
 # Install tools
 RUN apk --no-cache add bash iproute2
 
