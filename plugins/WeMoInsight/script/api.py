@@ -1,3 +1,4 @@
+import sys
 
 from flask import Flask
 from flask_restful import Api, Resource
@@ -24,12 +25,14 @@ class WemoScript(Resource):
             return {STATUS_KEY: result}
         except Exception as e:
             error_msg = "Error executing wemo comand: " + str(e)
-            print(error_msg, flush=True)
+            print(error_msg)
+            sys.stdout.flush()
             return {STATUS_KEY: ERROR_VALUE, ERROR_DETAILS_KEY: error_msg}
 
 
 def main():
-    print("Loading wemo API server", flush=True)
+    print("Loading wemo API server")
+    sys.stdout.flush()
 
     app = Flask(__name__)
     api = Api(app)
