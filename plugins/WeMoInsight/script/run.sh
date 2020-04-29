@@ -4,4 +4,4 @@ export https_proxy=""
 export HTTP_PROXY=""
 export HTTPS_PROXY=""
 
-python wemo.py "$@"
+python api.py "$@"
