@@ -6,13 +6,13 @@ RUN pip install pipenv
 COPY Pipfile /plugins/wemo/
 COPY Pipfile.lock /plugins/wemo/
 WORKDIR /plugins/wemo/
-RUN apk --no-cache add build-base && \
+RUN apk --no-cache add build-base libffi-dev  && \
     pipenv install --system --deploy --ignore-pipfile && \
-    apk del build-base
+    apk del build-base libffi-dev
 
 # Actual code.
 COPY wemo.py /plugins/wemo/
 COPY api.py /plugins/wemo/
 
-WORKDIR /$PROJECT_NAME
-ENTRYPOINT ["pipenv", "run", "python", "wemo.py"]
+WORKDIR /plugins/wemo/
+ENTRYPOINT ["python", "wemo.py"]

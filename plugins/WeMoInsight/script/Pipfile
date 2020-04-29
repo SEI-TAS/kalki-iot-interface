@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-ouimeaux = "==0.8.2"
+ouimeaux = "==0.8"
 greenlet = "==0.4.15"
 
 [dev-packages]
