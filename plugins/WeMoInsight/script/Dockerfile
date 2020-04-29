@@ -1,11 +1,5 @@
 FROM python:2.7-alpine
 
-# Clear proxy.
-ENV http_proxy=""
-ENV https_proxy=""
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-
 RUN pip install pipenv
 
 # Installing Python deps without a venv (not needed in container).
@@ -15,6 +9,12 @@ WORKDIR /plugins/wemo/
 RUN apk --no-cache add build-base libffi-dev  && \
     pipenv install --system --deploy --ignore-pipfile && \
     apk del build-base libffi-dev
+
+# Clear proxy.
+ENV http_proxy=""
+ENV https_proxy=""
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
 
 # Actual code.
 COPY wemo.py /plugins/wemo/
