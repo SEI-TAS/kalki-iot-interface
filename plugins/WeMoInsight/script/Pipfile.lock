@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "668794d8f1f0e7a52e3e2f82a6336cf02ef2a67d66966aedb4a00eafd950abc3"
+            "sha256": "c6ca8874d3f9cd3f37fb5edc58d4c15f001fd9bdab9c52bf0ccc16316a25d51c"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.8"
+            "python_version": "2.7"
         },
         "sources": [
             {
@@ -90,7 +90,7 @@
                 "sha256:d97b0661e1aead761f0ded3b769044bb00ed5d33e1ec865e891a8b128bf7c656",
                 "sha256:e538b8dae561080b542b0f5af64d47ef859f22517f7eca617bb314e0e03fd7ef"
             ],
-            "index": "pypi",
+            "markers": "platform_python_implementation == 'CPython'",
             "version": "==0.4.15"
         },
         "idna": {
@@ -102,10 +102,10 @@
         },
         "ouimeaux": {
             "hashes": [
-                "sha256:a466e2c64b458c3beaacafe89254d69dced3c78239f97c673a8a87d3dcfb2dc5"
+                "sha256:db49a67b9dfb5fb37e347824b356b71826aa41073ca00be124b8e7375bc2b812"
             ],
             "index": "pypi",
-            "version": "==0.8"
+            "version": "==0.8.2"
         },
         "pyyaml": {
             "hashes": [
