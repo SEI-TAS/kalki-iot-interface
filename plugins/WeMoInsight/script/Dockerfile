@@ -6,6 +6,7 @@ RUN pip install pipenv
 COPY Pipfile /plugins/wemo/
 COPY Pipfile.lock /plugins/wemo/
 COPY wemo.py /plugins/wemo/
+COPY api.py /plugins/wemo/
 
 WORKDIR /plugins/wemo/
 RUN pipenv install --system --deploy --ignore-pipfile
