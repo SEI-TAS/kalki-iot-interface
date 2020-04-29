@@ -19,13 +19,13 @@ public class CommandSender extends IotCommandSender {
      * Implements a command called "turn-on" (or "turn_on").
      */
     protected void command_turn_on() {
-        WemoScript.executeScript("turn-on", device.getIp());
+        WemoAPI.sendToApi("turn-on", device.getIp());
     }
 
     /**
      * Implements a command called "turn-off" (or "turn_off").
      */
     protected void command_turn_off() {
-        WemoScript.executeScript("turn-off", device.getIp());
+        WemoAPI.sendToApi("turn-off", device.getIp());
     }
 }

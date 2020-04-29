@@ -1,8 +1,10 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.WeMoInsight;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.logging.Logger;
 
 public class WemoAPI
@@ -11,45 +13,44 @@ public class WemoAPI
 
     private static Logger logger = Logger.getLogger("iot-interface");
 
-    /**
-     * Configures command line arguments to execute the wemo python script
-     * @param deviceIp The ip of the WemoInsight device
-     * @param command The command to be sent. Options: turn-off, turn-on, status (not applicable here)
-     * @return Array of command line args to execute the script
-     */
-    private static List<String> setParams(String deviceIp, String command) throws IOException
-    {
-        logger.info(LOG_ID + "Preparing script");
-        List<String> params = new ArrayList<>();
-        params.add("bash");
-        params.add("run_container.sh");
-        params.add(deviceIp);
-        params.add(command);
-        return params;
-    }
+    private static final int WEMO_API_PORT = 7501;
+    private static final String WEMO_BASE_PATH = "/plugins/wemo";
+    private static final String WEMO_API_URL = "http://localhost:" + WEMO_API_PORT + WEMO_BASE_PATH;
 
     /**
-     * Executes the wemo python script and process output
-     * @param command The string that is the command's name
+     * Helper method to send a json object to the WemoAPI
      */
-    public static String executeScript(String command, String deviceIp){
+    public static String sendToApi(String command, String deviceIp){
+        StringBuilder response = new StringBuilder();
+
         try {
-            List<String> params = setParams(deviceIp, command);
-            List<String> outputs = CommandExecutor.executeCommand(params, ".");
-
-            StringBuilder sb = new StringBuilder();
-            for (String s : outputs)
+            java.net.URL url = new URL(WEMO_API_URL + "/" + deviceIp + "/" + command);
+            logger.info("Sending command to: " + url.toString());
+            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+            httpCon.setRequestMethod("POST");
+            int responseCode = httpCon.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK)
             {
-                sb.append(s);
-                sb.append("\n");
+                BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                logger.info("Response: " + response.toString());
+                return response.toString();
             }
-
-            return sb.toString();
-
+            else
+            {
+                logger.severe("GET request was unsuccessful: " + responseCode);
+                throw new RuntimeException("Problem sending request to server: " + responseCode);
+            }
         } catch (IOException e) {
-            logger.severe(LOG_ID + " Error reading response from device " + deviceIp);
+            logger.severe(LOG_ID + "Error sending command to Wemo API: " + command + "(" + deviceIp + ")");
             logger.severe(e.getMessage());
-            return null;
+            throw new RuntimeException("Could not send command: " + e.getMessage());
         }
     }
 }

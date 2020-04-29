@@ -16,6 +16,7 @@ RUN tar -xvf $DIST_NAME.tar && \
     mv /$DIST_NAME /$PROJECT_NAME
 
 COPY $PROJECT_NAME/config.json /$PROJECT_NAME/
+COPY $PROJECT_NAME/run.sh /$PROJECT_NAME/
 
 WORKDIR /$PROJECT_NAME
-ENTRYPOINT ["bash", "bin/app"]
+ENTRYPOINT ["bash", "run.sh"]

@@ -22,7 +22,7 @@ public class Monitor extends PollingMonitor {
     @Override
     public void pollDevice(DeviceStatus status) {
         try {
-            String output = WemoScript.executeScript("status", device.getIp());
+            String output = WemoAPI.sendToApi("status", device.getIp());
 
             if(output != null) {
                 JSONObject json = new JSONObject(output);
