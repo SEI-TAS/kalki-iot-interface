@@ -13,6 +13,7 @@ RUN apk --no-cache add build-base libffi-dev bash && \
 # Actual code.
 COPY wemo.py /plugins/wemo/
 COPY api.py /plugins/wemo/
+COPY run.sh /plugins/wemo/
 
 WORKDIR /plugins/wemo/
 ENTRYPOINT ["bash", "run.sh"]
