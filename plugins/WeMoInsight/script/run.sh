@@ -4,4 +4,4 @@ export https_proxy=""
 export HTTP_PROXY=""
 export HTTPS_PROXY=""
 
-exec api.py "$@"
+exec python api.py "$@"
