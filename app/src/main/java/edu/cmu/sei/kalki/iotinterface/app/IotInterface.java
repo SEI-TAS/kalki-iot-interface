@@ -10,18 +10,6 @@ public class IotInterface {
     private static Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
-        if(args.length >= 2 && args[0].equals("test"))
-        {
-            if(args[1].equals("wemo"))
-            {
-                IntegrationTests.testWemoTurnOn();
-            }
-            else if(args[1].equals("phle"))
-            {
-                IntegrationTests.testPHLETurnOn();
-            }
-        }
-
         try {
             Config.load("config.json");
         } catch (IOException e) {
@@ -33,9 +21,26 @@ public class IotInterface {
         MonitorManager monitor = new MonitorManager();
         logger.info("[IotInterface] MonitorManager initialized.");
 
-        if(!startApiServer(monitor)){
-            logger.info("[IotInterface] APIServerStartup failed. Exiting.");
-            System.exit(-1);
+        if(args.length >= 2 && args[0].equals("test"))
+        {
+            if(args[1].equals("wemo"))
+            {
+                IntegrationTests.testWemoTurnOn();
+            }
+            else if(args[1].equals("phle"))
+            {
+                IntegrationTests.testPHLETurnOn();
+            }
+            else if(args[1].equals("wemo_poll"))
+            {
+                IntegrationTests.testWemoPoll(monitor);
+            }
+        }
+        else {
+            if (!startApiServer(monitor)) {
+                logger.info("[IotInterface] APIServerStartup failed. Exiting.");
+                System.exit(-1);
+            }
         }
     }
 

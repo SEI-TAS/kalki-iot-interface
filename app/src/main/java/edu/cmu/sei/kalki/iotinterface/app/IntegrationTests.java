@@ -10,14 +10,18 @@ import java.util.List;
 public class IntegrationTests
 {
     public static void testWemoTurnOn () {
-        commandSenderTests("WeMo Insight", "Wemo 1", "10.27.151.121", "turn-on");
+        testSendingCommand("WeMo Insight", "Wemo 1", "10.27.151.121", "turn-on");
     }
 
     public static void testPHLETurnOn () {
-        commandSenderTests("Philips Hue Light Emulator", "PHLE 1", "10.27.151.106", "turn-on");
+        testSendingCommand("Philips Hue Light Emulator", "PHLE 1", "10.27.151.106", "turn-on");
     }
 
-    public static void commandSenderTests(String deviceTypeName, String deviceName, String deviceIp, String commandName) {
+    public static void testWemoPoll(MonitorManager monitorManager) {
+        testMonitorStart("WeMo Insight", "Wemo 1", "10.27.151.121", monitorManager);
+    }
+
+    public static void testSendingCommand(String deviceTypeName, String deviceName, String deviceIp, String commandName) {
         DeviceType deviceType = new DeviceType();
         deviceType.setName(deviceTypeName);
         Device device = new Device();
@@ -32,4 +36,17 @@ public class IntegrationTests
 
         CommandManager.processCommands(device, commands);
     }
+
+    public static void testMonitorStart(String deviceTypeName, String deviceName, String deviceIp, MonitorManager monitorManager) {
+        DeviceType deviceType = new DeviceType();
+        deviceType.setName(deviceTypeName);
+        Device device = new Device();
+        device.setId(1);
+        device.setName(deviceName);
+        device.setIp(deviceIp);
+        device.setType(deviceType);
+
+        monitorManager.startMonitor(device);
+    }
+
 }
