@@ -110,8 +110,13 @@ public class MonitorManager {
      * @param device Device the monitor was updated for
      */
     private void logUpdateMonitor(Device device, String info) {
-        logger.info( className + " Logging monitor update for device: "+device.getId());
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, info);
-        DeviceControllerApi.sendLog(log);
+        if(device.getCurrentState() != null) {
+            logger.info( className + " Logging monitor update for device: "+device.getId());
+            StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, info);
+            DeviceControllerApi.sendLog(log);
+        }
+        else {
+            logger.info( className + " Not logging monitor update (no current state id) for device: "+device.getId());
+        }
     }
 }
