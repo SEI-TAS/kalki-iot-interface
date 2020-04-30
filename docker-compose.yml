@@ -1,0 +1,18 @@
+version: '3'
+services:
+  kalki-iot-interface:
+    build: .
+    image: kalki/kalki-iot-interface
+    environment:
+      - TZ=${HOST_TZ}
+    ports:
+      - 5050:5050
+    depends_on:
+      - plugin-wemo
+  kalki-iot-wemo:
+    build: plugins/WeMoInsight/api/
+    image: kalki/kalki-iot-wemo
+    environment:
+      - TZ=${HOST_TZ}
+    ports:
+      - 7501:7501

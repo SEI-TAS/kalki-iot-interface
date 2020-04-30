@@ -10,6 +10,9 @@ RUN apk --no-cache add build-base libffi-dev bash && \
     pipenv install --system --deploy --ignore-pipfile && \
     apk del build-base libffi-dev
 
+# API is listening here.
+EXPOSE 7501
+
 # Actual code.
 COPY wemo.py /plugins/wemo/
 COPY api.py /plugins/wemo/
