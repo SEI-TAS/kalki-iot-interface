@@ -45,7 +45,7 @@ public class IntegrationTests
         device.setName(deviceName);
         device.setIp(deviceIp);
         device.setType(deviceType);
-        device.setSamplingRate(10);
+        device.setSamplingRate(1000);
 
         monitorManager.startMonitor(device);
     }
