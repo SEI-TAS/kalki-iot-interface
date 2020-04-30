@@ -20,7 +20,16 @@ public class Monitor extends IotMonitor implements EventObserver
         deviceEmailSource = clearedDeviceName + DLINK_EMAIL_DOMAIN;
         MailServer.initialize(MAIL_PORT);
         MailServer.registerObserver(this);
+    }
+
+    public void start() {
         logger.info(LOG_ID + " Monitor started for device: " + device.getName());
+        MailServer.start();
+    }
+
+    public void stop() {
+        logger.info(LOG_ID + " Monitor stopped for device: " + device.getName());
+        MailServer.stop();
     }
 
     /**

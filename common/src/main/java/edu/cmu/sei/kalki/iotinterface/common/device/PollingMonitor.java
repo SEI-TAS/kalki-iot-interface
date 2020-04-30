@@ -42,6 +42,14 @@ public abstract class PollingMonitor extends IotMonitor {
     }
 
     /**
+     * Connect to the device and stop monitoring.
+     */
+    public void stop(){
+        logger.info(LOG_ID + " Stopping monitor for device " + device.getName());
+        stopPolling();
+    }
+
+    /**
      * Starts a task to poll the device for its current state.
      * Polling interval is controlled by pollInterval.
      * Can be cancelled with stopPolling

@@ -20,6 +20,16 @@ public abstract class IotMonitor {
         return isPollable;
     }
 
+    /**
+     * Begin monitoring.
+     */
+    public abstract void start();
+
+    /**
+     * Stop monitoring.
+     */
+    public abstract void stop();
+
     protected void sendToDeviceController(DeviceStatus status) {
         DeviceControllerApi.sendStatus(status);
     }

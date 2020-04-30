@@ -32,7 +32,22 @@ public class MonitorManager {
             logger.info(className + " Starting monitor for device: "+device.getId());
             IotMonitor mon = fromDevice(device);
             monitors.put(device.getId(), mon);
+            mon.start();
             logUpdateMonitor(device, "Monitor started");
+        }
+    }
+
+    /**
+     * Stops a running monitor for the given device
+     * @param device
+     */
+    public void stopMonitor(Device device) {
+        if(monitors.containsKey(device.getId())) {
+            IotMonitor monitor = monitors.get(device.getId());
+            monitor.stop();
+        }
+        else {
+            logger.info(className + " Can't stop monitor; it was not found for device " + device.getName());
         }
     }
 

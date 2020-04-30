@@ -30,7 +30,6 @@ public class Monitor extends PollingMonitor {
     public Monitor(Device device, int samplingRate){
         super(device, true, samplingRate);
         setSensors();
-        start();
     }
 
     /**
