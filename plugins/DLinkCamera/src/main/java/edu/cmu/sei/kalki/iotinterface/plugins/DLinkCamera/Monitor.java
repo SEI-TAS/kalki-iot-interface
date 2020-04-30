@@ -14,10 +14,12 @@ public class Monitor extends IotMonitor implements EventObserver
 
     private String deviceEmailSource = "";
 
-    public Monitor(Device device, int samplingRate){
-        super(device, false);
-        String clearedDeviceName = device.getName().replace(" ", "");
-        deviceEmailSource = clearedDeviceName + DLINK_EMAIL_DOMAIN;
+    public Monitor(Device device){
+        super(device);
+
+        String sanitizedDeviceName = device.getName().replace(" ", "");
+        deviceEmailSource = sanitizedDeviceName + DLINK_EMAIL_DOMAIN;
+
         MailServer.initialize(MAIL_PORT);
         MailServer.registerObserver(this);
     }

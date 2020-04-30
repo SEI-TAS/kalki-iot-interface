@@ -70,9 +70,9 @@ public class MonitorManager {
             }
 
             PollingMonitor pollMon = (PollingMonitor) mon;
-            if(pollMon.getPollInterval() != device.getSamplingRate()) { // the sampling rate has been updated
+            if(pollMon.getPollIntervalMs() != device.getSamplingRate()) { // the sampling rate has been updated
                 logger.info(className + " Updating monitor for device: "+device.getId());
-                pollMon.setPollInterval(device.getSamplingRate());
+                pollMon.setPollIntervalMs(device.getSamplingRate());
                 monitors.replace(device.getId(), pollMon);
             } else {
                 logger.info(className + " Not updating monitor for device: "+device.getId()+". Sampling rate hasn't changed.");
@@ -96,11 +96,11 @@ public class MonitorManager {
             String deviceTypeName = device.getType().getName().replaceAll("\\s+","");
 
             // Get IotMonitor constructor via reflection
-            String classPath = "edu.cmu.sei.kalki.iotinterface.plugins."+deviceTypeName+".Monitor";
-            Constructor con = Class.forName(classPath).getConstructor(Integer.TYPE, String.class, Integer.TYPE);
+            String classPath = "edu.cmu.sei.kalki.iotinterface.plugins." + deviceTypeName + ".Monitor";
+            Constructor con = Class.forName(classPath).getConstructor(Device.class);
 
             // Create and return instance of specific IotMonitor
-            IotMonitor mon = (IotMonitor) con.newInstance(device.getId(), device.getIp(), device.getSamplingRate());
+            IotMonitor mon = (IotMonitor) con.newInstance(device);
             return mon;
         } catch (Exception e){
             logger.info("Error creating monitor from device type: " + e.getMessage());

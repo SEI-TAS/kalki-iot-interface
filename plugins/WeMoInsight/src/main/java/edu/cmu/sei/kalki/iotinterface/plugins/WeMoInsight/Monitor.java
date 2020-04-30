@@ -10,8 +10,8 @@ import org.json.JSONObject;
 public class Monitor extends PollingMonitor {
     private static final String logId = "[WemoMonitor]";
 
-    public Monitor(Device device, int samplingRate) {
-        super(device, true, samplingRate);
+    public Monitor(Device device) {
+        super(device);
     }
 
     /**

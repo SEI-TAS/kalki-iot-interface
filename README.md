@@ -32,6 +32,7 @@ To add an API implementation for a new device type, follow these steps:
         1. Create a class called `Monitor.java` inside the package created above, and inherit from `IotMonitor` or `PollingMonitor`
         1. Make sure the constructor calls the base constructor
         1. If deriving from `PollingMonitor`, override the `pollDevice()` method, and fill the `DeviceStatus` param that is received with the polled information
+        1. If not deriving from `PollingMonitor`, override the `start()` and `stop()` methods as needed to initialize and stop your monitor. Be sure to manually call `sendStatusToDB()` when you have a new status to report.
     1. For Command Senders
         1. Create a class called `CommandSender.java` inside the package created above, and inherit from `IotCommandSender`
         1. Make sure the constructor calls the base constructor

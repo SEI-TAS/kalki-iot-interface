@@ -7,13 +7,12 @@ import java.util.logging.Logger;
 
 public abstract class IotMonitor {
     protected Device device;
-    protected boolean isPollable;
+    protected boolean isPollable = false;
 
     protected final Logger logger = Logger.getLogger("iot-interface");
 
-    public IotMonitor(Device device, boolean isPollable){
+    public IotMonitor(Device device) {
         this.device = device;
-        this.isPollable = isPollable;
     }
 
     public boolean isPollable() {
