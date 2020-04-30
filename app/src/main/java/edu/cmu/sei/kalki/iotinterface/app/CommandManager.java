@@ -12,8 +12,6 @@ public class CommandManager {
     private static Logger logger = Logger.getLogger("iot-interface");
     private final static String LOG_ID = "[CommandManager]";
 
-    public CommandManager(){}
-
     /**
      * Creates command sender from device's type and sends the list of commands
      * @param device The device receiving commands

@@ -33,7 +33,6 @@ public class MonitorManager {
             IotMonitor mon = fromDevice(device);
             monitors.put(device.getId(), mon);
             logUpdateMonitor(device, "Monitor started");
-
         }
     }
 
@@ -100,6 +99,4 @@ public class MonitorManager {
         StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.FINISH, info);
         DeviceControllerApi.sendLog(log);
     }
-
-
 }

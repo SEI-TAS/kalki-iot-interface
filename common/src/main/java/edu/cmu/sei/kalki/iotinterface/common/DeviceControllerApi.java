@@ -1,7 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.common;
 
 import edu.cmu.sei.kalki.iotinterface.common.utils.HttpRequest;
-import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
+import edu.cmu.sei.kalki.db.utils.Config;
 import edu.cmu.sei.kalki.db.models.DeviceStatus;
 import edu.cmu.sei.kalki.db.models.StageLog;
 import org.json.JSONObject;
@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 public class DeviceControllerApi {
     private static final Logger logger = Logger.getLogger("iot-interface");
 
-    private static final String apiIp = Config.data.get("device_controller_api_ip");
-    private static final String apiPort = Config.data.get("device_controller_api_port");
+    private static final String apiIp = Config.getValue("device_controller_api_ip");
+    private static final String apiPort = Config.getValue("device_controller_api_port");
     private static final String basePath = "/device-controller-api";
 
     private static final String apiUrl = "http://"+apiIp+":"+apiPort+basePath;

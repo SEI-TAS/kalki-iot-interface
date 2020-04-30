@@ -1,7 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.app.api;
 
 import edu.cmu.sei.kalki.iotinterface.app.MonitorManager;
-import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
+import edu.cmu.sei.kalki.db.utils.Config;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import java.util.logging.Logger;
@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 public class ApiServerStartup {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static final String API_URL = "/iot-interface-api";
-    private static final int SERVER_PORT = Integer.parseInt(Config.data.get("iot_interface_api_port"));
+    private static final int SERVER_PORT = Integer.parseInt(Config.getValue("iot_interface_api_port"));
 
     /**
      * Starts a Jetty server, with handler for notifications

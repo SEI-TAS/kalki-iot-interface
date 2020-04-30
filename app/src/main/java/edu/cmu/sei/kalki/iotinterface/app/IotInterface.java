@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.app;
+
 import edu.cmu.sei.kalki.iotinterface.app.api.*;
-import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
+import edu.cmu.sei.kalki.db.utils.Config;
 
 import java.io.IOException;
 import java.util.logging.Logger;
