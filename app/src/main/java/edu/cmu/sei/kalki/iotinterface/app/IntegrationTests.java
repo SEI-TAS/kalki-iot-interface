@@ -9,11 +9,15 @@ import java.util.List;
 
 public class IntegrationTests
 {
-    public static void testWemoTurnOn () {
+    public static void testWemoTurnOn() {
         testSendingCommand("WeMo Insight", "Wemo 1", "10.27.151.121", "turn-on");
     }
 
-    public static void testPHLETurnOn () {
+    public static void testWemoTurnOff() {
+        testSendingCommand("WeMo Insight", "Wemo 1", "10.27.151.121", "turn-off");
+    }
+
+    public static void testPHLETurnOn() {
         testSendingCommand("Philips Hue Light Emulator", "PHLE 1", "10.27.151.106", "turn-on");
     }
 

@@ -23,9 +23,13 @@ public class IotInterface {
 
         if(args.length >= 2 && args[0].equals("test"))
         {
-            if(args[1].equals("wemo"))
+            if(args[1].equals("wemo_on"))
             {
                 IntegrationTests.testWemoTurnOn();
+            }
+            else if(args[1].equals("wemo_off"))
+            {
+                IntegrationTests.testWemoTurnOff();
             }
             else if(args[1].equals("phle"))
             {
