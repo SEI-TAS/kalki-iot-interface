@@ -12,11 +12,16 @@ None.
 
 ### Data Node Setup
 
-- Python, PIP and Pipenv must be installed to set up the dependencies needed for the Wemo Python script. This can be easily done by running from this folder:
+- Docker has to be installed on the node that has access to the WeMo device.
+- Create the Docker container that will have an HTTP API that communicates with the WeMo device:
 ```
-$ bash pipenv_setup.sh
+$ bash build_container.sh
 ```
-- This will create a folder called temp/wemo on the root of the IoT-Inteface folder, where the script and its dependencies will be set up (and automatically called later).
+- To run the container with the HTTP API that will communicate with the WeMo device:
+```
+$ bash run_container.sh
+```
+- Once the container is running, the WeMo plugin will be able to communicate with the WeMo device through it.
 
 ## API Implementation
 
