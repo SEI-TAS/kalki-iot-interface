@@ -87,9 +87,13 @@ public abstract class PollingMonitor extends IotMonitor {
         }
 
         public void run() {
-            DeviceStatus status = new DeviceStatus(this.deviceId);
-            pollDevice(status); // pollDevice adds attributes to currentStatus
-            sendStatusToDB(status);
+            try {
+                DeviceStatus status = new DeviceStatus(this.deviceId);
+                pollDevice(status); // pollDevice adds attributes to currentStatus
+                sendStatusToDB(status);
+            } catch(Exception e) {
+                logger.severe(LOG_ID + "Error polling device information: " + e.toString());
+            }
         }
     }
 

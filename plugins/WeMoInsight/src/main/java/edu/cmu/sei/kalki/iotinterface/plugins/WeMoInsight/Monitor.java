@@ -20,17 +20,15 @@ public class Monitor extends PollingMonitor {
      */
     @Override
     public void pollDevice(DeviceStatus status) {
-        try {
-            String output = WemoAPI.sendToApi("status", device.getIp());
+        String output = WemoAPI.sendToApi("status", device.getIp());
 
-            if(output != null) {
-                JSONObject json = new JSONObject(output);
-                for (Object keyObj : json.keySet())
-                {
-                    String key = (String) keyObj;
-                    String value = json.get(key).toString();
-                    status.addAttribute(key, value);
-                }
+        try {
+            JSONObject json = new JSONObject(output);
+            for (Object keyObj : json.keySet())
+            {
+                String key = (String) keyObj;
+                String value = json.get(key).toString();
+                status.addAttribute(key, value);
             }
         } catch (JSONException e) {
             logger.severe(logId + " Error parsing JSON response from Wemo Insight: " + device.getName() + ". " + e.getMessage());
