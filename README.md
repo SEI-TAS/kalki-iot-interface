@@ -19,6 +19,14 @@ To run:
 $ bash run_container.sh
 ```
 
+Alternatively, to run along with any other containers that are needed for configured device type APIs, run:
+
+```
+$ bash run_compose.sh
+```
+
+Optionally, the parameter ``test`` can be passed to either script above, to enter a simple test mode for  IoTInterface. Additional parameters have to be passed after this to execute specific tests. For more details, see the IotInterface.java source file.
+
 ## Adding New IoT Device API Plugins
 To add an API implementation for a new device type, follow these steps:
 
