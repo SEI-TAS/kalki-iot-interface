@@ -6,8 +6,6 @@ services:
     network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
-    ports:
-      - 5050:5050
     depends_on:
       - kalki-iot-wemo
     command: ${CMD_PARAMS}
@@ -17,5 +15,3 @@ services:
     network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
-    ports:
-      - 7501:7501
