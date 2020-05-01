@@ -9,7 +9,7 @@ services:
       - 5050:5050
     depends_on:
       - kalki-iot-wemo
-    command: test wemo_poll
+    command: ${CMD_PARAMS}
   kalki-iot-wemo:
     build: plugins/WeMoInsight/api/
     image: kalki/kalki-iot-wemo
