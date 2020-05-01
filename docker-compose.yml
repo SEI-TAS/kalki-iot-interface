@@ -3,6 +3,7 @@ services:
   kalki-iot-interface:
     build: .
     image: kalki/kalki-iot-interface
+    network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
     ports:
@@ -13,6 +14,7 @@ services:
   kalki-iot-wemo:
     build: plugins/WeMoInsight/api/
     image: kalki/kalki-iot-wemo
+    network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
     ports:
