@@ -44,6 +44,18 @@ To run all:
 ```
 $ bash run_compose.sh
 ```
+When exiting the log view after running this, containers will continue running in the background.
+
+If the log window is exited, the logs can be still monitored with this command:
+
+```
+$ bash compose_logs.sh
+```
+
+To stop all:
+```
+$ bash stop_compose.sh
+```
 
 ### Test Mode
 Optionally, the parameter ``test`` can be passed to either script above, to enter a simple test mode for  IoTInterface. Additional parameters have to be passed after this to execute specific tests. For more details, see the IotInterface.java source file.
