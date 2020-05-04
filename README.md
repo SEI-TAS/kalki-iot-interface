@@ -6,6 +6,13 @@ Kalki component that monitors and polls information from IoT devices, as well as
 - Docker has to be installed.
 - Each API plugin may have additional setup requirements. Review the readme file for each plugin that is to be used to set up all necessary configs or dependencies.
 
+## Configuration
+The file app/config.json contains mandatory and optional configuration:
+
+- device_controller_api_ip (mandatory): IP of the Control Node where the Device Controller is.
+- device_controller_api_port (optional): port where Device Controller is listening, default should be ok in most cases.
+- iot_interface_api_port (optional): port where IoT Interface is listening locally, default should be ok in most cases.
+
 ## Usage
 ### Kalki-Iot-Interface Only 
 First compile and build a docker image with:
@@ -38,6 +45,7 @@ To run all:
 $ bash run_compose.sh
 ```
 
+### Test Mode
 Optionally, the parameter ``test`` can be passed to either script above, to enter a simple test mode for  IoTInterface. Additional parameters have to be passed after this to execute specific tests. For more details, see the IotInterface.java source file.
 
 ## Adding New IoT Device API Plugins
