@@ -1,4 +1,4 @@
-FROM openjdk:8-alpine
+FROM openjdk:8-jre-alpine
 
 # Install tools
 RUN apk --no-cache add bash iproute2
