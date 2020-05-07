@@ -35,11 +35,6 @@ To build:
 $bash build_compose.sh
 ```
 
-Or if behind a proxy:
-```
-$bash build_compose_proxy.sh
-```
-
 To run all:
 ```
 $ bash run_compose.sh
