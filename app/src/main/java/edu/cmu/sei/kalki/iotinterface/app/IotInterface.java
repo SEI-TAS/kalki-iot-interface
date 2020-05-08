@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class IotInterface {
-    private static Logger logger = Logger.getLogger("iot-interface");
+    private static final Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
         try {
@@ -23,22 +23,7 @@ public class IotInterface {
 
         if(args.length >= 2 && args[0].equals("test"))
         {
-            if(args[1].equals("wemo_on"))
-            {
-                IntegrationTests.testWemoTurnOn();
-            }
-            else if(args[1].equals("wemo_off"))
-            {
-                IntegrationTests.testWemoTurnOff();
-            }
-            else if(args[1].equals("phle"))
-            {
-                IntegrationTests.testPHLETurnOn();
-            }
-            else if(args[1].equals("wemo_poll"))
-            {
-                IntegrationTests.testWemoPoll(monitor);
-            }
+            IntegrationTests.runTest(args[1], monitor);
         }
         else {
             if (!startApiServer(monitor)) {
