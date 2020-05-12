@@ -2,8 +2,8 @@
 Kalki component that monitors and polls information from IoT devices, as well as sends commands to them.
 
 ## Prerequisites
-- Kalki-db library. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
 - Docker and Docker-Compose have to be installed.
+- Kalki-db library Docker image. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
 - Each API plugin may have additional setup requirements. Review the readme file for each plugin that is to be used to set up all necessary configs or dependencies.
 
 ## Configuration
