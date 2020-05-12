@@ -1,12 +1,4 @@
 #!/usr/bin/env bash
-docker-compose build --build-arg HTTP_PROXY=${HTTP_PROXY} \
-                     --build-arg HTTPS_PROXY=${HTTPS_PROXY} \
-                     --build-arg http_proxy=${http_proxy} \
-                     --build-arg https_proxy=${https_proxy} \
-                     kalki-iot-interface
+bash build_container.sh
 
-docker-compose build --build-arg HTTP_PROXY=${HTTP_PROXY} \
-                     --build-arg HTTPS_PROXY=${HTTPS_PROXY} \
-                     --build-arg http_proxy=${http_proxy} \
-                     --build-arg https_proxy=${https_proxy} \
-                     kalki-iot-wemo
+(cd plugins/WeMoInsight/api && bash build_container.sh)

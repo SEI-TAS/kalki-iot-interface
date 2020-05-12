@@ -1,7 +1,6 @@
 version: '2'
 services:
   kalki-iot-interface:
-    build: .
     image: kalki/kalki-iot-interface
     network_mode: "host"
     environment:
@@ -10,7 +9,6 @@ services:
       - kalki-iot-wemo
     command: ${CMD_PARAMS}
   kalki-iot-wemo:
-    build: plugins/WeMoInsight/api/
     image: kalki/kalki-iot-wemo
     network_mode: "host"
     environment:
