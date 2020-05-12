@@ -3,7 +3,7 @@ Kalki component that monitors and polls information from IoT devices, as well as
 
 ## Prerequisites
 - Docker and Docker-Compose have to be installed.
-- Kalki-db library Docker image. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
+- Kalki-db library build env Docker image. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
 - Each API plugin may have additional setup requirements. Review the readme file for each plugin that is to be used to set up all necessary configs or dependencies.
 
 ## Configuration
@@ -14,8 +14,10 @@ The file app/config.json contains mandatory and optional configuration:
 - iot_interface_api_port (optional): port where IoT Interface is listening locally, default should be ok in most cases.
 
 ## Usage
-### Kalki-Iot-Interface Only 
-First compile and build a docker image with:
+### Kalki-Iot-Interface and Device API plugins 
+To build and run along with any other containers that are needed for device type APIs.
+
+First compile and build the docker images with:
 
 ```
 $ bash build_container.sh
@@ -24,21 +26,9 @@ $ bash build_container.sh
 To run:
 
 ```
-$ bash run_container.sh
-```
-
-### Kalki-Iot-Interface and Device API plugins
-To build and run along with any other containers that are needed for device type APIs.
-
-To build:
-```
-$bash build_compose.sh
-```
-
-To run all:
-```
 $ bash run_compose.sh
 ```
+
 When exiting the log view after running this, containers will continue running in the background.
 
 If the log window is exited, the logs can be still monitored with this command:
