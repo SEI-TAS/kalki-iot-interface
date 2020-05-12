@@ -1,5 +1,5 @@
 # First stage: build.
-FROM gradle:5.6.4-jdk8 AS build_env
+FROM kalki/kalki-db-env AS build_env
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
