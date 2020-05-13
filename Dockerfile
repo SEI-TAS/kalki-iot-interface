@@ -15,7 +15,7 @@ RUN apk --no-cache add bash iproute2
 EXPOSE 5050
 
 ARG PROJECT_NAME=app
-ARG PROJECT_VERSION=1.4.0
+ARG PROJECT_VERSION=1.5.0
 ARG DIST_NAME=$PROJECT_NAME-$PROJECT_VERSION
 
 COPY --from=build_env /home/gradle/src/$PROJECT_NAME/build/distributions/$DIST_NAME.tar /
