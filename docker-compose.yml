@@ -1,4 +1,4 @@
-version: '2'
+version: '2.3'
 services:
   kalki-iot-interface:
     image: kalki/kalki-iot-interface
