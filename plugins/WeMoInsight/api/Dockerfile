@@ -1,6 +1,6 @@
 FROM python:2.7-alpine
 
-RUN pip install pipenv
+RUN pip install pipenv==2018.11.26
 
 # Installing Python deps without a venv (not needed in container).
 COPY Pipfile /plugins/wemo/
