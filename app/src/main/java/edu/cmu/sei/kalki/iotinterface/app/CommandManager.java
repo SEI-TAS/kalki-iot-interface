@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.iotinterface.app;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.IotCommandSender;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceCommand;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.logging.Logger;
 public class CommandManager {
     private static Logger logger = Logger.getLogger("iot-interface");
     private final static String LOG_ID = "[CommandManager]";
-
-    public CommandManager(){}
 
     /**
      * Creates command sender from device's type and sends the list of commands

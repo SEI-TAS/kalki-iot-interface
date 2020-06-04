@@ -1,26 +1,15 @@
 package edu.cmu.sei.kalki.iotinterface.app;
+
 import edu.cmu.sei.kalki.iotinterface.app.api.*;
-import edu.cmu.sei.kalki.iotinterface.common.utils.Config;
+import edu.cmu.sei.kalki.db.utils.Config;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 public class IotInterface {
-    private static Logger logger = Logger.getLogger("iot-interface");
+    private static final Logger logger = Logger.getLogger("iot-interface");
 
     public static void main(String[] args) {
-        if(args.length >= 2 && args[0].equals("test"))
-        {
-            if(args[1].equals("wemo"))
-            {
-                IntegrationTests.testWemoTurnOn();
-            }
-            else if(args[1].equals("phle"))
-            {
-                IntegrationTests.testPHLETurnOn();
-            }
-        }
-
         try {
             Config.load("config.json");
         } catch (IOException e) {
@@ -32,9 +21,15 @@ public class IotInterface {
         MonitorManager monitor = new MonitorManager();
         logger.info("[IotInterface] MonitorManager initialized.");
 
-        if(!startApiServer(monitor)){
-            logger.info("[IotInterface] APIServerStartup failed. Exiting.");
-            System.exit(-1);
+        if(args.length >= 2 && args[0].equals("test"))
+        {
+            IntegrationTests.runTest(args[1], monitor);
+        }
+        else {
+            if (!startApiServer(monitor)) {
+                logger.info("[IotInterface] APIServerStartup failed. Exiting.");
+                System.exit(-1);
+            }
         }
     }
 

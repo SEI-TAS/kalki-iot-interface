@@ -5,7 +5,8 @@ name = "pypi"
 
 [packages]
 ouimeaux = "==0.8.2"
-greenlet = "==0.4.15"
+flask = "==1.1.2"
+flask-restful = "==0.3.8"
 
 [dev-packages]
 

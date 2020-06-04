@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.PhilipsHueLightEmulator;
 
+import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.Set;
 
@@ -13,11 +13,10 @@ public class Monitor extends PollingMonitor {
     private static final String logId = "[PhleMonitor]";
 
     // TODO: This should be part of the device information.
-    private String authCode = "newdeveloper"; //Default username works for most GET operations
+    private final String authCode = "newdeveloper"; //Default username works for most GET operations
 
-    public Monitor(Device device, int samplingRate){
-        super(device, true, samplingRate);
-        start();
+    public Monitor(Device device) {
+        super(device);
     }
 
     /**
@@ -47,5 +46,4 @@ public class Monitor extends PollingMonitor {
             logger.severe(logId + " Error: " + err.toString());
         }
     }
-
 }

@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.UdooNeo;
 
 import edu.cmu.sei.kalki.iotinterface.common.device.PollingMonitor;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +21,15 @@ import com.jcraft.jsch.JSchException;
 
 public class Monitor extends PollingMonitor {
     private static final String logId = "[UdooNeoMonitor]";
-    private List<NeoSensor> sensors = new ArrayList<NeoSensor>();
+    private final List<NeoSensor> sensors = new ArrayList<NeoSensor>();
 
     // TODO: This should be part of the device information.
-    private String username = "udooer";
-    private String password = "udooer";
+    private final String username = "udooer";
+    private final String password = "udooer";
 
-    public Monitor(Device device, int samplingRate){
-        super(device, true, samplingRate);
+    public Monitor(Device device){
+        super(device);
         setSensors();
-        start();
     }
 
     /**

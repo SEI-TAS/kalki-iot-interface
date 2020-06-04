@@ -1,0 +1,17 @@
+version: '2.3'
+services:
+  kalki-iot-interface:
+    image: kalki/kalki-iot-interface
+    container_name: kalki-iot-interface
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    depends_on:
+      - kalki-iot-wemo
+    command: ${CMD_PARAMS}
+  kalki-iot-wemo:
+    image: kalki/kalki-iot-wemo
+    container_name: kalki-iot-wemo
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}

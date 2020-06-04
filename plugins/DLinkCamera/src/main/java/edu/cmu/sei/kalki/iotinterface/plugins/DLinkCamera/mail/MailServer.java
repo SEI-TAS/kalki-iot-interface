@@ -6,21 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 public class MailServer {
 
     private static Logger logger = Logger.getLogger("myLogger");
 
     private List<EventObserver> mailObservers = new ArrayList<EventObserver>();
+    public SMTPServer smtpServer;
 
     public static MailServer mailServer;
 
     public MailServer(int port)
     {
-        MyMessageHandlerFactory myFactory = new MyMessageHandlerFactory(this) ;
-        SMTPServer smtpServer = new SMTPServer(myFactory);
+        MyMessageHandlerFactory myFactory = new MyMessageHandlerFactory() ;
+        smtpServer = new SMTPServer(myFactory);
         smtpServer.setPort(port);
-        smtpServer.start();
+    }
+
+    public static void start() {
+        if(mailServer != null) {
+            logger.info("Starting mail server");
+            mailServer.smtpServer.start();
+        }
+        else {
+            logger.info("Can't start mail server, not properly initialized.");
+        }
     }
 
     public static void registerObserver(EventObserver o){
@@ -42,5 +51,13 @@ public class MailServer {
         } else {
             logger.info("[MailServer] mail server already initialized");
         }
+    }
+
+    public static void stop() {
+        if(mailServer != null){
+            mailServer.smtpServer.stop();
+            mailServer.smtpServer = null;
+        }
+        mailServer = null;
     }
 }

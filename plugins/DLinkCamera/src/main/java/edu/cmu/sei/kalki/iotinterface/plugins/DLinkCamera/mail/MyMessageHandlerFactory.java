@@ -9,12 +9,6 @@ import java.io.InputStreamReader;
 
 public class MyMessageHandlerFactory implements MessageHandlerFactory {
 
-    MailServer mailServer;
-
-    public MyMessageHandlerFactory(MailServer mailServer){
-        this.mailServer = mailServer;
-    }
-
     public MessageHandler create(MessageContext ctx) {
         return new Handler(ctx);
     }
@@ -26,12 +20,12 @@ public class MyMessageHandlerFactory implements MessageHandlerFactory {
             this.ctx = ctx;
         }
 
-        public void from(String from) throws RejectException {
+        public void from(String from) {
 //            System.out.println("FROM:"+from);
             MailServer.notify(from);
         }
 
-        public void recipient(String recipient) throws RejectException {
+        public void recipient(String recipient) {
 //            System.out.println("RECIPIENT:"+recipient);
         }
 

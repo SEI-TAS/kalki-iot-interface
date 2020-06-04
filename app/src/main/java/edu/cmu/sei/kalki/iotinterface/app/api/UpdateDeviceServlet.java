@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.cmu.sei.kalki.iotinterface.app.MonitorManager;
-import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.kalki.db.models.Device;
 import org.eclipse.jetty.http.HttpStatus;
 
 import org.json.JSONException;

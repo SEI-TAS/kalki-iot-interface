@@ -3,8 +3,8 @@ package edu.cmu.sei.kalki.iotinterface.plugins.DLinkCamera;
 import edu.cmu.sei.kalki.iotinterface.plugins.DLinkCamera.mail.EventObserver;
 import edu.cmu.sei.kalki.iotinterface.plugins.DLinkCamera.mail.MailServer;
 import edu.cmu.sei.kalki.iotinterface.common.device.IotMonitor;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 public class Monitor extends IotMonitor implements EventObserver
 {
@@ -14,13 +14,24 @@ public class Monitor extends IotMonitor implements EventObserver
 
     private String deviceEmailSource = "";
 
-    public Monitor(Device device, int samplingRate){
-        super(device, false);
-        String clearedDeviceName = device.getName().replace(" ", "");
-        deviceEmailSource = clearedDeviceName + DLINK_EMAIL_DOMAIN;
+    public Monitor(Device device){
+        super(device);
+
+        String sanitizedDeviceName = device.getName().replace(" ", "");
+        deviceEmailSource = sanitizedDeviceName + DLINK_EMAIL_DOMAIN;
+
         MailServer.initialize(MAIL_PORT);
         MailServer.registerObserver(this);
+    }
+
+    public void start() {
         logger.info(LOG_ID + " Monitor started for device: " + device.getName());
+        MailServer.start();
+    }
+
+    public void stop() {
+        logger.info(LOG_ID + " Monitor stopped for device: " + device.getName());
+        MailServer.stop();
     }
 
     /**
