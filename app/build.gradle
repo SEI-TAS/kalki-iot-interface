@@ -15,4 +15,5 @@ dependencies {
     compile project(':plugins:PhilipsHueLightEmulator')
     compile project(':plugins:UdooNeo')
     compile project(':plugins:WeMoInsight')
+    compile project(':plugins:AmcrestIP8M2496ECamera')
 }
