@@ -10,7 +10,7 @@ services:
       - kalki-iot-wemo
     command: ${CMD_PARAMS}
     volumes:
-      - ./logs:/logs
+      - ./kii-logs:/logs
   kalki-iot-wemo:
     image: kalki/kalki-iot-wemo
     container_name: kalki-iot-wemo
