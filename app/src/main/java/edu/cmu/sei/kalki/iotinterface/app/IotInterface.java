@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.iotinterface.app;
 
+import edu.cmu.sei.kalki.db.utils.LoggerSetup;
 import edu.cmu.sei.kalki.iotinterface.app.api.*;
 import edu.cmu.sei.kalki.db.utils.Config;
 
@@ -12,6 +13,7 @@ public class IotInterface {
     public static void main(String[] args) {
         try {
             Config.load("config.json");
+            LoggerSetup.setup();
         } catch (IOException e) {
             logger.severe("[IotInterface] Error parsing the config.json. Exiting.");
             e.printStackTrace();

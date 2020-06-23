@@ -1,5 +1,7 @@
 package edu.cmu.sei.kalki.iotinterface.plugins.WeMoInsight;
 
+import edu.cmu.sei.kalki.db.utils.CommandExecutor;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
