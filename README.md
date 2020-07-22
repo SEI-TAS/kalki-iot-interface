@@ -1,6 +1,18 @@
 # Kalki-IoT-Interface
 Kalki component that monitors and polls information from IoT devices, as well as sends commands to them.
 
+Kalki is an IoT platform for allowing untrusted IoT devices to connect to a network in a secure way, protecting both the IoT device and the network from malicious attackers.
+
+Kalki comprises a total of 8 GitHub projects:
+- kalki-node-setup (Kalki Main Repository, composes all non-UI components)
+- kalki-controller (Kalki Main Controller)
+- kalki-umbox-controller (Kalki Umbox Controller)
+- kalki-device-controller (Kalki Device Controller)
+- kalki-dashboard (Kalki Dashboard)
+- kalki-db (Kalki Database Library)
+- kalki-iot-interface (Kalki IoT Interface)
+- kalki-umboxes (Kalki Umboxes, sample umboxes and umboxes components)
+
 ## Prerequisites
 - Docker and Docker-Compose have to be installed.
 - Kalki-db library build env Docker image. See [here](https://github.com/SEI-TAS/kalki-db) for installation details.
