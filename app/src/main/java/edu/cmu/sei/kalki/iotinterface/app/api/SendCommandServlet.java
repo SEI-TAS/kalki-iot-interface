@@ -68,7 +68,7 @@ public class SendCommandServlet extends ApiServlet {
         // get Device from body
         Device device;
         try {
-            device = parseDevice(requestBody.getJSONObject("device"));
+            device = new Device(requestBody.getJSONObject("device"));
         }
         catch (JSONException e) {
             throw new ServletException("Error parsing device JSON: " + e.getMessage());
