@@ -58,6 +58,10 @@ public class Monitor extends PollingMonitor {
     @Override
     public void pollDevice(DeviceStatus status) {
         JSONObject json = PHLEApi.getAllLights(device.getIp(), authCode);
+        if(json.has("error")) {
+            logger.severe(logId + " Could not poll lights information: " + json.getString("error"));
+            return;
+        }
         try {
             Set<String> keys = json.keySet();
 
