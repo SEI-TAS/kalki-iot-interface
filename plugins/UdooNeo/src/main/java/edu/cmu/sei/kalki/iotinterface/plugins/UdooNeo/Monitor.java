@@ -54,12 +54,18 @@ public class Monitor extends PollingMonitor {
     private static final String logId = "[UdooNeoMonitor]";
     private final List<NeoSensor> sensors = new ArrayList<NeoSensor>();
 
-    // TODO: This should be part of the device information.
-    private final String username = "udooer";
-    private final String password = "udooer";
+    // NOTE: default values are "udooer" and "udooer".
+    private final String username;
+    private final String password;
 
     public Monitor(Device device){
         super(device);
+        String[] credentials = device.getCredentials().split(":");
+        if(credentials.length < 2) {
+            throw new RuntimeException("Device credentials are not in the expected format.");
+        }
+        username = credentials[0];
+        password = credentials[1];
         setSensors();
     }
 

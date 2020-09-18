@@ -63,7 +63,7 @@ public class UpdateDeviceServlet extends ApiServlet {
         // convert JSON to Device
         Device device;
         try {
-            device = parseDevice(requestBody);
+            device = new Device(requestBody);
         }
         catch (JSONException e){
             throw new ServletException("Error parsing device JSON: " + e.getMessage());
