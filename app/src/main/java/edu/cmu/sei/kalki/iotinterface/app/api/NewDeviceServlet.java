@@ -61,6 +61,7 @@ public class NewDeviceServlet extends ApiServlet {
         JSONObject requestBody = parseRequestBody(request, response);
 
         // convert JSON to Device
+        logger.info("[NewDeviceServlet] Parsing device info: " + requestBody.toString());
         Device device;
         try {
             device = new Device(requestBody);
