@@ -44,13 +44,14 @@ public class CommandSender extends IotCommandSender {
     private static Logger logger = Logger.getLogger("iot-interface");
     private static final String logId = "[PhleCommandSender]";
 
-    // TODO: This should be part of the device information.
-    private String authCode = "newdeveloper"; //Default username works for most GET operations
-
     private JSONObject lights;
+
+    // NOTE: default built-in credentials that can be used for this is the auth code "newdeveloper"
+    private String authCode;
 
     public CommandSender(Device device, List<DeviceCommand> commands) {
         super(device, commands);
+        authCode = device.getCredentials();
     }
 
     /**

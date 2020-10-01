@@ -43,11 +43,12 @@ import org.json.JSONObject;
 public class Monitor extends PollingMonitor {
     private static final String logId = "[PhleMonitor]";
 
-    // TODO: This should be part of the device information.
-    private final String authCode = "newdeveloper"; //Default username works for most GET operations
+    // NOTE: default built-in credentials that can be used for this is the auth code "newdeveloper"
+    private String authCode;
 
     public Monitor(Device device) {
         super(device);
+        authCode = device.getCredentials();
     }
 
     /**
@@ -57,6 +58,10 @@ public class Monitor extends PollingMonitor {
     @Override
     public void pollDevice(DeviceStatus status) {
         JSONObject json = PHLEApi.getAllLights(device.getIp(), authCode);
+        if(json.has("error")) {
+            logger.severe(logId + " Could not poll lights information: " + json.getString("error"));
+            return;
+        }
         try {
             Set<String> keys = json.keySet();
 
