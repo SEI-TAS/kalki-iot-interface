@@ -1,7 +1,8 @@
-FROM python:2.7-alpine
+FROM python:3.11-alpine
 
 # Trusted host configs used to avoid issues when running behind SSL proxies.
 RUN pip config set global.trusted-host "pypi.org pypi.python.org files.pythonhosted.org"
+RUN sed -ie "s/https/http/g" /etc/apk/repositories
 
 # Installing Python deps without a venv (not needed in container).
 COPY requirements.txt /plugins/wemo/
