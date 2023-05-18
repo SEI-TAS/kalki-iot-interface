@@ -9,6 +9,7 @@ WORKDIR /plugins/wemo/
 RUN apk --no-cache add build-base libffi-dev bash && \
     pip install -r requirements.txt --default-timeout=100 && \
     apk del build-base libffi-dev
+RUN apk add --no-cache libstdc++
 
 # API is listening here.
 EXPOSE 7501
