@@ -1,14 +1,16 @@
-FROM python:2.7-alpine
+FROM python:3.11-alpine
 
-RUN pip install pipenv==2018.11.26
+# Trusted host configs used to avoid issues when running behind SSL proxies.
+RUN pip config set global.trusted-host "pypi.org pypi.python.org files.pythonhosted.org"
+RUN sed -ie "s/https/http/g" /etc/apk/repositories
 
 # Installing Python deps without a venv (not needed in container).
-COPY Pipfile /plugins/wemo/
-COPY Pipfile.lock /plugins/wemo/
+COPY requirements.txt /plugins/wemo/
 WORKDIR /plugins/wemo/
 RUN apk --no-cache add build-base libffi-dev bash && \
-    pipenv install --system --deploy --ignore-pipfile && \
+    pip install -r requirements.txt --default-timeout=100 && \
     apk del build-base libffi-dev
+RUN apk add --no-cache libstdc++
 
 # API is listening here.
 EXPOSE 7501
